@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!-- saved from url=(0253)https://preview-%2Dadventurous-monograph-design-lab.base44.app/?hide_badge=true&base44_data_env=prod&server_url=https%3A%2F%2Fpreview-%2Dadventurous-monograph-design-lab.base44.app&_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&previewFE_version=1 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+    (function() {
+        var buffer = window.__base44_preview_native_failures;
+        if (!buffer || buffer.version !== 1 || !Array.isArray(buffer.entries)) {
+            buffer = { version: 1, entries: [], listenersInstalled: false };
+            window.__base44_preview_native_failures = buffer;
+        }
+        if (buffer.listenersInstalled) return;
+        function value(object, key) {
+            return object && typeof object[key] === 'string' ? object[key] : '';
+        }
+        function append(message) {
+            if (!message) return;
+            var normalizedMessage = String(message).slice(0, 5000);
+            for (var index = buffer.entries.length - 1; index >= 0; index--) {
+                var existing = buffer.entries[index];
+                if (existing && existing.level === 'error' && existing.message === normalizedMessage) {
+                    buffer.entries.splice(index, 1);
+                }
+            }
+            buffer.entries.push({
+                level: 'error',
+                message: normalizedMessage,
+                timestamp: Date.now()
+            });
+            if (buffer.entries.length > 100) {
+                buffer.entries.splice(0, buffer.entries.length - 100);
+            }
+        }
+        buffer.append = append;
+        function handleError(event) {
+            var target = event && event.target;
+            var tagName = value(target, 'tagName').toLowerCase() || 'window';
+            var isModule = tagName === 'script' && value(target, 'type').toLowerCase() === 'module';
+            var resourceType = isModule ? 'module' : tagName;
+            var url = value(target, 'src') || value(target, 'href') || value(event, 'filename');
+            var detail = value(event, 'message') || value(event && event.error, 'message');
+            var prefix = tagName === 'window' ? 'Native browser error' : 'Failed to load ' + resourceType;
+            append(prefix + (url ? ' ' + url : '') + (detail ? ': ' + detail : ''));
+        }
+        function rejectionReason(reason) {
+            if (typeof reason === 'string') return reason;
+            var message = value(reason, 'message');
+            if (message) return message;
+            try { return JSON.stringify(reason) || String(reason); }
+            catch (e) { return String(reason); }
+        }
+        function handleRejection(event) {
+            append('Unhandled promise rejection: ' + rejectionReason(event && event.reason));
+        }
+        function handleCspViolation(event) {
+            var blockedUri = value(event, 'blockedURI') || 'resource';
+            var directive = value(event, 'violatedDirective');
+            append('Content Security Policy blocked ' + blockedUri + (directive ? ' (' + directive + ')' : ''));
+        }
+        function overlayText(root, selector) {
+            var element = root && root.querySelector(selector);
+            return value(element, 'textContent').trim();
+        }
+        function captureViteOverlay(overlay) {
+            var root = overlay && overlay.shadowRoot;
+            var message = overlayText(root, '.message-body');
+            if (!message) return;
+            var plugin = overlayText(root, '.plugin');
+            var details = ['Vite build error: ' + (plugin ? plugin + ' ' : '') + message];
+            var file = overlayText(root, '.file');
+            var frame = overlayText(root, '.frame');
+            var stack = overlayText(root, '.stack');
+            if (file) details.push('File: ' + file);
+            if (frame) details.push(frame);
+            if (stack) details.push(stack);
+            append(details.join(String.fromCharCode(10)));
+        }
+        function captureViteOverlays(node) {
+            if (!node || node.nodeType !== 1) return;
+            if (node.matches && node.matches('vite-error-overlay')) captureViteOverlay(node);
+            if (!node.querySelectorAll) return;
+            var overlays = node.querySelectorAll('vite-error-overlay');
+            for (var index = 0; index < overlays.length; index++) captureViteOverlay(overlays[index]);
+        }
+        window.addEventListener('error', handleError, true);
+        window.addEventListener('unhandledrejection', handleRejection);
+        window.addEventListener('securitypolicyviolation', handleCspViolation);
+        if (typeof MutationObserver !== 'undefined' && document.documentElement) {
+            captureViteOverlays(document.documentElement);
+            new MutationObserver(function(records) {
+                for (var recordIndex = 0; recordIndex < records.length; recordIndex++) {
+                    var nodes = records[recordIndex].addedNodes;
+                    for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex++) {
+                        captureViteOverlays(nodes[nodeIndex]);
+                    }
+                }
+            }).observe(document.documentElement, { childList: true, subtree: true });
+        }
+        buffer.listenersInstalled = true;
+    })();
+    </script><script defer="" data-preview-inject="true" data-app-id="6a5ea2ccee1afda4efbe998a" data-preview-type="latest_preview" data-rum-app-id="db50c921-10c3-4f12-bccb-950fa174b708" data-rum-client-token="pubfe8a4f2972b412b4556fd67e77f82cb4" data-dd-site="datadoghq.com" src="./builder-bridge.js.download"></script>
+    <script>
+    (function() {
+        var IGNORE = { SCRIPT: 1, STYLE: 1, LINK: 1, META: 1, NOSCRIPT: 1, TEMPLATE: 1 };
+        const fire = () => window.parent.postMessage({ type: 'IFRAME_CONTENT_READY' }, '*');
+        function check() {
+            var body = document.body;
+            if (!body) return false;
+            for (var idx = 0; idx < body.children.length; idx++) {
+                if (!IGNORE[body.children[idx].tagName]) return true;
+            }
+            return false;
+        }
+        function start() {
+            if (check()) { fire(); return; }
+            var observer = new MutationObserver(function() {
+                if (check()) { fire(); observer.disconnect(); }
+            });
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+        }
+        if (document.body) { start(); }
+        else { document.addEventListener('DOMContentLoaded', start, { once: true }); }
+    })();
+    </script>
+    <script>
+    (function() {
+        if (window.self === window.top) return;
+        var APP_ID = "6a5ea2ccee1afda4efbe998a";
+        var PREVIEW_TYPE = "latest_preview";
+        var on404 = false;
+        var booted = false;
+        function detect() { return !!document.querySelector('[data-source-location^="PageNotFound:"]'); }
+        function payload() { return { app_id: APP_ID, preview_type: PREVIEW_TYPE, url_path: window.location.pathname }; }
+        function tick() {
+            var now = detect();
+            if (now && !on404) {
+                on404 = true;
+                window.parent.postMessage({ type: 'PREVIEW_PAGE_NOT_FOUND', payload: payload() }, '*');
+            } else if (!now && (on404 || !booted)) {
+                // On first tick of a fresh document, emit a cleared signal even when
+                // not currently on a 404 — the parent may have latched is404=true from
+                // a previous document at the same URL (e.g. after an iframe reload).
+                on404 = false;
+                window.parent.postMessage({ type: 'PREVIEW_PAGE_NOT_FOUND_CLEARED', payload: payload() }, '*');
+            }
+            booted = true;
+        }
+        function start() {
+            tick();
+            new MutationObserver(tick).observe(document.body, { childList: true, subtree: true });
+        }
+        if (document.body) { start(); }
+        else { document.addEventListener('DOMContentLoaded', start, { once: true }); }
+    })();
+    </script>
+    <script>
+    (function() {
+        if (window.self === window.top) return;
+        function postUnsupported(reason) {
+            window.parent.postMessage({
+                type: 'IFRAME_FIRST_CONTENTFUL_PAINT_UNSUPPORTED',
+                payload: { reason: reason, userAgent: navigator.userAgent }
+            }, '*');
+        }
+        if (typeof PerformanceObserver === 'undefined') {
+            postUnsupported('no_performance_observer');
+            return;
+        }
+        try {
+            var obs = new PerformanceObserver(function(list) {
+                var entries = list.getEntries();
+                for (var i = 0; i < entries.length; i++) {
+                    if (entries[i].name === 'first-contentful-paint') {
+                        obs.disconnect();
+                        window.parent.postMessage({ type: 'IFRAME_FIRST_CONTENTFUL_PAINT' }, '*');
+                        return;
+                    }
+                }
+            });
+            obs.observe({ type: 'paint', buffered: true });
+        } catch (e) {
+            postUnsupported('observe_threw:' + (e && e.name ? e.name : 'Error'));
+        }
+    })();
+    </script>
+    <script>
+    (function() {
+        if (window.self === window.top) return;
+        var lastUrl = window.location.href;
+        function notify() {
+            var url = window.location.href;
+            if (url === lastUrl) return;
+            lastUrl = url;
+            window.parent.postMessage({ type: 'APP_CHANGED_URL', url: url }, '*');
+        }
+        var origPush = history.pushState.bind(history);
+        history.pushState = function() { origPush.apply(history, arguments); notify(); };
+        var origReplace = history.replaceState.bind(history);
+        history.replaceState = function() { origReplace.apply(history, arguments); notify(); };
+        window.addEventListener('popstate', notify);
+        window.parent.postMessage({ type: 'APP_CHANGED_URL', url: window.location.href }, '*');
+    })();
+    </script>
+    
+    <link rel="icon" type="image/svg+xml" href="https://base44.com/logo_v2.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="https://preview--adventurous-monograph-design-lab.base44.app/manifest.json">
+    <meta name="description" content="Emily Sole — Houston&#39;s premier custom jewelry designer. GIA Graduate Gemologist &amp; certified designer with over 22 years creating one-of-a-kind pieces.">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./css2" rel="stylesheet">
+    <title>Emily Sole — Houston's Premier Custom Jewelry Designer</title>
+    <script type="module" crossorigin="" src="./index-qJ9d7yve.js.download"></script>
+    <link rel="stylesheet" crossorigin="" href="./index-BhNbQDD6.css">
+    <script type="module">
+if (window.self === window.top) {
+  let lastPath = "";
+  function getPageNameFromPath(path) {
+    const segments = path.split("/").filter(Boolean);
+    return segments[0] || null;
+  }
+  function trackPageView() {
+    const path = window.location.pathname;
+    if (path === lastPath) return;
+    lastPath = path;
+    const pageName = getPageNameFromPath(path) || "home";
+    const appId = "6a5ea2ccee1afda4efbe998a";
+    if (!appId) return;
+    fetch(`/api/app-logs/${appId}/log-user-in-app/${pageName}`, {
+      method: "POST",
+    }).catch(() => {});
+  }
+  const originalPushState = history.pushState.bind(history);
+  history.pushState = function (...args) {
+    originalPushState(...args);
+    trackPageView();
+  };
+  const originalReplaceState = history.replaceState.bind(history);
+  history.replaceState = function (...args) {
+    originalReplaceState(...args);
+    trackPageView();
+  };
+  window.addEventListener("popstate", trackPageView);
+  trackPageView();
+}
+</script>
+  <script src="./datadog-rum.js.download"></script><script src="./datadog-logs.js.download"></script></head>
+  <body>
+    <div id="root"><main class="bg-background"><header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none"><div class="hairline border-t-0 border-b bg-background/80 backdrop-blur-md"><nav class="mx-auto max-w-[1600px] px-6 md:px-12 h-16 flex items-center justify-between"><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#top" class="font-display text-2xl md:text-3xl tracking-tight leading-none">emily sole</a><div class="hidden md:flex items-center gap-8 font-mono text-[11px] uppercase tracking-mono"><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#work" class="hover:text-[hsl(var(--accent))] transition-colors">Work</a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#about" class="hover:text-[hsl(var(--accent))] transition-colors">About</a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#reviews" class="hover:text-[hsl(var(--accent))] transition-colors">Reviews</a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="hover:text-[hsl(var(--accent))] transition-colors">Contact</a></div><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="font-mono text-[11px] uppercase tracking-mono border border-foreground/30 px-4 py-2 hover:bg-foreground hover:text-background transition-colors">Book a Consultation</a></nav></div></header><section id="top" class="relative h-screen min-h-[640px] w-full overflow-hidden bg-background"><div class="absolute inset-0 transition-transform duration-700 ease-out will-change-transform" style="transform: scale(1.08) translate(1.37942px, -2.23881px);"><img src="./19c0b3e3b_generated_ff3c0362.png" alt="A brilliant-cut diamond engagement ring resting on heavy textured cream paper, lit softly from the left" class="h-full w-full object-cover transition-opacity duration-[2000ms] opacity-50"></div><div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/10 to-background"></div><div class="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"><p class="font-mono text-[11px] uppercase tracking-mono text-foreground/60 mb-6 reveal in">Est. Houston, Texas — GIA Graduate Gemologist</p><h1 class="font-display font-light leading-[0.85] tracking-[-0.04em] text-balance" style="font-size: clamp(3.5rem, 13vw, 15rem);">Emily Sole</h1><p class="mt-8 max-w-xl font-body text-base md:text-lg leading-relaxed text-foreground/70 reveal in">Houston's premier custom jewelry designer. One-of-a-kind pieces, crafted with master craftsmen for over twenty-two years.</p></div><div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] uppercase tracking-mono text-foreground/50 animate-pulse">Scroll</div></section><section id="about" class="relative"><div class="hairline"></div><div class="mx-auto max-w-[1600px] px-6 md:px-12 py-24 md:py-40 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16"><div class="md:col-span-5 md:col-start-1 reveal in"><div class="sticky top-24"><span class="inline-block relative aspect-[3/4] w-full bg-secondary"><img src="./32d855f46_generated_e46d58c5.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/32d855f46_generated_e46d58c5.png/v1/fit/w_558,h_745,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/32d855f46_generated_e46d58c5.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/32d855f46_generated_e46d58c5.png/v1/fit/w_1117,h_1489,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/32d855f46_generated_e46d58c5.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/32d855f46_generated_e46d58c5.png/v1/fit/w_1675,h_2234,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/32d855f46_generated_e46d58c5.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-contain" alt="An elegant female master jeweler photographed in her minimalist Houston studio"></span></div></div><div class="md:col-span-6 md:col-start-7 flex flex-col justify-center"><p class="font-mono text-[11px] uppercase tracking-mono text-foreground/50 mb-8 reveal in">01 — The Designer</p><h2 class="font-display font-light leading-[0.95] tracking-[-0.03em] text-balance reveal in" style="font-size: clamp(2.5rem, 5vw, 4.5rem);">A living monograph of craft &amp; intent.</h2><div class="mt-10 space-y-6 font-body text-lg leading-relaxed text-foreground/80 reveal in"><p>Emily Sole is a GIA Graduate Gemologist and GIA Certified Jewelry Designer with over twenty-two years of experience working alongside master craftsmen to create one-of-a-kind pieces you will cherish forever.</p><p>She specializes in diamonds, colored stones, and pearls across all price points and styles — from the first sketch to the final polish.</p></div><div class="mt-12 reveal in"><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-mono"><span class="border-b border-foreground pb-1 group-hover:text-[hsl(var(--accent))] group-hover:border-[hsl(var(--accent))] transition-colors">Create my wish list</span></a></div></div></div></section><section id="work" class="relative"><div class="hairline"></div><div class="mx-auto max-w-[1600px] px-6 md:px-12 py-24 md:py-40"><div class="flex items-end justify-between mb-16 md:mb-24"><div><p class="font-mono text-[11px] uppercase tracking-mono text-foreground/50 mb-6 reveal in">02 — The Curated Archive</p><h2 class="font-display font-light leading-[0.9] tracking-[-0.03em] reveal in" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">The Work</h2></div><p class="hidden md:block max-w-xs font-body text-sm leading-relaxed text-foreground/60 reveal in">Diamonds, colored stones, and pearls — composed by hand, one piece at a time.</p></div><div class="grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-20 md:gap-y-32"><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group reveal block md:col-span-5 in"><div class="relative overflow-hidden bg-secondary aspect-[4/5]"><span class="inline-block relative h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"><img src="./f9abfe062_generated_dfcc9e94.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/f9abfe062_generated_dfcc9e94.png/v1/fill/w_558,h_698,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/f9abfe062_generated_dfcc9e94.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/f9abfe062_generated_dfcc9e94.png/v1/fill/w_1117,h_1396,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/f9abfe062_generated_dfcc9e94.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/f9abfe062_generated_dfcc9e94.png/v1/fill/w_1675,h_2094,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/f9abfe062_generated_dfcc9e94.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="A cushion-cut diamond solitaire engagement ring on a platinum band over warm bone paper"></span></div><div class="mt-5 flex items-baseline justify-between"><h3 class="font-display font-light tracking-tight" style="font-size: clamp(1.6rem, 2.4vw, 2.4rem);">Engagement Rings</h3><span class="font-mono text-[11px] uppercase tracking-mono text-foreground/40">01</span></div></a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group reveal block md:col-span-6 md:col-start-8 in"><div class="relative overflow-hidden bg-secondary aspect-[4/5]"><span class="inline-block relative h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"><img src="./98e5609b1_generated_05cf0b8e.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/98e5609b1_generated_05cf0b8e.png/v1/fill/w_558,h_698,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/98e5609b1_generated_05cf0b8e.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/98e5609b1_generated_05cf0b8e.png/v1/fill/w_1117,h_1396,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/98e5609b1_generated_05cf0b8e.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/98e5609b1_generated_05cf0b8e.png/v1/fill/w_1675,h_2094,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/98e5609b1_generated_05cf0b8e.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="Two stacked platinum and rose gold wedding bands resting on textured cream paper"></span></div><div class="mt-5 flex items-baseline justify-between"><h3 class="font-display font-light tracking-tight" style="font-size: clamp(1.6rem, 2.4vw, 2.4rem);">Wedding Bands</h3><span class="font-mono text-[11px] uppercase tracking-mono text-foreground/40">02</span></div></a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group reveal block md:col-span-6 md:col-start-1 in"><div class="relative overflow-hidden bg-secondary aspect-[4/5]"><span class="inline-block relative h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"><img src="./778f7e369_generated_36c39490.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/778f7e369_generated_36c39490.png/v1/fill/w_558,h_698,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/778f7e369_generated_36c39490.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/778f7e369_generated_36c39490.png/v1/fill/w_1117,h_1396,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/778f7e369_generated_36c39490.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/778f7e369_generated_36c39490.png/v1/fill/w_1675,h_2094,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/778f7e369_generated_36c39490.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="A delicate pearl and diamond pendant necklace draped on a warm stone surface"></span></div><div class="mt-5 flex items-baseline justify-between"><h3 class="font-display font-light tracking-tight" style="font-size: clamp(1.6rem, 2.4vw, 2.4rem);">Necklaces &amp; Earrings</h3><span class="font-mono text-[11px] uppercase tracking-mono text-foreground/40">03</span></div></a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group reveal block md:col-span-5 md:col-start-8 in"><div class="relative overflow-hidden bg-secondary aspect-[4/5]"><span class="inline-block relative h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"><img src="./5ee382132_generated_364ff3a3.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/5ee382132_generated_364ff3a3.png/v1/fill/w_558,h_698,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/5ee382132_generated_364ff3a3.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/5ee382132_generated_364ff3a3.png/v1/fill/w_1117,h_1396,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/5ee382132_generated_364ff3a3.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/5ee382132_generated_364ff3a3.png/v1/fill/w_1675,h_2094,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/5ee382132_generated_364ff3a3.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="A master jeweler&#39;s hands holding fine tweezers over a gemstone on a warm workbench"></span></div><div class="mt-5 flex items-baseline justify-between"><h3 class="font-display font-light tracking-tight" style="font-size: clamp(1.6rem, 2.4vw, 2.4rem);">The Experience</h3><span class="font-mono text-[11px] uppercase tracking-mono text-foreground/40">04</span></div></a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group reveal block md:col-span-5 md:col-start-2 in"><div class="relative overflow-hidden bg-secondary aspect-[4/5]"><span class="inline-block relative h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"><img src="./510d2eb98_generated_663f9cb1.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/510d2eb98_generated_663f9cb1.png/v1/fill/w_558,h_698,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/510d2eb98_generated_663f9cb1.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/510d2eb98_generated_663f9cb1.png/v1/fill/w_1117,h_1396,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/510d2eb98_generated_663f9cb1.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/510d2eb98_generated_663f9cb1.png/v1/fill/w_1675,h_2094,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/510d2eb98_generated_663f9cb1.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="A vintage heirloom brooch with old-cut diamonds and sapphires beside loose gemstones on cream paper"></span></div><div class="mt-5 flex items-baseline justify-between"><h3 class="font-display font-light tracking-tight" style="font-size: clamp(1.6rem, 2.4vw, 2.4rem);">Vintage &amp; Redesign</h3><span class="font-mono text-[11px] uppercase tracking-mono text-foreground/40">05</span></div></a><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group reveal block md:col-span-5 md:col-start-8 in"><div class="relative overflow-hidden bg-secondary aspect-[4/5]"><span class="inline-block relative h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"><img src="./44f49f98a_generated_2d952726.webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/44f49f98a_generated_2d952726.png/v1/fill/w_558,h_698,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/44f49f98a_generated_2d952726.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/44f49f98a_generated_2d952726.png/v1/fill/w_1117,h_1396,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/44f49f98a_generated_2d952726.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/44f49f98a_generated_2d952726.png/v1/fill/w_1675,h_2094,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/44f49f98a_generated_2d952726.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="Loose faceted emerald, ruby, and sapphire gemstones arranged on a warm bone textured surface"></span></div><div class="mt-5 flex items-baseline justify-between"><h3 class="font-display font-light tracking-tight" style="font-size: clamp(1.6rem, 2.4vw, 2.4rem);">Colored Stones</h3><span class="font-mono text-[11px] uppercase tracking-mono text-foreground/40">06</span></div></a></div></div><div class="pointer-events-none fixed z-40 hidden lg:block" style="transform: translate(-50%, -50%); left: 559px; top: 110px;"></div></section><section id="reviews" class="relative bg-secondary/50"><div class="hairline"></div><div class="mx-auto max-w-[1600px] px-6 md:px-12 py-24 md:py-40"><p class="font-mono text-[11px] uppercase tracking-mono text-foreground/50 mb-16 reveal in">03 — Press + Reviews</p><div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16"><figure class="reveal flex flex-col in"><span class="font-display text-7xl leading-none text-[hsl(var(--accent))] mb-4" aria-hidden="true">“</span><blockquote class="font-display font-light text-xl md:text-2xl leading-snug text-foreground/90 tracking-tight">Thank you so much for helping me re-imagine my engagement setting. It is a very special ring to me and you made it more beautiful and dear to my heart. You are so much fun to work with!</blockquote><figcaption class="mt-8 font-mono text-[11px] uppercase tracking-mono text-foreground/50">— Sara</figcaption></figure><figure class="reveal flex flex-col in"><span class="font-display text-7xl leading-none text-[hsl(var(--accent))] mb-4" aria-hidden="true">“</span><blockquote class="font-display font-light text-xl md:text-2xl leading-snug text-foreground/90 tracking-tight">Emily — Thank you for the easiest jewelry buying experience ever! More to come. Lots of love!</blockquote><figcaption class="mt-8 font-mono text-[11px] uppercase tracking-mono text-foreground/50">— Marco</figcaption></figure><figure class="reveal flex flex-col in"><span class="font-display text-7xl leading-none text-[hsl(var(--accent))] mb-4" aria-hidden="true">“</span><blockquote class="font-display font-light text-xl md:text-2xl leading-snug text-foreground/90 tracking-tight">I still remember Claudia's reaction the day we left your office…she said 'Brian, I'm blown away!' I can't say thank you enough for all the hand holding throughout the process…and of course the perfect ring.</blockquote><figcaption class="mt-8 font-mono text-[11px] uppercase tracking-mono text-foreground/50">— Brian + Claudia</figcaption></figure></div></div></section><section class="relative"><div class="hairline"></div><div class="mx-auto max-w-[1600px] px-6 md:px-12 py-24 md:py-40 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center"><div class="md:col-span-7 reveal in"><p class="font-mono text-[11px] uppercase tracking-mono text-foreground/50 mb-8">04 — The Process</p><h2 class="font-display font-light leading-[0.92] tracking-[-0.03em] text-balance" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">Work with Emily on your custom engagement ring.</h2><p class="mt-10 max-w-xl font-body text-lg leading-relaxed text-foreground/70">From design, to mock up, to delivery — Emily is there every step of the way to help you craft your perfect ring.</p><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#contact" class="group mt-10 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-mono"><span class="border-b border-foreground pb-1 group-hover:text-[hsl(var(--accent))] group-hover:border-[hsl(var(--accent))] transition-colors">Get more info on engagement rings</span></a></div><div class="md:col-span-4 md:col-start-9 reveal in"><span class="inline-block relative aspect-[3/4] w-full bg-secondary"><img src="./32d855f46_generated_e46d58c5(1).webp" srcset="https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/32d855f46_generated_e46d58c5.png/v1/fill/w_558,h_745,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/32d855f46_generated_e46d58c5.webp 1x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/32d855f46_generated_e46d58c5.png/v1/fill/w_1117,h_1489,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/32d855f46_generated_e46d58c5.webp 2x, https://media.base44.com/images/public/6a5ea2ccee1afda4efbe998a/32d855f46_generated_e46d58c5.png/v1/fill/w_1675,h_2234,al_c,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/32d855f46_generated_e46d58c5.webp 3x" loading="lazy" class="w-full h-full inset-0 absolute object-cover" alt="The designer at work crafting a custom engagement ring in her Houston studio"></span></div></div></section><footer id="contact" class="relative bg-foreground text-background"><div class="mx-auto max-w-[1600px] px-6 md:px-12 pt-24 md:pt-40 pb-10"><p class="font-mono text-[11px] uppercase tracking-mono text-background/50 mb-10 reveal in">05 — Begin</p><a href="mailto:info@emilysole.com" class="block reveal in"><h2 class="font-display font-light leading-[0.85] tracking-[-0.04em] text-balance hover:text-[hsl(var(--accent))] transition-colors duration-500" style="font-size: clamp(3rem, 14vw, 16rem);">Start a<br>Project</h2></a><div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-10 border-t border-background/20 pt-12"><div class="reveal in"><p class="font-mono text-[11px] uppercase tracking-mono text-background/40 mb-4">Location</p><p class="font-body text-base leading-relaxed text-background/80">1800 Augusta Dr<br>Houston, TX 77057</p></div><div class="reveal in"><p class="font-mono text-[11px] uppercase tracking-mono text-background/40 mb-4">Contact</p><p class="font-body text-base leading-relaxed text-background/80"><a href="tel:+15048106543" class="block hover:text-[hsl(var(--accent))] transition-colors">504.810.6543</a><a href="mailto:info@emilysole.com" class="block hover:text-[hsl(var(--accent))] transition-colors">info@emilysole.com</a></p></div><div class="reveal in"><p class="font-mono text-[11px] uppercase tracking-mono text-background/40 mb-4">Hours</p><p class="font-body text-base leading-relaxed text-background/80">By appointment only<br>Tuesday — Saturday</p></div></div><div class="mt-20 flex flex-wrap items-center justify-between gap-6 border-t border-background/20 pt-8"><p class="font-mono text-[10px] uppercase tracking-mono text-background/40">© 2026 Emily Sole — GIA Graduate Gemologist</p><div class="flex items-center gap-6 font-mono text-[10px] uppercase tracking-mono text-background/50"><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#about" class="hover:text-[hsl(var(--accent))] transition-colors">About</a><span class="text-background/20">/</span><a href="https://preview--adventurous-monograph-design-lab.base44.app/?hide_badge=true&amp;base44_data_env=prod&amp;server_url=https%3A%2F%2Fpreview--adventurous-monograph-design-lab.base44.app&amp;_b44_commit=63089088eb6750a1e783d3e061a5716c0d9d5a7d&amp;previewFE_version=1#work" class="hover:text-[hsl(var(--accent))] transition-colors">Work</a><span class="text-background/20">/</span><a href="tel:+15048106543" class="hover:text-[hsl(var(--accent))] transition-colors">Call</a></div></div></div></footer></main><div class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"><div class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></div></div></div>
+  
+
+</body></html>

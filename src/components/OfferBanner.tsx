@@ -14,7 +14,7 @@ return (
 
 
 <Image
-src="/images/offer.jpg"
+src="/images/offers.jpg"
 alt="Wedding Offer"
 width={1600}
 height={600}
