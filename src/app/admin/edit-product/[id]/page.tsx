@@ -1,12 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 
-import { useProducts } from "@/context/ProductContext";
+import { useEffect, useState } from "react";
+
+import { 
+  useParams,
+  useRouter
+} from "next/navigation";
+
+
+import {
+  doc,
+  getDoc,
+  updateDoc
+} from "firebase/firestore";
+
+
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "firebase/storage";
+
+
+import {
+  db,
+  storage
+} from "@/lib/firebase";
+
+
+
 
 
 export default function EditProductPage(){
+
 
 
 const router = useRouter();
@@ -14,137 +41,239 @@ const router = useRouter();
 const params = useParams();
 
 
-const id = Number(params.id);
-
-
-
-const {
-
-products,
-
-updateProduct
-
-}=useProducts();
+const id = params.id as string;
 
 
 
 
 
-const product = products.find(
+const [name,setName]=useState("");
 
-(item)=>item.id === id
+const [price,setPrice]=useState("");
 
-);
+const [category,setCategory]=useState("Gold");
+
+const [weight,setWeight]=useState("");
+
+const [purity,setPurity]=useState("");
+
+const [image,setImage]=useState("");
+
+const [newImage,setNewImage]=useState<File | null>(null);
+
+
+const [loading,setLoading]=useState(false);
 
 
 
 
 
-const [name,setName] = useState(product?.name || "");
+// Load Product
 
-const [price,setPrice] = useState(
 
-product ? String(product.price) : ""
+useEffect(()=>{
 
-);
 
-const [category,setCategory] = useState(
+async function loadProduct(){
 
-product?.category || "Gold"
 
-);
+const snap = await getDoc(
 
-const [weight,setWeight] = useState(
-
-product?.weight || ""
-
-);
-
-const [purity,setPurity] = useState(
-
-product?.purity || ""
-
-);
-
-const [image,setImage] = useState(
-
-product?.image || ""
+doc(db,"products",id)
 
 );
 
 
 
+if(snap.exists()){
+
+
+const data=snap.data();
+
+
+setName(data.name);
+
+setPrice(String(data.price));
+
+setCategory(data.category);
+
+setWeight(data.weight);
+
+setPurity(data.purity);
+
+setImage(data.image);
+
+
+
+}
+
+
+}
+
+
+
+if(id){
+
+loadProduct();
+
+}
+
+
+
+},[id]);
 
 
 
 
-function handleUpdate(){
 
 
-if(!product){
 
-alert("Product not found");
 
-return;
+function handleImage(e:any){
+
+
+const file=e.target.files[0];
+
+
+if(file){
+
+setNewImage(file);
+
+
+}
+
 
 }
 
 
 
 
-updateProduct({
 
-id:product.id,
 
-name:name,
+
+
+
+async function handleUpdate(){
+
+
+
+try{
+
+
+setLoading(true);
+
+
+
+let imageUrl=image;
+
+
+
+
+
+// Upload new image
+
+
+if(newImage){
+
+
+
+const imageRef = ref(
+
+storage,
+
+`products/${Date.now()}-${newImage.name}`
+
+);
+
+
+
+await uploadBytes(
+
+imageRef,
+
+newImage
+
+);
+
+
+
+imageUrl = await getDownloadURL(
+
+imageRef
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+await updateDoc(
+
+doc(db,"products",id),
+
+{
+
+
+name,
 
 price:Number(price),
 
-category:category,
+category,
 
-weight:weight,
+weight,
 
-purity:purity,
+purity,
 
-image:image
-
-});
-
-
-
-
-alert("Product Updated Successfully");
-
-
-router.push("/admin");
+image:imageUrl
 
 
 }
 
-
-
-
-
-
-
-if(!product){
-
-
-return (
-
-<main className="min-h-screen flex items-center justify-center text-black">
-
-<h1>
-
-Product Not Found
-
-</h1>
-
-</main>
 
 );
 
 
+
+
+
+
+alert("Product Updated Successfully ✅");
+
+
+
+router.push("/admin/products");
+
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+alert("Update Failed");
+
+
+}
+
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+
 }
 
 
@@ -153,20 +282,39 @@ Product Not Found
 
 
 
-return (
 
-<main className="min-h-screen bg-[#f8f4ee] py-12 text-black">
+
+return(
+
+
+<main className="
+min-h-screen
+bg-[#f8f4ee]
+py-12
+text-black
+">
+
 
 
 <section className="max-w-xl mx-auto px-6">
 
 
 
-<div className="bg-white shadow rounded-xl p-8">
+<div className="
+bg-white
+shadow-xl
+rounded-2xl
+p-8
+">
 
 
 
-<h1 className="text-3xl font-bold text-[#6b4d1f] mb-8">
+<h1 className="
+text-3xl
+font-bold
+text-[#6b4d1f]
+mb-8
+">
 
 Edit Product
 
@@ -187,7 +335,13 @@ onChange={(e)=>setName(e.target.value)}
 
 placeholder="Product Name"
 
-className="w-full border p-3 rounded mb-4 text-black bg-white"
+className="
+w-full
+border
+p-3
+rounded
+mb-4
+"
 
 />
 
@@ -207,9 +361,16 @@ onChange={(e)=>setPrice(e.target.value)}
 
 placeholder="Price"
 
-className="w-full border p-3 rounded mb-4 text-black bg-white"
+className="
+w-full
+border
+p-3
+rounded
+mb-4
+"
 
 />
+
 
 
 
@@ -223,33 +384,34 @@ value={category}
 
 onChange={(e)=>setCategory(e.target.value)}
 
-className="w-full border p-3 rounded mb-4 text-black bg-white"
+className="
+w-full
+border
+p-3
+rounded
+mb-4
+"
 
 >
 
 
-<option>
+<option>Gold</option>
 
-Gold
+<option>Diamond</option>
 
-</option>
+<option>Platinum</option>
 
+<option>Bridal</option>
 
-<option>
+<option>Ring</option>
 
-Diamond
+<option>Necklace</option>
 
-</option>
-
-
-<option>
-
-Platinum
-
-</option>
+<option>Earrings</option>
 
 
 </select>
+
 
 
 
@@ -265,7 +427,13 @@ onChange={(e)=>setWeight(e.target.value)}
 
 placeholder="Weight"
 
-className="w-full border p-3 rounded mb-4 text-black bg-white"
+className="
+w-full
+border
+p-3
+rounded
+mb-4
+"
 
 />
 
@@ -283,7 +451,13 @@ onChange={(e)=>setPurity(e.target.value)}
 
 placeholder="Purity"
 
-className="w-full border p-3 rounded mb-4 text-black bg-white"
+className="
+w-full
+border
+p-3
+rounded
+mb-4
+"
 
 />
 
@@ -293,15 +467,45 @@ className="w-full border p-3 rounded mb-4 text-black bg-white"
 
 
 
+
+<img
+
+src={image}
+
+alt="product"
+
+className="
+w-40
+h-40
+object-cover
+rounded-xl
+mb-4
+"
+
+/>
+
+
+
+
+
+
+
+
 <input
 
-value={image}
+type="file"
 
-onChange={(e)=>setImage(e.target.value)}
+accept="image/*"
 
-placeholder="Image URL"
+onChange={handleImage}
 
-className="w-full border p-3 rounded mb-4 text-black bg-white"
+className="
+w-full
+border
+p-3
+rounded
+mb-5
+"
 
 />
 
@@ -316,13 +520,36 @@ className="w-full border p-3 rounded mb-4 text-black bg-white"
 
 onClick={handleUpdate}
 
-className="w-full bg-[#9b7a3d] text-white py-4 rounded-xl"
+disabled={loading}
+
+className="
+w-full
+bg-[#9b7a3d]
+text-white
+py-4
+rounded-xl
+"
 
 >
 
-Update Product
+
+{
+
+loading
+
+?
+
+"Updating..."
+
+:
+
+"Update Product"
+
+}
+
 
 </button>
+
 
 
 
@@ -336,6 +563,7 @@ Update Product
 
 
 </main>
+
 
 );
 
