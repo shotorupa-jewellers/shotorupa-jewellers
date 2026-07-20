@@ -1,15 +1,98 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function Header(){
 
+
 const [open,setOpen]=useState(false);
+
+const router = useRouter();
+
+const menuRef = useRef<HTMLDivElement>(null);
+
+
+
+
+
+useEffect(()=>{
+
+
+function closeMenu(e:any){
+
+if(
+
+menuRef.current &&
+
+!menuRef.current.contains(e.target)
+
+){
+
+setOpen(false);
+
+}
+
+
+}
+
+
+document.addEventListener(
+
+"mousedown",
+
+closeMenu
+
+);
+
+
+
+return()=>{
+
+document.removeEventListener(
+
+"mousedown",
+
+closeMenu
+
+);
+
+}
+
+
+
+},[]);
+
+
+
+
+
+
+
+function logout(){
+
+
+localStorage.removeItem("admin");
+
+
+router.push("/admin/login");
+
+
+}
+
+
+
+
+
 
 
 return (
 
-<header className="
+
+<header
+
+className="
 h-20
 bg-white
 shadow-sm
@@ -17,33 +100,50 @@ flex
 items-center
 justify-between
 px-8
-">
+"
+
+
+>
+
+
 
 
 {/* Left */}
 
+
 <div>
 
-<h1 className="
+
+<h1
+
+className="
 text-2xl
 font-serif
 font-bold
 text-[#6b4d1f]
-">
+"
+
+>
 
 Admin Dashboard
 
 </h1>
 
 
-<p className="
+
+<p
+
+className="
 text-sm
 text-gray-500
-">
+"
+
+>
 
 Manage Shotorupa Jewellers
 
 </p>
+
 
 
 </div>
@@ -52,42 +152,61 @@ Manage Shotorupa Jewellers
 
 
 
+
+
 {/* Right */}
 
-<div className="
+
+<div
+
+className="
 flex
 items-center
-gap-5
-">
+gap-6
+"
+
+>
+
 
 
 {/* Notification */}
 
-<button className="
+
+<button
+
+className="
 relative
 text-2xl
-">
+"
+
+>
 
 🔔
 
-<span className="
+
+<span
+
+className="
 absolute
-top-0
-right-0
+-top-1
+-right-2
 bg-red-500
 text-white
 text-xs
 rounded-full
-w-4
-h-4
+w-5
+h-5
 flex
 items-center
 justify-center
-">
+"
+
+>
 
 3
 
 </span>
+
 
 
 </button>
@@ -97,9 +216,19 @@ justify-center
 
 
 
+
+
+
 {/* Profile */}
 
-<div className="relative">
+
+<div
+
+className="relative"
+
+ref={menuRef}
+
+>
 
 
 <button
@@ -112,13 +241,14 @@ items-center
 gap-3
 "
 
-
 >
 
 
-<div className="
-w-10
-h-10
+<div
+
+className="
+w-11
+h-11
 rounded-full
 bg-[#d4af37]
 flex
@@ -126,35 +256,40 @@ items-center
 justify-center
 font-bold
 text-black
-">
+"
+
+>
 
 A
 
 </div>
 
 
-<div className="
+
+<div
+
+className="
 hidden
 md:block
 text-left
-">
+"
 
-<p className="
-font-semibold
-">
+>
+
+
+<p className="font-semibold">
 
 Admin
 
 </p>
 
-<p className="
-text-xs
-text-gray-500
-">
+
+<p className="text-xs text-gray-500">
 
 Owner
 
 </p>
+
 
 
 </div>
@@ -167,30 +302,46 @@ Owner
 
 
 
-{
-open && (
 
-<div className="
+
+
+
+{
+
+open &&
+
+
+<div
+
+className="
 absolute
 right-0
 mt-3
-w-40
+w-48
 bg-white
 shadow-xl
 rounded-xl
 p-3
 z-50
-">
+border
+"
+
+>
 
 
 <button
+
+onClick={()=>router.push("/admin/profile")}
+
 className="
 w-full
 text-left
+px-3
 py-2
 hover:bg-gray-100
-rounded
+rounded-lg
 "
+
 >
 
 👤 Profile
@@ -199,15 +350,26 @@ rounded
 
 
 
+
+
+
+
 <button
+
+
+onClick={logout}
+
+
 className="
 w-full
 text-left
+px-3
 py-2
-hover:bg-gray-100
-rounded
+hover:bg-red-50
+rounded-lg
 text-red-600
 "
+
 >
 
 🚪 Logout
@@ -215,23 +377,33 @@ text-red-600
 </button>
 
 
+
+
 </div>
 
-)
+
 
 }
 
 
 
+
+</div>
+
+
+
+
+
 </div>
 
 
 
-</div>
 
 
 
 </header>
+
+
 
 );
 
