@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -22,11 +22,15 @@ const firebaseConfig = {
 };
 
 
+// Prevent Firebase re-initialize error
+const app =
+  getApps().length === 0
+    ? initializeApp(firebaseConfig)
+    : getApps()[0];
 
-const app = initializeApp(firebaseConfig);
 
+// Firebase Services
 
 export const auth = getAuth(app);
-
 
 export const db = getFirestore(app);
