@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useProducts } from "@/context/ProductContext";
-
 import { db } from "@/lib/firebase";
 
 import {
@@ -13,24 +12,17 @@ import {
 } from "firebase/firestore";
 
 
-
 export default function AdminPage(){
-
 
 
 const {
 
 products=[],
-
 deletedProducts=[],
-
 deleteProduct,
-
 restoreProduct
 
 }=useProducts();
-
-
 
 
 
@@ -40,9 +32,7 @@ const [orders,setOrders] = useState<any[]>([]);
 
 
 
-
 useEffect(()=>{
-
 
 
 const unsubscribe = onSnapshot(
@@ -55,9 +45,7 @@ collection(db,"orders"),
 const data = snapshot.docs.map(doc=>(
 
 {
-
 id:doc.id,
-
 ...doc.data()
 
 }
@@ -65,21 +53,16 @@ id:doc.id,
 ));
 
 
-
 setOrders(data);
-
 
 
 }
 
 
-
 );
 
 
-
 return ()=>unsubscribe();
-
 
 
 },[]);
@@ -88,14 +71,9 @@ return ()=>unsubscribe();
 
 
 
-
-
-
 return(
 
-
 <main className="min-h-screen bg-[#f8f4ee] py-12 text-black">
-
 
 
 <section className="max-w-7xl mx-auto px-6">
@@ -104,7 +82,7 @@ return(
 
 
 
-<h1 className="text-4xl font-serif text-[#6b4d1f] mb-8">
+<h1 className="text-4xl font-serif text-[#6b4d1f] mb-10">
 
 SHOTORUPA ADMIN DASHBOARD
 
@@ -114,61 +92,53 @@ SHOTORUPA ADMIN DASHBOARD
 
 
 
+{/* Dashboard Cards */}
 
-
-{/* Cards */}
-
-
-<div className="grid md:grid-cols-3 gap-6 mb-10">
-
-
+<div className="grid md:grid-cols-4 gap-6 mb-10">
 
 
 
 <div className="bg-white shadow rounded-xl p-6">
 
 <h2 className="text-xl font-bold">
-
-Total Products
-
+Products
 </h2>
 
-
 <p className="text-4xl text-[#9b7a3d] mt-3">
-
 {products.length}
-
 </p>
-
 
 </div>
 
 
 
 
+<div className="bg-white shadow rounded-xl p-6">
+
+<h2 className="text-xl font-bold">
+Orders
+</h2>
+
+<p className="text-4xl text-[#9b7a3d] mt-3">
+{orders.length}
+</p>
+
+</div>
+
 
 
 
 <div className="bg-white shadow rounded-xl p-6">
 
 <h2 className="text-xl font-bold">
-
-Deleted Products
-
+Deleted
 </h2>
-
 
 <p className="text-4xl text-red-600 mt-3">
-
 {deletedProducts.length}
-
 </p>
 
-
 </div>
-
-
-
 
 
 
@@ -176,22 +146,88 @@ Deleted Products
 <div className="bg-white shadow rounded-xl p-6">
 
 <h2 className="text-xl font-bold">
-
-Total Orders
-
+Customers
 </h2>
 
-
 <p className="text-4xl text-[#9b7a3d] mt-3">
-
-{orders.length}
-
+0
 </p>
+
+</div>
+
 
 
 </div>
 
 
+
+
+
+
+{/* Admin Menu */}
+
+
+<div className="bg-white shadow rounded-xl p-6 mb-10">
+
+
+<h2 className="text-2xl font-bold mb-6">
+⚙ Admin Panel
+</h2>
+
+
+<div className="grid md:grid-cols-3 gap-4">
+
+
+
+<Link
+href="/admin"
+className="bg-[#9b7a3d] text-white p-4 rounded-lg text-center"
+>
+Dashboard
+</Link>
+
+
+
+<Link
+href="/admin/add-product"
+className="bg-black text-white p-4 rounded-lg text-center"
+>
+Add Product
+</Link>
+
+
+
+
+<Link
+href="/admin/orders"
+className="bg-[#9b7a3d] text-white p-4 rounded-lg text-center"
+>
+Orders
+</Link>
+
+
+
+
+<Link
+href="/admin/customers"
+className="bg-black text-white p-4 rounded-lg text-center"
+>
+Customers
+</Link>
+
+
+
+
+<Link
+href="/admin/settings"
+className="bg-[#9b7a3d] text-white p-4 rounded-lg text-center"
+>
+Settings
+</Link>
+
+
+
+</div>
 
 
 </div>
@@ -207,17 +243,12 @@ Total Orders
 {/* Orders */}
 
 
-
 <div className="bg-white shadow rounded-xl p-6 mb-10">
 
 
-
 <h2 className="text-2xl font-bold mb-6">
-
 📦 Customer Orders
-
 </h2>
-
 
 
 
@@ -228,11 +259,8 @@ orders.length===0 ?
 
 
 <p>
-
 No Orders Found
-
 </p>
-
 
 
 :
@@ -241,59 +269,38 @@ No Orders Found
 orders.slice(0,5).map((order)=>(
 
 
-
 <div
-
 key={order.id}
-
 className="border-b py-4"
-
 >
 
 
-
 <h3 className="font-bold">
-
 {order.orderId}
-
 </h3>
 
 
-
 <p>
-
 Customer: {order.customer?.name}
-
 </p>
 
 
-
 <p>
-
 Phone: {order.customer?.phone}
-
 </p>
-
 
 
 <p>
-
 Total: ৳ {order.total?.toLocaleString()}
-
 </p>
-
 
 
 <p className="text-[#9b7a3d]">
-
 Status: {order.status}
-
 </p>
 
 
-
 </div>
-
 
 
 ))
@@ -316,7 +323,6 @@ View All Orders
 </Link>
 
 
-
 </div>
 
 
@@ -327,7 +333,7 @@ View All Orders
 
 
 
-{/* Product List */}
+{/* Products */}
 
 
 
@@ -339,11 +345,8 @@ View All Orders
 
 
 <h2 className="text-2xl font-bold">
-
 Product List
-
 </h2>
-
 
 
 
@@ -360,11 +363,7 @@ className="bg-[#9b7a3d] text-white px-5 py-3 rounded-lg"
 </Link>
 
 
-
 </div>
-
-
-
 
 
 
@@ -377,9 +376,7 @@ products.length===0 ?
 
 
 <p>
-
 No Product Found
-
 </p>
 
 
@@ -387,7 +384,6 @@ No Product Found
 
 
 products.map((product)=>(
-
 
 
 <div
@@ -403,7 +399,6 @@ className="flex justify-between items-center border-b py-5"
 <div className="flex gap-5 items-center">
 
 
-
 {
 
 product.image &&
@@ -414,7 +409,7 @@ src={product.image}
 
 alt={product.name}
 
-className="w-24 h-24 object-cover rounded-xl"
+className="w-24 h-24 rounded-xl object-cover"
 
 />
 
@@ -422,24 +417,16 @@ className="w-24 h-24 object-cover rounded-xl"
 
 
 
-
-
 <div>
 
-
 <h3 className="font-bold text-lg">
-
 {product.name}
-
 </h3>
 
 
 <p>
-
 ৳ {product.price.toLocaleString()}
-
 </p>
-
 
 
 <p className="text-gray-600">
@@ -457,13 +444,10 @@ className="w-24 h-24 object-cover rounded-xl"
 </p>
 
 
-
 </div>
 
 
 </div>
-
-
 
 
 
@@ -488,8 +472,6 @@ Edit
 
 
 
-
-
 <button
 
 onClick={()=>deleteProduct(product.id)}
@@ -508,10 +490,7 @@ Delete
 
 
 
-
-
 </div>
-
 
 
 ))
@@ -538,7 +517,6 @@ Delete
 <div className="bg-white shadow rounded-xl p-6">
 
 
-
 <h2 className="text-2xl font-bold mb-6">
 
 🗑 Deleted Product History
@@ -554,18 +532,14 @@ deletedProducts.length===0 ?
 
 
 <p>
-
 No Deleted Product
-
 </p>
 
 
 :
 
 
-
 deletedProducts.map((product)=>(
-
 
 
 <div
@@ -577,9 +551,7 @@ className="flex justify-between items-center border-b py-4"
 >
 
 
-
 <div>
-
 
 <h3 className="font-bold text-red-600">
 
@@ -589,14 +561,11 @@ className="flex justify-between items-center border-b py-4"
 
 
 <p>
-
 ৳ {product.price.toLocaleString()}
-
 </p>
 
 
 </div>
-
 
 
 
@@ -618,7 +587,6 @@ Restore
 </div>
 
 
-
 ))
 
 
@@ -627,7 +595,6 @@ Restore
 
 
 </div>
-
 
 
 
