@@ -2,17 +2,31 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyC8tKLew5DNDTk-EzfCX-Ne11ll5rWYQZw",
-  authDomain: "jewellers-123.firebaseapp.com",
-  projectId: "jewellers-123",
-  storageBucket: "jewellers-123.firebasestorage.app",
-  messagingSenderId: "970063305874",
-  appId: "1:970063305874:web:e3e2faf01988f81f055a4b",
-  measurementId: "G-HTBPHNF5YX",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+
+  measurementId:
+    process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
+
+
 
 const app = initializeApp(firebaseConfig);
 
+
 export const auth = getAuth(app);
+
+
 export const db = getFirestore(app);
