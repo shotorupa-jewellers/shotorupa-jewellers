@@ -9,10 +9,9 @@ import {
 } from "react";
 
 
-
 type Product = {
 
-  id:number;
+  id:string;
 
   name:string;
 
@@ -30,14 +29,11 @@ type Product = {
 
 
 
-
 type CartItem = Product & {
 
   quantity:number;
 
 };
-
-
 
 
 
@@ -50,13 +46,13 @@ type CartContextType = {
   addToCart:(product:Product)=>void;
 
 
-  removeFromCart:(id:number)=>void;
+  removeFromCart:(id:string)=>void;
 
 
-  increaseQuantity:(id:number)=>void;
+  increaseQuantity:(id:string)=>void;
 
 
-  decreaseQuantity:(id:number)=>void;
+  decreaseQuantity:(id:string)=>void;
 
 
   clearCart:()=>void;
@@ -66,15 +62,7 @@ type CartContextType = {
 
 
 
-
-
-
-
 const CartContext = createContext<CartContextType | null>(null);
-
-
-
-
 
 
 
@@ -92,12 +80,7 @@ children:ReactNode;
 
 
 
-
-
-
 const [cart,setCart] = useState<CartItem[]>([]);
-
-
 
 
 
@@ -113,16 +96,12 @@ const savedCart = localStorage.getItem("cart");
 
 if(savedCart){
 
-
 setCart(JSON.parse(savedCart));
-
 
 }
 
 
 },[]);
-
-
 
 
 
@@ -144,7 +123,6 @@ JSON.stringify(cart)
 
 
 },[cart]);
-
 
 
 
@@ -176,9 +154,12 @@ if(exist){
 
 return prev.map((item)=>
 
+
 item.id === product.id
 
+
 ?
+
 
 {
 
@@ -188,7 +169,9 @@ quantity:item.quantity + 1
 
 }
 
+
 :
+
 
 item
 
@@ -197,7 +180,6 @@ item
 
 
 }
-
 
 
 
@@ -239,9 +221,7 @@ quantity:1
 
 
 
-
-function removeFromCart(id:number){
-
+function removeFromCart(id:string){
 
 
 setCart((prev)=>
@@ -257,7 +237,6 @@ prev.filter(
 );
 
 
-
 }
 
 
@@ -268,9 +247,7 @@ prev.filter(
 
 
 
-
-
-function increaseQuantity(id:number){
+function increaseQuantity(id:string){
 
 
 
@@ -280,7 +257,9 @@ setCart((prev)=>
 prev.map((item)=>
 
 
+
 item.id === id
+
 
 
 ?
@@ -298,6 +277,7 @@ quantity:item.quantity + 1
 }
 
 
+
 :
 
 
@@ -322,7 +302,7 @@ item
 
 
 
-function decreaseQuantity(id:number){
+function decreaseQuantity(id:string){
 
 
 
@@ -334,6 +314,7 @@ prev.map((item)=>
 
 
 item.id === id && item.quantity > 1
+
 
 
 ?
@@ -351,6 +332,7 @@ quantity:item.quantity - 1
 }
 
 
+
 :
 
 
@@ -375,10 +357,7 @@ item
 
 
 
-// Clear Cart After Order
-
 function clearCart(){
-
 
 
 setCart([]);
@@ -387,12 +366,7 @@ setCart([]);
 localStorage.removeItem("cart");
 
 
-
 }
-
-
-
-
 
 
 
@@ -439,14 +413,11 @@ clearCart,
 {children}
 
 
-
 </CartContext.Provider>
 
 
 
 );
-
-
 
 
 

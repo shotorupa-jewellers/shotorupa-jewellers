@@ -30,7 +30,8 @@ decreaseQuantity
 
 
 
-const [removeId,setRemoveId]=useState<number | null>(null);
+
+const [removeId,setRemoveId]=useState<string | null>(null);
 
 
 
@@ -50,9 +51,12 @@ sum + item.price * item.quantity,
 
 
 
+
 const totalItems = cart.reduce(
 
-(sum,item)=>sum + item.quantity,
+(sum,item)=>
+
+sum + item.quantity,
 
 0
 
@@ -65,10 +69,12 @@ const totalItems = cart.reduce(
 
 
 
-function removeItem(id:number){
+function removeItem(id:string){
+
 
 
 setRemoveId(id);
+
 
 
 setTimeout(()=>{
@@ -84,8 +90,8 @@ setRemoveId(null);
 },300);
 
 
-}
 
+}
 
 
 
@@ -108,12 +114,12 @@ return(
 
 
 
-
 <h1 className="text-5xl font-serif text-[#6b4d1f] mb-3">
 
 Shopping Cart
 
 </h1>
+
 
 
 
@@ -130,17 +136,13 @@ Shopping Cart
 
 
 
-
 {
 
 cart.length===0 ?
 
 
 
-
-
 <div className="bg-white rounded-3xl shadow-xl p-12 text-center">
-
 
 
 <div className="text-6xl mb-5">
@@ -148,7 +150,6 @@ cart.length===0 ?
 💎
 
 </div>
-
 
 
 <h2 className="text-3xl font-serif text-[#6b4d1f]">
@@ -159,15 +160,11 @@ Your Cart is Empty
 
 
 
-
 <p className="text-gray-500 mt-3">
 
 Add your favourite jewellery collection
 
 </p>
-
-
-
 
 
 
@@ -186,8 +183,6 @@ Continue Shopping
 
 
 
-
-
 </div>
 
 
@@ -198,22 +193,13 @@ Continue Shopping
 
 
 
-
-
 <div className="grid lg:grid-cols-3 gap-8">
 
 
 
 
 
-
-
-{/* Cart Items */}
-
-
-
 <div className="lg:col-span-2 space-y-5">
-
 
 
 
@@ -253,10 +239,7 @@ height={150}
 
 className="rounded-xl object-cover"
 
- />
-
-
-
+/>
 
 
 
@@ -264,8 +247,6 @@ className="rounded-xl object-cover"
 
 
 <div className="flex-1">
-
-
 
 
 
@@ -288,12 +269,12 @@ className="rounded-xl object-cover"
 
 
 
+
 <p className="text-gray-500">
 
 Weight: {item.weight}
 
 </p>
-
 
 
 
@@ -312,10 +293,7 @@ Weight: {item.weight}
 
 
 
-
 <div className="flex items-center gap-4 mt-5">
-
-
 
 
 
@@ -365,7 +343,6 @@ className="w-10 h-10 rounded-full bg-[#9b7a3d] text-white text-xl"
 
 
 
-
 </div>
 
 
@@ -373,11 +350,7 @@ className="w-10 h-10 rounded-full bg-[#9b7a3d] text-white text-xl"
 
 
 
-
-
 </div>
-
-
 
 
 
@@ -409,6 +382,7 @@ Remove
 ))
 
 
+
 }
 
 
@@ -424,11 +398,6 @@ Remove
 
 
 
-
-{/* Summary */}
-
-
-
 <div className="bg-white rounded-3xl shadow-xl p-8 h-fit">
 
 
@@ -440,7 +409,6 @@ Remove
 Order Summary
 
 </h2>
-
 
 
 
@@ -499,7 +467,6 @@ Total
 
 
 
-
 <Link
 
 href="/checkout"
@@ -511,7 +478,6 @@ className="block text-center mt-8 bg-[#9b7a3d] text-white py-4 rounded-xl font-s
 Proceed To Checkout
 
 </Link>
-
 
 
 
@@ -553,8 +519,6 @@ Continue Shopping
 
 
 
-
-
 </section>
 
 
@@ -566,6 +530,7 @@ Continue Shopping
 
 
 );
+
 
 
 }

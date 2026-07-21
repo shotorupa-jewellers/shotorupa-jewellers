@@ -352,11 +352,15 @@ Add To Cart
 onClick={()=>{
 
 
-addToWishlist(product);
+addToWishlist({
 
+...product,
+
+id: Number(product.id)
+
+});
 
 showToast("❤️ Added to Wishlist");
-
 
 }}
 

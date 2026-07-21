@@ -203,7 +203,13 @@ Weight: {product.weight}
 
 onClick={()=>{
 
-addToCart(product);
+addToCart({
+
+...product,
+
+id: product.id.toString()
+
+});
 
 showToast("🛒 Added to Cart");
 

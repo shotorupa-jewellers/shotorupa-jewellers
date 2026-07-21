@@ -164,7 +164,13 @@ Weight: {product.weight}
 
 <button
 
-onClick={()=>addToCart(product)}
+onClick={()=>addToCart({
+
+...product,
+
+id: product.id.toString()
+
+})}
 
 className="mt-5 w-full bg-[#9b7a3d] text-white py-3 rounded-lg"
 

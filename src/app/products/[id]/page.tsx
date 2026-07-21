@@ -40,6 +40,7 @@ const [toast,setToast] = useState("");
 
 
 
+
 function showToast(message:string){
 
 setToast(message);
@@ -52,6 +53,8 @@ setToast("");
 },2000);
 
 }
+
+
 
 
 
@@ -81,17 +84,26 @@ Product Not Found
 
 
 
+
 function addCart(){
 
 if(!product) return;
 
 
-addToCart(product);
+addToCart({
+
+...product,
+
+id: product.id.toString()
+
+});
 
 
 showToast("🛒 Added to Cart");
 
 }
+
+
 
 
 
@@ -120,7 +132,13 @@ function buyNow(){
 if(!product) return;
 
 
-addToCart(product);
+addToCart({
+
+...product,
+
+id: product.id.toString()
+
+});
 
 
 showToast("⚡ Added to Cart");
@@ -133,7 +151,6 @@ router.push("/checkout");
 },500);
 
 }
-
 
 
 
@@ -171,7 +188,6 @@ window.open(url,"_blank");
 
 
 }
-
 
 
 
@@ -255,7 +271,6 @@ className="w-full h-[600px] object-cover rounded-2xl"
 
 
 
-
 <div className="flex flex-col justify-center">
 
 
@@ -265,6 +280,7 @@ className="w-full h-[600px] object-cover rounded-2xl"
 {product.category}
 
 </span>
+
 
 
 
@@ -283,6 +299,7 @@ className="w-full h-[600px] object-cover rounded-2xl"
 
 
 
+
 <p className="text-gray-600 mt-6 text-lg">
 
 Purity: {product.purity}
@@ -294,11 +311,13 @@ Purity: {product.purity}
 
 
 
+
 <p className="text-gray-600 text-lg">
 
 Weight: {product.weight}
 
 </p>
+
 
 
 
@@ -318,7 +337,9 @@ Weight: {product.weight}
 
 
 
+
 <div className="grid grid-cols-2 gap-4 mt-8">
+
 
 
 
@@ -396,9 +417,8 @@ className="bg-green-600 text-white py-4 rounded-xl"
 
 
 
+
 </div>
-
-
 
 
 
@@ -431,7 +451,9 @@ className="mt-5 w-full border-2 border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
 
 
 
+
 </div>
+
 
 
 </section>
