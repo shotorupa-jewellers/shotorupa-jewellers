@@ -27,6 +27,8 @@ const {
 
 
 
+
+
 return(
 
 
@@ -47,9 +49,12 @@ My Wishlist
 
 
 
+
+
 {
 
 wishlist.length===0 ?
+
 
 
 <div className="bg-white rounded-xl shadow p-10 text-center">
@@ -81,7 +86,10 @@ Continue Shopping
 
 
 
+
 :
+
+
 
 
 
@@ -92,6 +100,7 @@ Continue Shopping
 
 
 wishlist.map((product)=>(
+
 
 
 <div
@@ -122,7 +131,11 @@ className="w-full h-64 object-cover"
 
 
 
+
+
 <div className="p-5">
+
+
 
 
 
@@ -134,6 +147,8 @@ className="w-full h-64 object-cover"
 
 
 
+
+
 <p className="text-gray-500 mt-2">
 
 {product.purity}
@@ -142,11 +157,15 @@ className="w-full h-64 object-cover"
 
 
 
+
+
 <p className="text-gray-500">
 
 Weight: {product.weight}
 
 </p>
+
+
 
 
 
@@ -162,15 +181,10 @@ Weight: {product.weight}
 
 
 
+
 <button
 
-onClick={()=>addToCart({
-
-...product,
-
-id: product.id.toString()
-
-})}
+onClick={()=>addToCart(product)}
 
 className="mt-5 w-full bg-[#9b7a3d] text-white py-3 rounded-lg"
 
@@ -179,6 +193,8 @@ className="mt-5 w-full bg-[#9b7a3d] text-white py-3 rounded-lg"
 Add To Cart
 
 </button>
+
+
 
 
 
@@ -201,11 +217,16 @@ Remove
 
 
 
+
+
 </div>
 
 
 
+
+
 </div>
+
 
 
 
@@ -216,7 +237,9 @@ Remove
 
 
 
+
 </div>
+
 
 
 

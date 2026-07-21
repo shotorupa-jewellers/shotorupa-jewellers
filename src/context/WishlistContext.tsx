@@ -1,40 +1,43 @@
 "use client";
 
 import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
+createContext,
+useContext,
+useState,
+ReactNode
 } from "react";
 
 
-type Product = {
 
-  id:number;
+export type Product = {
 
-  name:string;
+id:number;
 
-  price:number;
+name:string;
 
-  image:string;
+price:number;
 
-  category:string;
+image:string;
 
-  weight:string;
+category:string;
 
-  purity:string;
+weight:string;
+
+purity:string;
 
 };
+
+
 
 
 
 type WishlistContextType = {
 
-  wishlist:Product[];
+wishlist:Product[];
 
-  addToWishlist:(product:Product)=>boolean;
+addToWishlist:(product:Product)=>boolean;
 
-  removeFromWishlist:(id:number)=>void;
+removeFromWishlist:(id:number)=>void;
 
 };
 
@@ -42,9 +45,8 @@ type WishlistContextType = {
 
 
 
-const WishlistContext = 
+const WishlistContext =
 createContext<WishlistContextType | null>(null);
-
 
 
 
@@ -53,7 +55,7 @@ createContext<WishlistContextType | null>(null);
 
 export function WishlistProvider({
 
-children,
+children
 
 }:{
 
@@ -63,9 +65,8 @@ children:ReactNode;
 
 
 
-
-
-const [wishlist,setWishlist] = useState<Product[]>([]);
+const [wishlist,setWishlist] =
+useState<Product[]>([]);
 
 
 
@@ -85,16 +86,11 @@ const exist = wishlist.some(
 
 
 
-
-
 if(exist){
 
 return false;
 
 }
-
-
-
 
 
 
@@ -119,20 +115,16 @@ return true;
 
 
 
-
-
 function removeFromWishlist(id:number){
 
 
 setWishlist((prev)=>
-
 
 prev.filter(
 
 (item)=>item.id !== id
 
 )
-
 
 );
 
@@ -145,14 +137,12 @@ prev.filter(
 
 
 
-return(
 
+return(
 
 <WishlistContext.Provider
 
-
 value={{
-
 
 wishlist,
 
@@ -160,9 +150,7 @@ addToWishlist,
 
 removeFromWishlist
 
-
 }}
-
 
 >
 
@@ -176,9 +164,7 @@ removeFromWishlist
 );
 
 
-
 }
-
 
 
 
@@ -189,21 +175,15 @@ removeFromWishlist
 export function useWishlist(){
 
 
-
 const context = useContext(WishlistContext);
-
 
 
 
 if(!context){
 
-
 throw new Error(
-
 "useWishlist must be used inside WishlistProvider"
-
 );
-
 
 }
 

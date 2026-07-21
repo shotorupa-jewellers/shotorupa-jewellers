@@ -9,7 +9,7 @@ import {
 } from "react";
 
 
-type Product = {
+export type Product = {
 
   id:string;
 
@@ -29,7 +29,7 @@ type Product = {
 
 
 
-type CartItem = Product & {
+export type CartItem = Product & {
 
   quantity:number;
 
@@ -37,32 +37,31 @@ type CartItem = Product & {
 
 
 
-type CartContextType = {
 
+
+type CartContextType = {
 
   cart:CartItem[];
 
-
   addToCart:(product:Product)=>void;
-
 
   removeFromCart:(id:string)=>void;
 
-
   increaseQuantity:(id:string)=>void;
-
 
   decreaseQuantity:(id:string)=>void;
 
-
   clearCart:()=>void;
-
 
 };
 
 
 
+
+
 const CartContext = createContext<CartContextType | null>(null);
+
+
 
 
 
@@ -86,7 +85,10 @@ const [cart,setCart] = useState<CartItem[]>([]);
 
 
 
-// Load Cart
+
+
+
+// Load cart from browser
 
 useEffect(()=>{
 
@@ -108,7 +110,9 @@ setCart(JSON.parse(savedCart));
 
 
 
-// Save Cart
+
+
+// Save cart
 
 useEffect(()=>{
 
@@ -131,12 +135,12 @@ JSON.stringify(cart)
 
 
 
+
 function addToCart(product:Product){
 
 
 
 setCart((prev)=>{
-
 
 
 const exist = prev.find(
@@ -148,7 +152,6 @@ const exist = prev.find(
 
 
 
-
 if(exist){
 
 
@@ -156,7 +159,6 @@ return prev.map((item)=>
 
 
 item.id === product.id
-
 
 ?
 
@@ -187,25 +189,17 @@ item
 
 return [
 
-
 ...prev,
-
 
 {
 
-
 ...product,
-
 
 quantity:1
 
-
 }
 
-
-
 ];
-
 
 
 });
@@ -221,18 +215,17 @@ quantity:1
 
 
 
+
 function removeFromCart(id:string){
 
 
 setCart((prev)=>
-
 
 prev.filter(
 
 (item)=>item.id !== id
 
 )
-
 
 );
 
@@ -250,16 +243,12 @@ prev.filter(
 function increaseQuantity(id:string){
 
 
-
 setCart((prev)=>
-
 
 prev.map((item)=>
 
 
-
 item.id === id
-
 
 
 ?
@@ -267,15 +256,11 @@ item.id === id
 
 {
 
-
 ...item,
-
 
 quantity:item.quantity + 1
 
-
 }
-
 
 
 :
@@ -284,12 +269,9 @@ quantity:item.quantity + 1
 item
 
 
-
 )
 
-
 );
-
 
 
 }
@@ -305,16 +287,12 @@ item
 function decreaseQuantity(id:string){
 
 
-
 setCart((prev)=>
-
 
 prev.map((item)=>
 
 
-
 item.id === id && item.quantity > 1
-
 
 
 ?
@@ -322,15 +300,11 @@ item.id === id && item.quantity > 1
 
 {
 
-
 ...item,
-
 
 quantity:item.quantity - 1
 
-
 }
-
 
 
 :
@@ -339,12 +313,9 @@ quantity:item.quantity - 1
 item
 
 
-
 )
 
-
 );
-
 
 
 }
@@ -384,27 +355,19 @@ return(
 
 value={{
 
-
 cart,
-
 
 addToCart,
 
-
 removeFromCart,
-
 
 increaseQuantity,
 
-
 decreaseQuantity,
 
-
-clearCart,
-
+clearCart
 
 }}
-
 
 
 >
@@ -414,7 +377,6 @@ clearCart,
 
 
 </CartContext.Provider>
-
 
 
 );
@@ -431,8 +393,8 @@ clearCart,
 
 
 
-export function useCart(){
 
+export function useCart(){
 
 
 const context = useContext(CartContext);
