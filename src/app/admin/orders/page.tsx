@@ -18,7 +18,6 @@ import {
 export default function OrdersPage(){
 
 
-
 const [orders,setOrders] = useState<any[]>([]);
 
 
@@ -41,26 +40,38 @@ orderBy("createdAt","desc")
 
 
 
-const unsubscribe = onSnapshot(q,(snapshot)=>{
+const unsubscribe = onSnapshot(
+
+q,
+
+(snapshot)=>{
 
 
-const data = snapshot.docs.map((doc)=>({
+const data = snapshot.docs.map((doc)=>(
 
+
+{
 
 id:doc.id,
 
 ...doc.data()
 
 
-}));
+}
 
+
+));
 
 
 setOrders(data);
 
 
 
-});
+}
+
+
+
+);
 
 
 
@@ -80,7 +91,18 @@ return ()=>unsubscribe();
 
 
 
-async function changeStatus(id:string,status:string){
+
+
+// Update Order Status
+
+async function changeStatus(
+
+id:string,
+
+status:string
+
+){
+
 
 
 const orderRef = doc(
@@ -95,11 +117,20 @@ id
 
 
 
-await updateDoc(orderRef,{
+await updateDoc(
 
-status:status
+orderRef,
 
-});
+{
+
+
+orderStatus:status
+
+
+}
+
+);
+
 
 
 }
@@ -112,22 +143,43 @@ status:status
 
 
 
+
+
+
+
 return(
 
 
-<main className="min-h-screen bg-[#f8f4ee] p-8">
+<main className="
+min-h-screen
+bg-[#f8f4ee]
+p-8
+text-black
+">
 
 
 
 
 
-<section className="max-w-7xl mx-auto">
+
+<section className="
+max-w-7xl
+mx-auto
+">
 
 
 
-<h1 className="text-4xl font-serif text-[#6b4d1f] mb-8">
 
-Admin Orders
+
+
+<h1 className="
+text-4xl
+font-serif
+text-[#6b4d1f]
+mb-8
+">
+
+📦 Admin Orders
 
 </h1>
 
@@ -144,20 +196,38 @@ Admin Orders
 orders.length===0 ?
 
 
-<div className="bg-white p-8 rounded-xl shadow">
+
+<div className="
+bg-white
+p-8
+rounded-xl
+shadow
+">
+
+
 
 
 No Orders Found
+
+
 
 
 </div>
 
 
 
+
+
+
 :
 
 
-<div className="space-y-8">
+
+<div className="
+space-y-8
+">
+
+
 
 
 
@@ -170,11 +240,18 @@ orders.map((order)=>(
 
 
 
+
+
 <div
 
 key={order.id}
 
-className="bg-white rounded-xl shadow p-6"
+className="
+bg-white
+rounded-xl
+shadow
+p-6
+"
 
 >
 
@@ -183,26 +260,50 @@ className="bg-white rounded-xl shadow p-6"
 
 
 
-<div className="flex justify-between items-center mb-5">
 
 
 
-<h2 className="text-xl font-bold">
+<div className="
+flex
+justify-between
+items-center
+mb-5
+">
 
-Order ID: {order.orderId}
+
+
+
+
+
+<h2 className="
+text-xl
+font-bold
+">
+
+Order ID:
+
+{order.orderId}
 
 </h2>
 
 
 
 
-<span className="bg-yellow-600 text-white px-4 py-2 rounded-full">
 
 
-{order.status}
+<span className="
+bg-yellow-600
+text-white
+px-4
+py-2
+rounded-full
+">
 
+{order.orderStatus}
 
 </span>
+
+
 
 
 
@@ -216,7 +317,16 @@ Order ID: {order.orderId}
 
 
 
-<div className="grid md:grid-cols-3 gap-6">
+
+
+
+<div className="
+grid
+md:grid-cols-3
+gap-6
+">
+
+
 
 
 
@@ -225,11 +335,16 @@ Order ID: {order.orderId}
 <div>
 
 
-<h3 className="font-bold text-lg mb-3">
+<h3 className="
+font-bold
+text-lg
+mb-3
+">
 
 Customer
 
 </h3>
+
 
 
 <p>
@@ -239,11 +354,13 @@ Name: {order.customer?.name}
 </p>
 
 
+
 <p>
 
 Email: {order.customer?.email}
 
 </p>
+
 
 
 
@@ -255,9 +372,13 @@ Phone: {order.customer?.phone}
 
 
 
+
+
 <p>
 
-Address: {order.customer?.address}
+Address:
+
+{order.customer?.address}
 
 </p>
 
@@ -273,18 +394,25 @@ Address: {order.customer?.address}
 
 
 
-
 <div>
 
 
-<h3 className="font-bold text-lg mb-3">
+<h3 className="
+font-bold
+text-lg
+mb-3
+">
 
 Payment
 
 </h3>
 
 
+
+
 <p>
+
+Method:
 
 {order.payment}
 
@@ -292,7 +420,21 @@ Payment
 
 
 
+
+
+<p>
+
+Payment Status:
+
+{order.paymentStatus || "Pending"}
+
+</p>
+
+
+
+
 </div>
+
 
 
 
@@ -304,14 +446,25 @@ Payment
 <div>
 
 
-<h3 className="font-bold text-lg mb-3">
+<h3 className="
+font-bold
+text-lg
+mb-3
+">
 
 Total Amount
 
 </h3>
 
 
-<p className="text-2xl text-[#9b7a3d] font-bold">
+
+
+
+<p className="
+text-2xl
+text-[#9b7a3d]
+font-bold
+">
 
 ৳ {order.total?.toLocaleString()}
 
@@ -319,10 +472,6 @@ Total Amount
 
 
 
-</div>
-
-
-
 
 
 </div>
@@ -333,13 +482,32 @@ Total Amount
 
 
 
+</div>
 
 
-<h3 className="font-bold text-xl mt-6 mb-3">
+
+
+
+
+
+
+
+
+
+
+
+<h3 className="
+font-bold
+text-xl
+mt-6
+mb-3
+">
 
 Products
 
 </h3>
+
+
 
 
 
@@ -352,28 +520,38 @@ Products
 order.products?.map((item:any)=>(
 
 
+
+
 <div
 
 key={item.id}
 
-className="flex justify-between border-b py-3"
+className="
+flex
+justify-between
+border-b
+py-3
+"
 
 >
 
 
-<span>
 
-{item.name} × {item.quantity}
-
-</span>
+<div>
 
 
+<p className="font-semibold">
 
-<span>
+{item.name}
 
-৳ {(item.price * item.quantity).toLocaleString()}
+</p>
 
-</span>
+
+<p className="text-sm text-gray-500">
+
+Quantity: {item.quantity}
+
+</p>
 
 
 
@@ -381,7 +559,30 @@ className="flex justify-between border-b py-3"
 
 
 
+
+
+<div>
+
+
+৳ {(item.price * item.quantity)
+.toLocaleString()}
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
 ))
+
 
 
 }
@@ -394,15 +595,37 @@ className="flex justify-between border-b py-3"
 
 
 
-<div className="mt-6 flex gap-3">
+
+
+
+
+<div className="
+mt-6
+flex
+gap-3
+flex-wrap
+">
+
+
+
+
 
 
 
 <button
 
-onClick={()=>changeStatus(order.id,"Processing")}
+onClick={()=>changeStatus(
+order.id,
+"Processing"
+)}
 
-className="bg-blue-600 text-white px-4 py-2 rounded"
+className="
+bg-blue-600
+text-white
+px-5
+py-2
+rounded-lg
+"
 
 >
 
@@ -414,11 +637,24 @@ Processing
 
 
 
+
+
+
+
 <button
 
-onClick={()=>changeStatus(order.id,"Delivered")}
+onClick={()=>changeStatus(
+order.id,
+"Delivered"
+)}
 
-className="bg-green-600 text-white px-4 py-2 rounded"
+className="
+bg-green-600
+text-white
+px-5
+py-2
+rounded-lg
+"
 
 >
 
@@ -432,11 +668,22 @@ Delivered
 
 
 
+
+
 <button
 
-onClick={()=>changeStatus(order.id,"Cancelled")}
+onClick={()=>changeStatus(
+order.id,
+"Cancelled"
+)}
 
-className="bg-red-600 text-white px-4 py-2 rounded"
+className="
+bg-red-600
+text-white
+px-5
+py-2
+rounded-lg
+"
 
 >
 
@@ -448,20 +695,27 @@ Cancel
 
 
 
+
+</div>
+
+
+
+
+
+
+
+
+
 </div>
 
 
 
-
-
-
-
-</div>
 
 
 
 
 ))
+
 
 
 }
@@ -470,7 +724,12 @@ Cancel
 
 
 
+
+
 </div>
+
+
+
 
 
 
@@ -484,11 +743,12 @@ Cancel
 
 
 
+
+
 </main>
 
 
 );
-
 
 
 }
