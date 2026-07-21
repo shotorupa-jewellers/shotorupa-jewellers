@@ -18,7 +18,12 @@ export default function CheckoutPage(){
 
 const router = useRouter();
 
-const { cart } = useCart();
+
+const {
+  cart,
+  clearCart
+} = useCart();
+
 
 
 const [name,setName] = useState("");
@@ -33,13 +38,15 @@ const [payment,setPayment] = useState(
 "Cash On Delivery"
 );
 
+
 const [loading,setLoading] = useState(false);
 
 
 
 
 
-// Auto Fill Customer Data
+
+// Auto Fill Customer Information
 
 useEffect(()=>{
 
@@ -65,7 +72,9 @@ setPhone(userInfo.phone || "");
 }
 
 
+
 },[]);
+
 
 
 
@@ -82,6 +91,8 @@ sum + item.price * item.quantity,
 0
 
 );
+
+
 
 
 
@@ -108,6 +119,8 @@ return;
 
 
 
+
+
 if(cart.length===0){
 
 
@@ -124,6 +137,8 @@ return;
 
 
 
+
+
 try{
 
 
@@ -136,9 +151,11 @@ setLoading(true);
 const order = {
 
 
+
 orderId:
 
 "ORD-" + Date.now(),
+
 
 
 
@@ -162,13 +179,9 @@ address:address
 
 
 
-payment:payment,
-
-
-
-
 
 products:cart,
+
 
 
 
@@ -180,19 +193,33 @@ total:total,
 
 
 
-status:"Pending",
+
+payment:payment,
 
 
 
 
 
-createdAt:serverTimestamp(),
+paymentStatus:"Pending",
 
 
+
+
+
+orderStatus:"Pending",
+
+
+
+
+
+
+createdAt:serverTimestamp()
 
 
 
 };
+
+
 
 
 
@@ -210,13 +237,36 @@ order
 
 
 
-localStorage.removeItem("cart");
+
+
+// Clear Cart
+
+clearCart();
+
+
+
+// Save success order id
+
+localStorage.setItem(
+
+"lastOrder",
+
+order.orderId
+
+);
 
 
 
 
 
-router.push("/order-success");
+
+
+router.push(
+
+"/order-success"
+
+);
+
 
 
 
@@ -230,13 +280,12 @@ console.log(error);
 
 
 alert(
-
 "Order Failed"
-
 );
 
 
 }
+
 
 finally{
 
@@ -249,16 +298,43 @@ setLoading(false);
 
 
 }
+
+
+
+
+
+
+
+
+
 return(
 
-<main className="min-h-screen bg-[#f8f4ee] py-12">
+
+<main className="
+min-h-screen
+bg-[#f8f4ee]
+py-12
+text-black
+">
 
 
-<section className="max-w-6xl mx-auto px-6">
+
+<section className="
+max-w-6xl
+mx-auto
+px-6
+">
 
 
 
-<h1 className="text-4xl font-serif text-[#6b4d1f] mb-8">
+
+
+<h1 className="
+text-4xl
+font-serif
+text-[#6b4d1f]
+mb-8
+">
 
 Checkout
 
@@ -268,7 +344,17 @@ Checkout
 
 
 
-<div className="grid md:grid-cols-2 gap-8">
+
+
+
+
+<div className="
+grid
+md:grid-cols-2
+gap-8
+">
+
+
 
 
 
@@ -277,14 +363,26 @@ Checkout
 {/* Customer Information */}
 
 
-<div className="bg-white rounded-xl shadow p-8">
+
+<div className="
+bg-white
+rounded-xl
+shadow
+p-8
+">
 
 
-<h2 className="text-2xl font-bold mb-6">
+
+<h2 className="
+text-2xl
+font-bold
+mb-6
+">
 
 Customer Information
 
 </h2>
+
 
 
 
@@ -298,11 +396,20 @@ placeholder="Full Name"
 
 value={name}
 
-onChange={(e)=>setName(e.target.value)}
+onChange={(e)=>
+setName(e.target.value)
+}
 
-className="w-full border p-3 rounded-lg mb-4"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
+
 
 
 
@@ -317,9 +424,17 @@ placeholder="Email"
 
 value={email}
 
-readOnly
+onChange={(e)=>
+setEmail(e.target.value)
+}
 
-className="w-full border p-3 rounded-lg mb-4 bg-gray-100"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
 
@@ -337,9 +452,17 @@ placeholder="Phone Number"
 
 value={phone}
 
-onChange={(e)=>setPhone(e.target.value)}
+onChange={(e)=>
+setPhone(e.target.value)
+}
 
-className="w-full border p-3 rounded-lg mb-4"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
 
@@ -355,9 +478,18 @@ placeholder="Delivery Address"
 
 value={address}
 
-onChange={(e)=>setAddress(e.target.value)}
+onChange={(e)=>
+setAddress(e.target.value)
+}
 
-className="w-full border p-3 rounded-lg mb-4 h-32"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+h-32
+"
 
 />
 
@@ -371,11 +503,19 @@ className="w-full border p-3 rounded-lg mb-4 h-32"
 
 value={payment}
 
-onChange={(e)=>setPayment(e.target.value)}
+onChange={(e)=>
+setPayment(e.target.value)
+}
 
-className="w-full border p-3 rounded-lg"
+className="
+w-full
+border
+p-3
+rounded-lg
+"
 
 >
+
 
 
 <option>
@@ -391,6 +531,17 @@ Bank Transfer
 <option>
 Card Payment
 </option>
+
+
+<option>
+bKash
+</option>
+
+
+<option>
+Nagad
+</option>
+
 
 
 </select>
@@ -409,17 +560,36 @@ Card Payment
 
 
 
+
+
+
+
 {/* Order Summary */}
 
 
-<div className="bg-white rounded-xl shadow p-8">
+
+<div className="
+bg-white
+rounded-xl
+shadow
+p-8
+">
 
 
-<h2 className="text-2xl font-bold mb-6">
+
+
+
+<h2 className="
+text-2xl
+font-bold
+mb-6
+">
 
 Order Summary
 
 </h2>
+
+
 
 
 
@@ -436,25 +606,47 @@ cart.map((item)=>(
 
 key={item.id}
 
-className="flex justify-between border-b py-3"
+className="
+flex
+justify-between
+border-b
+py-3
+"
 
 >
 
 
-<span>
-
-{item.name} × {item.quantity}
-
-</span>
+<div>
 
 
+<p className="font-semibold">
+
+{item.name}
+
+</p>
 
 
-<span>
+<p className="text-sm text-gray-500">
 
-৳ {(item.price * item.quantity).toLocaleString()}
+Quantity: {item.quantity}
 
-</span>
+</p>
+
+
+</div>
+
+
+
+
+
+
+<p>
+
+৳ {(item.price * item.quantity)
+.toLocaleString()}
+
+</p>
+
 
 
 
@@ -463,6 +655,7 @@ className="flex justify-between border-b py-3"
 
 
 ))
+
 
 }
 
@@ -473,7 +666,15 @@ className="flex justify-between border-b py-3"
 
 
 
-<div className="flex justify-between mt-6 text-xl font-bold">
+
+<div className="
+flex
+justify-between
+mt-6
+text-xl
+font-bold
+">
+
 
 
 <span>
@@ -485,7 +686,9 @@ Total
 
 
 
-<span className="text-[#9b7a3d]">
+<span className="
+text-[#9b7a3d]
+">
 
 ৳ {total.toLocaleString()}
 
@@ -493,7 +696,11 @@ Total
 
 
 
+
 </div>
+
+
+
 
 
 
@@ -510,10 +717,19 @@ onClick={placeOrder}
 disabled={loading}
 
 
-className="mt-8 w-full bg-[#9b7a3d] text-white py-4 rounded-xl font-semibold hover:bg-[#7c622f]"
-
+className="
+mt-8
+w-full
+bg-[#9b7a3d]
+text-white
+py-4
+rounded-xl
+font-semibold
+hover:bg-[#7c622f]
+"
 
 >
+
 
 
 {
@@ -538,21 +754,29 @@ loading
 
 
 
-</div>
-
-
-
-
-
 
 
 </div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
 
 
 
 
 
 </section>
+
+
 
 
 
