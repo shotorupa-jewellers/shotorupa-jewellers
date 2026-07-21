@@ -35,6 +35,7 @@ const [loading,setLoading]=useState(false);
 
 
 
+
 function handleImage(e:any){
 
 
@@ -72,7 +73,7 @@ reader.readAsDataURL(file);
 
 
 
-function saveProduct(){
+async function saveProduct(){
 
 
 
@@ -97,10 +98,7 @@ setLoading(true);
 
 
 
-addProduct({
-
-
-id:Date.now(),
+await addProduct({
 
 
 name:name,
@@ -127,11 +125,23 @@ image:image
 
 
 
+
 alert("Product Added Successfully");
 
 
 router.push("/admin");
 
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+alert("Product Add Failed");
 
 
 }
@@ -155,7 +165,6 @@ setLoading(false);
 
 
 
-
 return(
 
 
@@ -165,7 +174,6 @@ bg-[#f8f4ee]
 py-12
 text-black
 ">
-
 
 
 <section className="
@@ -204,6 +212,8 @@ Add New Jewellery
 
 
 
+
+
 <input
 
 placeholder="Product Name"
@@ -221,6 +231,8 @@ mb-4
 "
 
 />
+
+
 
 
 
@@ -247,6 +259,8 @@ mb-4
 "
 
 />
+
+
 
 
 
@@ -289,6 +303,7 @@ mb-4
 
 
 
+
 <input
 
 placeholder="Weight (Gram)"
@@ -306,6 +321,7 @@ mb-4
 "
 
 />
+
 
 
 
@@ -339,6 +355,7 @@ mb-4
 
 
 
+
 <label className="
 font-semibold
 block
@@ -348,6 +365,9 @@ mb-2
 Product Image
 
 </label>
+
+
+
 
 
 
@@ -379,6 +399,8 @@ mb-4
 
 
 
+
+
 {
 
 image &&
@@ -400,6 +422,7 @@ mb-5
 />
 
 }
+
 
 
 
@@ -448,6 +471,7 @@ loading
 
 
 
+
 </div>
 
 
@@ -460,6 +484,7 @@ loading
 
 
 );
+
 
 
 }

@@ -9,9 +9,25 @@ import {
 } from "react";
 
 
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  deleteDoc,
+  doc,
+  updateDoc
+} from "firebase/firestore";
+
+
+import { db } from "@/lib/firebase";
+
+
+
+
+
 export type Product = {
 
-  id:number;
+  id:string;
 
   name:string;
 
@@ -29,6 +45,10 @@ export type Product = {
 
 
 
+
+
+
+
 export type DeletedProduct = Product & {
 
   deletedAt:string;
@@ -39,21 +59,33 @@ export type DeletedProduct = Product & {
 
 
 
+
+
+
 type ProductContextType = {
 
-  products:Product[];
 
-  deletedProducts:DeletedProduct[];
+products:Product[];
 
-  addProduct:(product:Product)=>void;
 
-  deleteProduct:(id:number)=>void;
+deletedProducts:DeletedProduct[];
 
-  restoreProduct:(id:number)=>void;
 
-  updateProduct:(product:Product)=>void;
+addProduct:(product:Omit<Product,"id">)=>void;
+
+
+deleteProduct:(id:string)=>void;
+
+
+restoreProduct:(id:string)=>void;
+
+
+updateProduct:(product:Product)=>void;
+
 
 };
+
+
 
 
 
@@ -64,6 +96,8 @@ type ProductContextType = {
 const ProductContext =
 
 createContext<ProductContextType | undefined>(undefined);
+
+
 
 
 
@@ -83,6 +117,8 @@ children:ReactNode;
 
 
 
+
+
 const [products,setProducts]=useState<Product[]>([]);
 
 
@@ -90,64 +126,55 @@ const [deletedProducts,setDeletedProducts]=useState<DeletedProduct[]>([]);
 
 
 
-const [loaded,setLoaded]=useState(false);
 
 
 
 
 
 
-
-// Load Data
+// Firebase থেকে Product Load
 
 useEffect(()=>{
 
 
-try{
+
+const unsubscribe = onSnapshot(
+
+collection(db,"products"),
+
+(snapshot)=>{
 
 
-const savedProducts =
-localStorage.getItem("products");
+const data = snapshot.docs.map((item)=>(
 
 
-const savedDeleted =
-localStorage.getItem("deletedProducts");
+{
+
+id:item.id,
+
+...item.data()
+
+}
+
+
+)) as Product[];
 
 
 
 
-if(savedProducts){
+setProducts(data);
 
-setProducts(
-JSON.parse(savedProducts)
+
+
+}
+
+
+
 );
 
-}
 
 
-
-
-if(savedDeleted){
-
-setDeletedProducts(
-JSON.parse(savedDeleted)
-);
-
-}
-
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-}
-
-
-
-setLoaded(true);
+return ()=>unsubscribe();
 
 
 
@@ -161,63 +188,34 @@ setLoaded(true);
 
 
 
-// Save Data
-
-useEffect(()=>{
-
-
-if(!loaded) return;
 
 
 
+// Add Product Firebase
 
-localStorage.setItem(
+async function addProduct(
 
-"products",
+product:Omit<Product,"id">
 
-JSON.stringify(products)
-
-);
-
+){
 
 
 
+await addDoc(
 
-localStorage.setItem(
-
-"deletedProducts",
-
-JSON.stringify(deletedProducts)
-
-);
-
-
-
-},[products,deletedProducts,loaded]);
-
-
-
-
-
-
-
-
-
-// Add Product
-
-function addProduct(product:Product){
-
-
-setProducts((prev)=>[
-
-...prev,
+collection(db,"products"),
 
 product
 
-]);
+);
+
 
 
 }
+
+
+
+
 
 
 
@@ -228,54 +226,23 @@ product
 
 // Delete Product
 
-function deleteProduct(id:number){
+async function deleteProduct(
+
+id:string
+
+){
 
 
 
-const product =
+await deleteDoc(
 
-products.find(
+doc(
 
-(item)=>item.id===id
+db,
 
-);
+"products",
 
-
-
-
-
-if(product){
-
-
-
-setDeletedProducts((prev)=>[
-
-...prev,
-
-{
-
-...product,
-
-deletedAt:new Date().toLocaleString()
-
-}
-
-]);
-
-
-
-}
-
-
-
-
-
-
-setProducts((prev)=>
-
-prev.filter(
-
-(item)=>item.id!==id
+id
 
 )
 
@@ -285,75 +252,6 @@ prev.filter(
 
 }
 
-
-
-
-
-
-
-
-
-// Restore Product
-
-function restoreProduct(id:number){
-
-
-
-const product =
-
-deletedProducts.find(
-
-(item)=>item.id===id
-
-);
-
-
-
-
-
-if(!product) return;
-
-
-
-
-
-const {
-
-deletedAt,
-
-...restoreProductData
-
-}=product;
-
-
-
-
-
-setProducts((prev)=>[
-
-...prev,
-
-restoreProductData
-
-]);
-
-
-
-
-
-setDeletedProducts((prev)=>
-
-prev.filter(
-
-(item)=>item.id!==id
-
-)
-
-);
-
-
-
-}
 
 
 
@@ -366,31 +264,89 @@ prev.filter(
 
 // Update Product
 
-function updateProduct(product:Product){
+async function updateProduct(
+
+product:Product
+
+){
 
 
 
-setProducts((prev)=>
+const productRef = doc(
 
-prev.map((item)=>
+db,
 
-item.id===product.id
+"products",
 
-?
+product.id
 
-product
+);
 
-:
 
-item
 
-)
+
+
+await updateDoc(
+
+productRef,
+
+{
+
+
+name:product.name,
+
+
+price:product.price,
+
+
+category:product.category,
+
+
+weight:product.weight,
+
+
+purity:product.purity,
+
+
+image:product.image
+
+
+
+}
 
 );
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// Restore (future use)
+
+function restoreProduct(id:string){
+
+
+console.log(
+"Restore product:",
+id
+);
+
+
+}
+
+
+
+
 
 
 
@@ -408,17 +364,25 @@ return(
 
 value={{
 
+
 products,
+
 
 deletedProducts,
 
+
 addProduct,
+
 
 deleteProduct,
 
+
 restoreProduct,
 
+
 updateProduct
+
+
 
 }}
 
@@ -430,7 +394,6 @@ updateProduct
 
 
 </ProductContext.Provider>
-
 
 
 );
@@ -451,10 +414,7 @@ export function useProducts(){
 
 
 
-const context =
-
-useContext(ProductContext);
-
+const context = useContext(ProductContext);
 
 
 
