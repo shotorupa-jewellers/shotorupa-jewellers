@@ -5,30 +5,94 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, FreeMode } from "swiper/modules";
+
+import "swiper/css";
+
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useProducts } from "@/context/ProductContext";
 
 import Toast from "@/components/Toast";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, FreeMode } from "swiper/modules";
 
-import "swiper/css";
+
+const defaultProducts = [
+
+{
+id:"1",
+name:"Royal Gold Necklace",
+category:"Gold",
+price:85000,
+image:"/images/necklace.jpg",
+weight:"25g",
+purity:"22K Gold"
+},
+
+
+{
+id:"2",
+name:"Diamond Ring",
+category:"Diamond",
+price:120000,
+image:"/images/ring.jpg",
+weight:"8g",
+purity:"18K Diamond"
+},
+
+
+{
+id:"3",
+name:"Bridal Jewellery Set",
+category:"Gold",
+price:250000,
+image:"/images/bridal.jpg",
+weight:"60g",
+purity:"22K Gold"
+},
+
+
+{
+id:"4",
+name:"Luxury Earrings",
+category:"Gold",
+price:45000,
+image:"/images/earrings.jpg",
+weight:"10g",
+purity:"22K Gold"
+}
+
+];
+
+
+
 
 
 export default function TrendingProducts(){
 
 
-const { products } = useProducts();
+
+const {products:adminProducts}=useProducts();
 
 
-const { addToCart } = useCart();
+const products =
+adminProducts && adminProducts.length > 0
+?
+adminProducts
+:
+defaultProducts;
 
-const { addToWishlist } = useWishlist();
+
+
+
+const {addToCart}=useCart();
+
+const {addToWishlist}=useWishlist();
 
 
 const router = useRouter();
+
 
 
 const [toast,setToast]=useState("");
@@ -38,7 +102,6 @@ const [toast,setToast]=useState("");
 
 
 function showToast(message:string){
-
 
 setToast(message);
 
@@ -64,7 +127,7 @@ function buyNow(product:any){
 addToCart(product);
 
 
-showToast("⚡ Added to Cart. Going Checkout...");
+showToast("⚡ Added to Cart");
 
 
 setTimeout(()=>{
@@ -81,10 +144,13 @@ router.push("/checkout");
 
 
 
+
+
+
 return(
 
-
 <>
+
 
 
 <Toast
@@ -99,18 +165,24 @@ show={toast!==""}
 
 
 
-
 <section className="max-w-7xl mx-auto px-6 py-12">
 
 
 
 
 
-<h2 className="text-4xl font-serif text-center text-[#6b4d1f] mb-8">
+<h2 className="
+text-4xl
+font-serif
+text-center
+text-[#6b4d1f]
+mb-10
+">
 
 TRENDING PRODUCTS
 
 </h2>
+
 
 
 
@@ -130,8 +202,9 @@ slidesPerView={1}
 
 
 
-breakpoints={{
+breakpoints={
 
+{
 
 640:{
 slidesPerView:2
@@ -142,19 +215,17 @@ slidesPerView:2
 slidesPerView:4
 }
 
+}
 
-}}
-
+}
 
 
 
 autoplay={{
 
-
 delay:2500,
 
 disableOnInteraction:false
-
 
 }}
 
@@ -163,9 +234,9 @@ disableOnInteraction:false
 
 freeMode={{
 
+enabled:true,
 
-enabled:true
-
+momentum:true
 
 }}
 
@@ -174,7 +245,13 @@ enabled:true
 grabCursor={true}
 
 
-loop={products.length > 4}
+
+touchRatio={1}
+
+
+
+loop={products.length>4}
+
 
 
 
@@ -182,19 +259,23 @@ loop={products.length > 4}
 
 
 
-
-
-
 {
 
+
 products.slice(0,10).map((product)=>(
+
 
 
 
 <SwiperSlide key={product.id}>
 
 
-<div className="bg-white rounded-xl shadow-lg overflow-hidden">
+<div className="
+bg-white
+rounded-2xl
+shadow-xl
+overflow-hidden
+">
 
 
 
@@ -203,27 +284,24 @@ products.slice(0,10).map((product)=>(
 
 <Image
 
-
 src={product.image}
-
 
 alt={product.name}
 
+width={500}
 
-width={400}
-
-
-height={300}
-
+height={400}
 
 quality={100}
 
-
-className="w-full h-64 object-cover"
-
-
+className="
+w-full
+h-64
+object-cover
+"
 
 />
+
 
 
 
@@ -237,11 +315,16 @@ className="w-full h-64 object-cover"
 
 
 
-<span className="bg-[#9b7a3d] text-white text-xs px-3 py-1 rounded-full">
-
+<span className="
+bg-[#9b7a3d]
+text-white
+text-xs
+px-3
+py-1
+rounded-full
+">
 
 {product.category}
-
 
 </span>
 
@@ -251,12 +334,14 @@ className="w-full h-64 object-cover"
 
 
 
-
-<h3 className="mt-3 text-lg font-bold text-[#6b4d1f]">
-
+<h3 className="
+mt-4
+text-xl
+font-bold
+text-[#6b4d1f]
+">
 
 {product.name}
-
 
 </h3>
 
@@ -265,15 +350,11 @@ className="w-full h-64 object-cover"
 
 
 
-
-<p className="text-gray-500">
-
+<p className="text-gray-500 mt-2">
 
 {product.purity}
 
-
 </p>
-
 
 
 
@@ -282,9 +363,7 @@ className="w-full h-64 object-cover"
 
 <p className="text-gray-500">
 
-
 Weight: {product.weight}
-
 
 </p>
 
@@ -294,12 +373,15 @@ Weight: {product.weight}
 
 
 
-<p className="mt-3 text-2xl font-bold text-[#9b7a3d]">
-
+<p className="
+text-2xl
+font-bold
+text-[#9b7a3d]
+mt-3
+">
 
 ৳ {product.price.toLocaleString()}
 
-
 </p>
 
 
@@ -312,29 +394,27 @@ Weight: {product.weight}
 
 <button
 
-
 onClick={()=>{
-
 
 addToCart(product);
 
-
-showToast("🛒 Added to Cart");
-
+showToast("🛒 Added To Cart");
 
 }}
 
-
-
-className="mt-4 w-full bg-[#9b7a3d] text-white py-3 rounded-lg hover:bg-[#7c622f]"
-
-
+className="
+mt-5
+w-full
+bg-[#9b7a3d]
+text-white
+py-3
+rounded-xl
+hover:bg-[#7c622f]
+"
 
 >
 
-
-Add To Cart
-
+🛒 Add To Cart
 
 </button>
 
@@ -345,36 +425,35 @@ Add To Cart
 
 
 
+
 <button
-
-
 
 onClick={()=>{
 
 
-addToWishlist({
+addToWishlist(product);
 
-...product,
 
-id: Number(product.id)
+showToast("❤️ Added To Wishlist");
 
-});
-
-showToast("❤️ Added to Wishlist");
 
 }}
 
 
 
-className="mt-3 w-full border border-[#9b7a3d] text-[#9b7a3d] py-3 rounded-lg"
-
-
+className="
+mt-3
+w-full
+border
+border-[#9b7a3d]
+text-[#9b7a3d]
+py-3
+rounded-xl
+"
 
 >
 
-
 ♡ Wishlist
-
 
 </button>
 
@@ -385,26 +464,26 @@ className="mt-3 w-full border border-[#9b7a3d] text-[#9b7a3d] py-3 rounded-lg"
 
 
 
+
 <button
-
-
 
 onClick={()=>buyNow(product)}
 
 
-
-className="mt-3 w-full bg-black text-white py-3 rounded-lg"
-
-
+className="
+mt-3
+w-full
+bg-black
+text-white
+py-3
+rounded-xl
+"
 
 >
 
-
-Buy Now
-
+⚡ Buy Now
 
 </button>
-
 
 
 
@@ -416,20 +495,19 @@ Buy Now
 
 <Link
 
-
 href={`/products/${product.id}`}
 
-
-
-className="mt-3 block text-center text-[#9b7a3d]"
-
-
+className="
+block
+text-center
+mt-4
+text-[#9b7a3d]
+font-semibold
+"
 
 >
 
-
 View Product
-
 
 </Link>
 
@@ -441,6 +519,8 @@ View Product
 
 
 </div>
+
+
 
 
 
@@ -464,7 +544,6 @@ View Product
 
 
 
-
 </Swiper>
 
 
@@ -474,7 +553,6 @@ View Product
 
 
 </section>
-
 
 
 
