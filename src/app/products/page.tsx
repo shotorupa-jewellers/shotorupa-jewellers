@@ -35,8 +35,35 @@ setToast("");
 
 },2000);
 
+}
+
+
+
+
+
+function convertProduct(product:any){
+
+return {
+
+id:String(product.id),
+
+name:product.name,
+
+price:product.price,
+
+image:product.image,
+
+category:product.category,
+
+weight:product.weight,
+
+purity:product.purity,
+
+};
 
 }
+
+
 
 
 
@@ -45,13 +72,14 @@ setToast("");
 function buyNow(product:any){
 
 
-if(!product) return;
+const cartProduct = convertProduct(product);
 
 
-addToCart(product);
+addToCart(cartProduct);
 
 
 showToast("⚡ Added to Cart. Going Checkout...");
+
 
 
 setTimeout(()=>{
@@ -61,6 +89,7 @@ window.location.href="/checkout";
 },500);
 
 
+
 }
 
 
@@ -68,8 +97,8 @@ window.location.href="/checkout";
 
 
 
-return(
 
+return(
 
 <main className="min-h-screen bg-[#f8f4ee]">
 
@@ -114,7 +143,6 @@ Explore our premium gold & diamond jewellery
 
 
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
 
 
 {
@@ -163,8 +191,6 @@ className="w-full h-72 object-cover"
 
 
 
-
-
 <p className="mt-2 text-gray-600">
 
 {product.purity}
@@ -173,16 +199,11 @@ className="w-full h-72 object-cover"
 
 
 
-
-
 <p className="text-gray-600">
 
 Weight: {product.weight}
 
 </p>
-
-
-
 
 
 
@@ -198,18 +219,11 @@ Weight: {product.weight}
 
 
 
-
 <button
 
 onClick={()=>{
 
-addToCart({
-
-...product,
-
-id: product.id.toString()
-
-});
+addToCart(convertProduct(product));
 
 showToast("🛒 Added to Cart");
 
@@ -229,14 +243,20 @@ className="mt-5 w-full bg-[#9b7a3d] text-white py-3 rounded-lg"
 
 
 
-
 <button
 
 onClick={()=>{
 
-addToWishlist(product);
+
+addToWishlist({
+
+...convertProduct(product)
+
+});
+
 
 showToast("❤️ Added to Wishlist");
+
 
 }}
 
@@ -247,8 +267,6 @@ className="mt-3 w-full border border-[#9b7a3d] text-[#9b7a3d] py-3 rounded-lg"
 ♡ Wishlist
 
 </button>
-
-
 
 
 
@@ -275,9 +293,6 @@ className="mt-3 w-full bg-black text-white py-3 rounded-lg"
 
 
 
-
-
-
 <Link
 
 href={`/products/${product.id}`}
@@ -289,6 +304,7 @@ className="block text-center mt-4 text-[#9b7a3d] font-semibold"
 View Product
 
 </Link>
+
 
 
 
@@ -307,7 +323,6 @@ View Product
 }
 
 
-
 </div>
 
 
@@ -315,7 +330,6 @@ View Product
 
 
 </main>
-
 
 );
 

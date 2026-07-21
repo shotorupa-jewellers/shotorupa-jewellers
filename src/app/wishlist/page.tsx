@@ -29,6 +29,7 @@ const {
 
 
 
+
 return(
 
 
@@ -182,9 +183,17 @@ Weight: {product.weight}
 
 
 
+
+
 <button
 
-onClick={()=>addToCart(product)}
+onClick={()=>addToCart({
+
+...product,
+
+id:String(product.id)
+
+})}
 
 className="mt-5 w-full bg-[#9b7a3d] text-white py-3 rounded-lg"
 
@@ -201,9 +210,10 @@ Add To Cart
 
 
 
+
 <button
 
-onClick={()=>removeFromWishlist(product.id)}
+onClick={()=>removeFromWishlist(String(product.id))}
 
 className="mt-3 w-full border border-red-500 text-red-500 py-3 rounded-lg"
 

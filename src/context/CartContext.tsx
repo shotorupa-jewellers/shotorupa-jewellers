@@ -59,7 +59,9 @@ type CartContextType = {
 
 
 
+
 const CartContext = createContext<CartContextType | null>(null);
+
 
 
 
@@ -87,10 +89,12 @@ const [cart,setCart] = useState<CartItem[]>([]);
 
 
 
-
-// Load cart from browser
+// Load cart
 
 useEffect(()=>{
+
+
+if(typeof window !== "undefined"){
 
 
 const savedCart = localStorage.getItem("cart");
@@ -98,7 +102,21 @@ const savedCart = localStorage.getItem("cart");
 
 if(savedCart){
 
+try{
+
 setCart(JSON.parse(savedCart));
+
+}
+
+catch{
+
+setCart([]);
+
+}
+
+
+}
+
 
 }
 
@@ -112,9 +130,14 @@ setCart(JSON.parse(savedCart));
 
 
 
+
+
 // Save cart
 
 useEffect(()=>{
+
+
+if(typeof window !== "undefined"){
 
 
 localStorage.setItem(
@@ -124,6 +147,9 @@ localStorage.setItem(
 JSON.stringify(cart)
 
 );
+
+
+}
 
 
 },[cart]);
@@ -136,6 +162,8 @@ JSON.stringify(cart)
 
 
 
+// Add Product
+
 function addToCart(product:Product){
 
 
@@ -143,7 +171,7 @@ function addToCart(product:Product){
 setCart((prev)=>{
 
 
-const exist = prev.find(
+const existing = prev.find(
 
 (item)=>item.id === product.id
 
@@ -152,7 +180,9 @@ const exist = prev.find(
 
 
 
-if(exist){
+
+if(existing){
+
 
 
 return prev.map((item)=>
@@ -162,7 +192,6 @@ item.id === product.id
 
 ?
 
-
 {
 
 ...item,
@@ -171,14 +200,13 @@ quantity:item.quantity + 1
 
 }
 
-
 :
-
 
 item
 
 
 );
+
 
 
 }
@@ -187,9 +215,14 @@ item
 
 
 
+
+
+
 return [
 
+
 ...prev,
+
 
 {
 
@@ -199,7 +232,9 @@ quantity:1
 
 }
 
+
 ];
+
 
 
 });
@@ -216,16 +251,23 @@ quantity:1
 
 
 
+
+
+// Remove Product
+
 function removeFromCart(id:string){
 
 
+
 setCart((prev)=>
+
 
 prev.filter(
 
 (item)=>item.id !== id
 
 )
+
 
 );
 
@@ -240,19 +282,23 @@ prev.filter(
 
 
 
+
+
+// Increase Quantity
+
 function increaseQuantity(id:string){
 
 
+
 setCart((prev)=>
+
 
 prev.map((item)=>
 
 
 item.id === id
 
-
 ?
-
 
 {
 
@@ -265,13 +311,14 @@ quantity:item.quantity + 1
 
 :
 
-
 item
 
 
 )
 
+
 );
+
 
 
 }
@@ -284,19 +331,23 @@ item
 
 
 
+
+
+// Decrease Quantity
+
 function decreaseQuantity(id:string){
 
 
+
 setCart((prev)=>
+
 
 prev.map((item)=>
 
 
 item.id === id && item.quantity > 1
 
-
 ?
-
 
 {
 
@@ -309,13 +360,14 @@ quantity:item.quantity - 1
 
 :
 
-
 item
 
 
 )
 
+
 );
+
 
 
 }
@@ -328,13 +380,23 @@ item
 
 
 
+
+
+// Clear Cart
+
 function clearCart(){
 
 
 setCart([]);
 
 
+if(typeof window !== "undefined"){
+
+
 localStorage.removeItem("cart");
+
+
+}
 
 
 }
@@ -355,6 +417,7 @@ return(
 
 value={{
 
+
 cart,
 
 addToCart,
@@ -366,6 +429,7 @@ increaseQuantity,
 decreaseQuantity,
 
 clearCart
+
 
 }}
 
@@ -384,7 +448,6 @@ clearCart
 
 
 }
-
 
 
 

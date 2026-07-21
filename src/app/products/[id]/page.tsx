@@ -25,7 +25,9 @@ const id = Number(params.id);
 
 
 const product = products.find(
+
 (item)=>item.id === id
+
 );
 
 
@@ -41,6 +43,7 @@ const [toast,setToast] = useState("");
 
 
 
+
 function showToast(message:string){
 
 setToast(message);
@@ -52,6 +55,7 @@ setToast("");
 
 },2000);
 
+
 }
 
 
@@ -60,7 +64,38 @@ setToast("");
 
 
 
+function convertProduct(product:any){
+
+return {
+
+id:String(product.id),
+
+name:product.name,
+
+price:product.price,
+
+image:product.image,
+
+category:product.category,
+
+weight:product.weight,
+
+purity:product.purity,
+
+};
+
+}
+
+
+
+
+
+
+
+
+
 if(!product){
+
 
 return(
 
@@ -85,23 +120,23 @@ Product Not Found
 
 
 
+
 function addCart(){
 
-if(!product) return;
 
+addToCart(
 
-addToCart({
+convertProduct(product)
 
-...product,
-
-id: product.id.toString()
-
-});
+);
 
 
 showToast("🛒 Added to Cart");
 
+
 }
+
+
 
 
 
@@ -111,15 +146,20 @@ showToast("🛒 Added to Cart");
 
 function addWish(){
 
-if(!product) return;
 
+addToWishlist(
 
-addToWishlist(product);
+convertProduct(product)
+
+);
 
 
 showToast("❤️ Added to Wishlist");
 
+
 }
+
+
 
 
 
@@ -129,19 +169,16 @@ showToast("❤️ Added to Wishlist");
 
 function buyNow(){
 
-if(!product) return;
 
+addToCart(
 
-addToCart({
+convertProduct(product)
 
-...product,
-
-id: product.id.toString()
-
-});
+);
 
 
 showToast("⚡ Added to Cart");
+
 
 
 setTimeout(()=>{
@@ -150,7 +187,10 @@ router.push("/checkout");
 
 },500);
 
+
 }
+
+
 
 
 
@@ -178,6 +218,8 @@ SHOTORUPA JEWELLERS`;
 
 
 
+
+
 const url =
 
 `https://wa.me/8801828784693?text=${encodeURIComponent(message)}`;
@@ -188,6 +230,7 @@ window.open(url,"_blank");
 
 
 }
+
 
 
 
@@ -214,10 +257,13 @@ window.open(
 
 
 
+
+
 return(
 
 
 <main className="min-h-screen bg-[#f8f4ee] py-12">
+
 
 
 <Toast
@@ -232,11 +278,13 @@ show={toast !== ""}
 
 
 
+
 <section className="max-w-6xl mx-auto px-6">
 
 
 
 <div className="grid md:grid-cols-2 gap-10 bg-white rounded-3xl shadow-xl p-8">
+
 
 
 
@@ -286,13 +334,11 @@ className="w-full h-[600px] object-cover rounded-2xl"
 
 
 
-
 <h1 className="text-5xl font-serif text-[#6b4d1f] mt-6">
 
 {product.name}
 
 </h1>
-
 
 
 
@@ -311,13 +357,11 @@ Purity: {product.purity}
 
 
 
-
 <p className="text-gray-600 text-lg">
 
 Weight: {product.weight}
 
 </p>
-
 
 
 
@@ -337,8 +381,8 @@ Weight: {product.weight}
 
 
 
-
 <div className="grid grid-cols-2 gap-4 mt-8">
+
 
 
 
@@ -356,7 +400,6 @@ className="bg-[#9b7a3d] text-white py-4 rounded-xl"
 🛒 Add To Cart
 
 </button>
-
 
 
 
@@ -382,7 +425,6 @@ className="bg-black text-white py-4 rounded-xl"
 
 
 
-
 <button
 
 onClick={addWish}
@@ -401,7 +443,6 @@ className="border border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
 
 
 
-
 <button
 
 onClick={shareWhatsapp}
@@ -413,6 +454,7 @@ className="bg-green-600 text-white py-4 rounded-xl"
 💬 WhatsApp
 
 </button>
+
 
 
 
@@ -445,7 +487,9 @@ className="mt-5 w-full border-2 border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
 
 
 
+
 </div>
+
 
 
 
@@ -457,6 +501,7 @@ className="mt-5 w-full border-2 border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
 
 
 </section>
+
 
 
 </main>
