@@ -27,11 +27,16 @@ const [purity,setPurity]=useState("");
 
 const [image,setImage]=useState("");
 
+const [loading,setLoading]=useState(false);
+
+
+
 
 
 
 
 function handleImage(e:any){
+
 
 const file = e.target.files[0];
 
@@ -54,11 +59,12 @@ setImage(reader.result as string);
 reader.readAsDataURL(file);
 
 
-
 }
 
 
 }
+
+
 
 
 
@@ -70,32 +76,50 @@ function saveProduct(){
 
 
 
-if(!name || !price){
+if(!name || !price || !image){
 
-alert("Fill required fields");
+
+alert("Please fill all required fields");
+
 
 return;
 
+
 }
+
+
+
+try{
+
+
+setLoading(true);
 
 
 
 
 addProduct({
 
+
 id:Date.now(),
 
-name,
+
+name:name,
+
 
 price:Number(price),
 
-category,
 
-weight,
+category:category,
 
-purity,
 
-image
+weight:weight,
+
+
+purity:purity,
+
+
+image:image
+
 
 });
 
@@ -109,7 +133,22 @@ alert("Product Added Successfully");
 router.push("/admin");
 
 
+
 }
+
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+}
+
+
+
 
 
 
@@ -119,17 +158,41 @@ router.push("/admin");
 
 return(
 
-<main className="min-h-screen bg-[#f8f4ee] py-12 text-black">
+
+<main className="
+min-h-screen
+bg-[#f8f4ee]
+py-12
+text-black
+">
 
 
-<section className="max-w-xl mx-auto px-6">
+
+<section className="
+max-w-xl
+mx-auto
+px-6
+">
 
 
 
-<div className="bg-white shadow rounded-xl p-8">
+<div className="
+bg-white
+shadow-xl
+rounded-2xl
+p-8
+">
 
 
-<h1 className="text-3xl font-bold text-[#6b4d1f] mb-8">
+
+
+
+<h1 className="
+text-3xl
+font-bold
+text-[#6b4d1f]
+mb-8
+">
 
 Add New Jewellery
 
@@ -149,7 +212,13 @@ value={name}
 
 onChange={(e)=>setName(e.target.value)}
 
-className="w-full border p-3 rounded mb-4 text-black"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
 
@@ -163,13 +232,19 @@ className="w-full border p-3 rounded mb-4 text-black"
 
 type="number"
 
-placeholder="Price"
+placeholder="Price ৳"
 
 value={price}
 
 onChange={(e)=>setPrice(e.target.value)}
 
-className="w-full border p-3 rounded mb-4 text-black"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
 
@@ -185,15 +260,25 @@ value={category}
 
 onChange={(e)=>setCategory(e.target.value)}
 
-className="w-full border p-3 rounded mb-4 text-black"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 >
+
 
 <option>Gold</option>
 
 <option>Diamond</option>
 
 <option>Platinum</option>
+
+<option>Silver</option>
+
 
 </select>
 
@@ -206,16 +291,21 @@ className="w-full border p-3 rounded mb-4 text-black"
 
 <input
 
-placeholder="Weight"
+placeholder="Weight (Gram)"
 
 value={weight}
 
 onChange={(e)=>setWeight(e.target.value)}
 
-className="w-full border p-3 rounded mb-4 text-black"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
-
 
 
 
@@ -225,13 +315,19 @@ className="w-full border p-3 rounded mb-4 text-black"
 
 <input
 
-placeholder="Purity"
+placeholder="Purity (22K/24K)"
 
 value={purity}
 
 onChange={(e)=>setPurity(e.target.value)}
 
-className="w-full border p-3 rounded mb-4 text-black"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
 
@@ -241,11 +337,20 @@ className="w-full border p-3 rounded mb-4 text-black"
 
 
 
-<label className="block mb-2 font-semibold">
+
+
+<label className="
+font-semibold
+block
+mb-2
+">
 
 Product Image
 
 </label>
+
+
+
 
 
 
@@ -257,9 +362,16 @@ accept="image/*"
 
 onChange={handleImage}
 
-className="w-full border p-3 rounded mb-4"
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
 
 />
+
 
 
 
@@ -277,7 +389,13 @@ src={image}
 
 alt="preview"
 
-className="w-40 h-40 object-cover rounded mb-4"
+className="
+w-48
+h-48
+object-cover
+rounded-xl
+mb-5
+"
 
 />
 
@@ -289,17 +407,43 @@ className="w-40 h-40 object-cover rounded mb-4"
 
 
 
+
 <button
 
 onClick={saveProduct}
 
-className="w-full bg-[#9b7a3d] text-white py-4 rounded-xl"
+disabled={loading}
+
+className="
+w-full
+bg-[#9b7a3d]
+text-white
+py-4
+rounded-xl
+font-bold
+"
 
 >
 
-Save Product
+
+{
+
+loading
+
+?
+
+"Saving..."
+
+:
+
+"Save Product"
+
+}
+
 
 </button>
+
+
 
 
 
@@ -307,10 +451,13 @@ Save Product
 </div>
 
 
+
 </section>
 
 
+
 </main>
+
 
 );
 
