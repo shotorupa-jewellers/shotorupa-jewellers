@@ -30,7 +30,6 @@ weight:"25g",
 purity:"22K Gold"
 },
 
-
 {
 id:"2",
 name:"Diamond Ring",
@@ -41,7 +40,6 @@ weight:"8g",
 purity:"18K Diamond"
 },
 
-
 {
 id:"3",
 name:"Bridal Jewellery Set",
@@ -51,7 +49,6 @@ image:"/images/bridal.jpg",
 weight:"60g",
 purity:"22K Gold"
 },
-
 
 {
 id:"4",
@@ -76,12 +73,25 @@ export default function TrendingProducts(){
 const {products:adminProducts}=useProducts();
 
 
-const products =
-adminProducts && adminProducts.length > 0
+
+const products = [
+
+...(adminProducts && adminProducts.length > 0
+
 ?
+
 adminProducts
+
 :
-defaultProducts;
+
+defaultProducts)
+
+].sort(
+
+(a,b)=>b.price-a.price
+
+);
+
 
 
 
@@ -91,8 +101,7 @@ const {addToCart}=useCart();
 const {addToWishlist}=useWishlist();
 
 
-const router = useRouter();
-
+const router=useRouter();
 
 
 const [toast,setToast]=useState("");
@@ -112,9 +121,7 @@ setToast("");
 
 },2000);
 
-
 }
-
 
 
 
@@ -124,10 +131,16 @@ setToast("");
 function buyNow(product:any){
 
 
-addToCart(product);
+addToCart({
+
+...product,
+
+id:String(product.id)
+
+});
 
 
-showToast("⚡ Added to Cart");
+showToast("⚡ Added To Cart");
 
 
 setTimeout(()=>{
@@ -138,8 +151,6 @@ router.push("/checkout");
 
 
 }
-
-
 
 
 
@@ -165,24 +176,28 @@ show={toast!==""}
 
 
 
+
 <section className="max-w-7xl mx-auto px-6 py-12">
 
 
 
 
 
-<h2 className="
+<h2
+
+className="
 text-4xl
 font-serif
 text-center
 text-[#6b4d1f]
 mb-10
-">
+"
+
+>
 
 TRENDING PRODUCTS
 
 </h2>
-
 
 
 
@@ -202,9 +217,7 @@ slidesPerView={1}
 
 
 
-breakpoints={
-
-{
+breakpoints={{
 
 640:{
 slidesPerView:2
@@ -215,9 +228,8 @@ slidesPerView:2
 slidesPerView:4
 }
 
-}
+}}
 
-}
 
 
 
@@ -231,12 +243,9 @@ disableOnInteraction:false
 
 
 
-
 freeMode={{
 
-enabled:true,
-
-momentum:true
+enabled:true
 
 }}
 
@@ -245,13 +254,7 @@ momentum:true
 grabCursor={true}
 
 
-
-touchRatio={1}
-
-
-
 loop={products.length>4}
-
 
 
 
@@ -259,8 +262,9 @@ loop={products.length>4}
 
 
 
-{
 
+
+{
 
 products.slice(0,10).map((product)=>(
 
@@ -270,14 +274,16 @@ products.slice(0,10).map((product)=>(
 <SwiperSlide key={product.id}>
 
 
-<div className="
+<div
+
+className="
 bg-white
 rounded-2xl
 shadow-xl
 overflow-hidden
-">
+"
 
-
+>
 
 
 
@@ -308,21 +314,24 @@ object-cover
 
 
 
-
 <div className="p-5">
 
 
 
 
 
-<span className="
+<span
+
+className="
 bg-[#9b7a3d]
 text-white
 text-xs
 px-3
 py-1
 rounded-full
-">
+"
+
+>
 
 {product.category}
 
@@ -333,13 +342,16 @@ rounded-full
 
 
 
+<h3
 
-<h3 className="
+className="
 mt-4
 text-xl
 font-bold
 text-[#6b4d1f]
-">
+"
+
+>
 
 {product.name}
 
@@ -372,13 +384,16 @@ Weight: {product.weight}
 
 
 
+<p
 
-<p className="
+className="
 text-2xl
 font-bold
 text-[#9b7a3d]
 mt-3
-">
+"
+
+>
 
 ৳ {product.price.toLocaleString()}
 
@@ -391,16 +406,26 @@ mt-3
 
 
 
-
 <button
 
 onClick={()=>{
 
-addToCart(product);
+
+addToCart({
+
+...product,
+
+id:String(product.id)
+
+});
+
 
 showToast("🛒 Added To Cart");
 
+
 }}
+
+
 
 className="
 mt-5
@@ -425,13 +450,19 @@ hover:bg-[#7c622f]
 
 
 
-
 <button
+
 
 onClick={()=>{
 
 
-addToWishlist(product);
+addToWishlist({
+
+...product,
+
+id:String(product.id)
+
+});
 
 
 showToast("❤️ Added To Wishlist");
@@ -464,8 +495,8 @@ rounded-xl
 
 
 
-
 <button
+
 
 onClick={()=>buyNow(product)}
 
@@ -492,10 +523,11 @@ rounded-xl
 
 
 
-
 <Link
 
+
 href={`/products/${product.id}`}
+
 
 className="
 block
@@ -517,9 +549,7 @@ View Product
 
 
 
-
 </div>
-
 
 
 
@@ -537,7 +567,6 @@ View Product
 ))
 
 
-
 }
 
 
@@ -550,17 +579,12 @@ View Product
 
 
 
-
-
 </section>
-
 
 
 </>
 
-
 );
-
 
 
 }

@@ -7,6 +7,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
 
+
 export default function WishlistPage(){
 
 
@@ -22,9 +23,6 @@ const {
  addToCart
 
 }=useCart();
-
-
-
 
 
 
@@ -51,10 +49,9 @@ My Wishlist
 
 
 
-
 {
 
-wishlist.length===0 ?
+wishlist.length === 0 ?
 
 
 
@@ -66,6 +63,7 @@ wishlist.length===0 ?
 Your Wishlist is Empty
 
 </h2>
+
 
 
 
@@ -92,25 +90,30 @@ Continue Shopping
 
 
 
-
-
 <div className="grid md:grid-cols-3 gap-8">
+
 
 
 {
 
-
 wishlist.map((product)=>(
-
 
 
 <div
 
 key={product.id}
 
-className="bg-white rounded-xl shadow overflow-hidden hover:scale-105 transition"
+className="
+bg-white 
+rounded-xl 
+shadow 
+overflow-hidden 
+hover:scale-105 
+transition
+"
 
 >
+
 
 
 
@@ -150,6 +153,7 @@ className="w-full h-64 object-cover"
 
 
 
+
 <p className="text-gray-500 mt-2">
 
 {product.purity}
@@ -160,11 +164,13 @@ className="w-full h-64 object-cover"
 
 
 
+
 <p className="text-gray-500">
 
 Weight: {product.weight}
 
 </p>
+
 
 
 
@@ -187,19 +193,37 @@ Weight: {product.weight}
 
 <button
 
-onClick={()=>addToCart({
+
+onClick={()=>{
+
+
+addToCart({
 
 ...product,
 
 id:String(product.id)
 
-})}
+});
 
-className="mt-5 w-full bg-[#9b7a3d] text-white py-3 rounded-lg"
+
+}}
+
+
+
+className="
+mt-5
+w-full
+bg-[#9b7a3d]
+text-white
+py-3
+rounded-lg
+"
 
 >
 
+
 Add To Cart
+
 
 </button>
 
@@ -213,13 +237,26 @@ Add To Cart
 
 <button
 
-onClick={()=>removeFromWishlist(String(product.id))}
 
-className="mt-3 w-full border border-red-500 text-red-500 py-3 rounded-lg"
+onClick={()=>removeFromWishlist(product.id)}
+
+
+
+className="
+mt-3
+w-full
+border
+border-red-500
+text-red-500
+py-3
+rounded-lg
+"
 
 >
 
+
 Remove
+
 
 </button>
 
@@ -234,9 +271,7 @@ Remove
 
 
 
-
 </div>
-
 
 
 
@@ -247,9 +282,7 @@ Remove
 
 
 
-
 </div>
-
 
 
 

@@ -4,12 +4,12 @@ import {
   createContext,
   useContext,
   useState,
-  ReactNode
+  ReactNode,
 } from "react";
 
 
 
-export type Product = {
+export type WishlistProduct = {
 
   id:string;
 
@@ -31,12 +31,11 @@ export type Product = {
 
 
 
-
 type WishlistContextType = {
 
-  wishlist:Product[];
+  wishlist:WishlistProduct[];
 
-  addToWishlist:(product:Product)=>boolean;
+  addToWishlist:(product:WishlistProduct)=>boolean;
 
   removeFromWishlist:(id:string)=>void;
 
@@ -47,9 +46,9 @@ type WishlistContextType = {
 
 
 
-const WishlistContext =
-createContext<WishlistContextType | null>(null);
 
+const WishlistContext = 
+createContext<WishlistContextType | null>(null);
 
 
 
@@ -60,7 +59,7 @@ createContext<WishlistContextType | null>(null);
 
 export function WishlistProvider({
 
-children
+children,
 
 }:{
 
@@ -70,8 +69,10 @@ children:ReactNode;
 
 
 
-const [wishlist,setWishlist] =
-useState<Product[]>([]);
+
+
+const [wishlist,setWishlist] = 
+useState<WishlistProduct[]>([]);
 
 
 
@@ -81,16 +82,16 @@ useState<Product[]>([]);
 
 
 
-
-function addToWishlist(product:Product){
-
+function addToWishlist(product:WishlistProduct){
 
 
-const exist = wishlist.some(
+
+const exist = wishlist.find(
 
 (item)=>item.id === product.id
 
 );
+
 
 
 
@@ -105,6 +106,8 @@ return false;
 
 
 
+
+
 setWishlist((prev)=>[
 
 ...prev,
@@ -112,6 +115,8 @@ setWishlist((prev)=>[
 product
 
 ]);
+
+
 
 
 
@@ -131,8 +136,8 @@ return true;
 function removeFromWishlist(id:string){
 
 
-setWishlist((prev)=>
 
+setWishlist((prev)=>
 
 prev.filter(
 
@@ -140,10 +145,22 @@ prev.filter(
 
 )
 
-
 );
 
 
+}
+
+
+
+
+
+
+
+
+
+function clearWishlist(){
+
+setWishlist([]);
 
 }
 
@@ -200,7 +217,10 @@ removeFromWishlist
 export function useWishlist(){
 
 
+
 const context = useContext(WishlistContext);
+
+
 
 
 
@@ -218,7 +238,10 @@ throw new Error(
 
 
 
+
+
 return context;
+
 
 
 }
