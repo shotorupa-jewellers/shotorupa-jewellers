@@ -16,24 +16,91 @@ weight:"12g",
 price:350000,
 category:"Diamond"
 },
+
 {
 id:"d2",
+name:"Luxury Diamond Earrings",
+image:"/images/earrings.jpg",
+purity:"VVS Diamond",
+weight:"8g",
+price:220000,
+category:"Diamond"
+},
+
+{
+id:"d3",
+name:"Luxury Diamond Earrings",
+image:"/images/diamondearrings.jpg",
+purity:"VVS Diamond",
+weight:"8g",
+price:220000,
+category:"Diamond"
+},
+
+
+{
+id:"d4",
+name:"Luxury Diamond Earrings",
+image:"/images/earrings1.jpg",
+purity:"VVS Diamond",
+weight:"8g",
+price:220000,
+category:"Diamond"
+},
+
+{
+id:"d5",
+name:"Luxury Diamond Earrings",
+image:"/images/earrings2.jpg",
+purity:"VVS Diamond",
+weight:"8g",
+price:220000,
+category:"Diamond"
+},
+
+{
+id:"d6",
+name:"Luxury Diamond Earrings",
+image:"/images/diamond-earrings1.jpg",
+purity:"VVS Diamond",
+weight:"8g",
+price:220000,
+category:"Diamond"
+},
+
+
+
+{
+id:"d7",
+name:"Luxury Diamond Earrings",
+image:"/images/diamond-earrings2.jpg",
+purity:"VVS Diamond",
+weight:"8g",
+price:220000,
+category:"Diamond"
+},
+
+
+
+{
+id:"d8",
 name:"Diamond Engagement Ring",
-image:"/images/diamond-ring.jpg",
+image:"/images/diamond-ring3.jpg",
 purity:"Pure Diamond",
 weight:"5g",
 price:180000,
 category:"Diamond"
 },
+
 {
-id:"d3",
+id:"d9",
 name:"Luxury Diamond Earrings",
-image:"/images/diamond-earrings.jpg",
+image:"/images/diamond-earrings4.jpg",
 purity:"VVS Diamond",
 weight:"8g",
 price:220000,
 category:"Diamond"
-}
+},
 ];
 
 
