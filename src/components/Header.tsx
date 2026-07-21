@@ -20,6 +20,47 @@ const { wishlist } = useWishlist();
 
 
 
+
+const navLinks = [
+
+{
+name:"BRIDAL COLLECTIONS",
+link:"/collections/bridal"
+},
+
+{
+name:"NECKLACES",
+link:"/collections/necklaces"
+},
+
+{
+name:"EARRINGS",
+link:"/collections/earrings"
+},
+
+{
+name:"MAANG TIKKAS",
+link:"/collections/maang-tikkas"
+},
+
+{
+name:"OUR STORY",
+link:"/story"
+},
+
+{
+name:"CONSULTATION",
+link:"/consultation"
+}
+
+];
+
+
+
+
+
+
+
 return(
 
 
@@ -27,7 +68,11 @@ return(
 
 
 
-<div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+<div className="max-w-7xl mx-auto px-6 py-4">
+
+
+
+<div className="flex items-center justify-between">
 
 
 
@@ -43,7 +88,9 @@ className="text-3xl font-serif font-bold text-[#9b7a3d]"
 SHOTORUPA
 
 <span className="text-[#6b4d1f]">
+
  JEWELLERS
+
 </span>
 
 </Link>
@@ -53,66 +100,46 @@ SHOTORUPA
 
 
 
+{/* Right Menu */}
 
 
-{/* Desktop Menu */}
-
-<nav className="hidden md:flex items-center gap-8 text-[#6b4d1f] font-semibold">
+<div className="hidden md:flex items-center gap-5 text-[#6b4d1f]">
 
 
-<Link href="/">
-Home
+<Link href="/search">
+Search Jewellery
 </Link>
 
 
-<Link href="/products">
-Products
+<Link href="/account">
+Account
 </Link>
 
+
+<Link href="/orders">
+My Orders
+</Link>
 
 
 <Link href="/wishlist">
 
-Wishlist
-
-<span className="ml-1 text-[#9b7a3d]">
+Wishlist ❤️
 
 ({wishlist.length})
 
-</span>
-
 </Link>
-
-
 
 
 <Link href="/cart">
 
-Cart
-
-<span className="ml-1 text-[#9b7a3d]">
+Cart 🛒
 
 ({cart.length})
 
-</span>
-
 </Link>
 
 
-
-
-
-<Link href="/account">
-
-Account
-
-</Link>
-
-
-
-</nav>
-
-
+</div>
 
 
 
@@ -137,6 +164,53 @@ className="md:hidden text-3xl text-[#9b7a3d]"
 
 
 
+</div>
+
+
+
+
+
+
+
+
+
+{/* Desktop Navigation */}
+
+
+<nav className="hidden md:flex justify-center gap-8 mt-5 text-[#6b4d1f] font-semibold">
+
+
+{
+
+navLinks.map((item)=>(
+
+
+<Link
+
+key={item.link}
+
+href={item.link}
+
+className="hover:text-[#9b7a3d] transition"
+
+>
+
+{item.name}
+
+</Link>
+
+
+))
+
+}
+
+
+</nav>
+
+
+
+
+
 
 
 </div>
@@ -150,95 +224,66 @@ className="md:hidden text-3xl text-[#9b7a3d]"
 
 {/* Mobile Menu */}
 
+
 {
 
 menu &&
 
-<div className="md:hidden bg-white border-t px-6 py-5 space-y-4 text-[#6b4d1f] font-semibold">
+<div className="md:hidden bg-white border-t px-6 py-5 space-y-4">
+
+
+{
+
+navLinks.map((item)=>(
 
 
 <Link
 
+key={item.link}
+
+href={item.link}
+
 onClick={()=>setMenu(false)}
 
-href="/"
-
-className="block"
+className="block text-[#6b4d1f] font-semibold"
 
 >
 
-Home
+{item.name}
 
 </Link>
 
 
+))
 
-
-<Link
-
-onClick={()=>setMenu(false)}
-
-href="/products"
-
-className="block"
-
->
-
-Products
-
-</Link>
-
+}
 
 
 
 
 <Link
-
-onClick={()=>setMenu(false)}
-
-href="/wishlist"
-
-className="block"
-
->
-
-Wishlist ({wishlist.length})
-
-</Link>
-
-
-
-
-
-<Link
-
-onClick={()=>setMenu(false)}
 
 href="/cart"
 
-className="block"
+className="block font-semibold"
 
 >
 
-Cart ({cart.length})
+Cart 🛒 ({cart.length})
 
 </Link>
 
 
 
-
-
 <Link
 
-onClick={()=>setMenu(false)}
+href="/wishlist"
 
-href="/account"
-
-className="block"
+className="block font-semibold"
 
 >
 
-Account
+Wishlist ❤️ ({wishlist.length})
 
 </Link>
 
@@ -252,6 +297,7 @@ Account
 
 
 </header>
+
 
 
 );

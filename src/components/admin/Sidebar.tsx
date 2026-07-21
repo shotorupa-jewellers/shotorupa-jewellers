@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 
-export default function Sidebar() {
+export default function Sidebar(){
 
 
 const pathname = usePathname();
@@ -15,11 +15,13 @@ const router = useRouter();
 
 const menu = [
 
+
 {
 name:"Dashboard",
 icon:"📊",
 link:"/admin"
 },
+
 
 
 {
@@ -29,11 +31,13 @@ link:"/admin/products"
 },
 
 
+
 {
 name:"Add Product",
 icon:"➕",
 link:"/admin/add-product"
 },
+
 
 
 {
@@ -43,11 +47,21 @@ link:"/admin/orders"
 },
 
 
+
 {
 name:"Customers",
 icon:"👥",
 link:"/admin/customers"
 },
+
+
+
+{
+name:"Offers",
+icon:"🔥",
+link:"/admin/offers"
+},
+
 
 
 {
@@ -57,15 +71,15 @@ link:"/admin/settings"
 },
 
 
+
 ];
 
 
 
 
 
-function logout(){
 
-localStorage.removeItem("admin");
+function logout(){
 
 router.push("/admin/login");
 
@@ -75,7 +89,7 @@ router.push("/admin/login");
 
 
 
-return (
+return(
 
 
 <aside
@@ -86,26 +100,17 @@ min-h-screen
 bg-[#111]
 text-white
 p-6
+shadow-xl
 hidden
 md:block
-shadow-xl
 "
 
-
 >
-
 
 
 {/* Logo */}
 
-<div
-
-className="
-mb-10
-text-center
-"
-
->
+<div className="mb-10 text-center">
 
 
 <h1
@@ -123,6 +128,7 @@ Shotorupa
 </h1>
 
 
+
 <p className="text-gray-400 text-sm">
 
 Jewellers Admin
@@ -131,6 +137,8 @@ Jewellers Admin
 
 
 </div>
+
+
 
 
 
@@ -149,9 +157,7 @@ menu.map((item)=>(
 
 <Link
 
-
 key={item.link}
-
 
 href={item.link}
 
@@ -165,7 +171,6 @@ py-3
 rounded-xl
 transition-all
 duration-300
-
 
 ${
 pathname === item.link ||
@@ -181,12 +186,10 @@ pathname.startsWith(item.link + "/")
 
 }
 
-
 `}
 
 
 >
-
 
 
 <span className="text-xl">
@@ -208,11 +211,11 @@ pathname.startsWith(item.link + "/")
 </Link>
 
 
-
 ))
 
 
 }
+
 
 
 </nav>
@@ -223,7 +226,9 @@ pathname.startsWith(item.link + "/")
 
 
 
-{/* Bottom */}
+
+
+{/* Logout */}
 
 
 <div className="mt-10">
@@ -243,7 +248,6 @@ py-3
 rounded-xl
 font-semibold
 transition
-
 "
 
 

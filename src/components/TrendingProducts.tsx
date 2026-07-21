@@ -5,10 +5,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { products } from "@/data/products";
-
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { useProducts } from "@/context/ProductContext";
 
 import Toast from "@/components/Toast";
 
@@ -21,9 +20,13 @@ import "swiper/css";
 export default function TrendingProducts(){
 
 
+const { products } = useProducts();
+
+
 const { addToCart } = useCart();
 
 const { addToWishlist } = useWishlist();
+
 
 const router = useRouter();
 
@@ -36,6 +39,7 @@ const [toast,setToast]=useState("");
 
 function showToast(message:string){
 
+
 setToast(message);
 
 
@@ -45,8 +49,8 @@ setToast("");
 
 },2000);
 
-}
 
+}
 
 
 
@@ -77,8 +81,6 @@ router.push("/checkout");
 
 
 
-
-
 return(
 
 
@@ -92,7 +94,6 @@ message={toast}
 show={toast!==""}
 
 />
-
 
 
 
@@ -116,9 +117,6 @@ TRENDING PRODUCTS
 
 
 
-
-
-
 <Swiper
 
 
@@ -134,6 +132,7 @@ slidesPerView={1}
 
 breakpoints={{
 
+
 640:{
 slidesPerView:2
 },
@@ -143,23 +142,30 @@ slidesPerView:2
 slidesPerView:4
 }
 
+
 }}
+
 
 
 
 autoplay={{
 
+
 delay:2500,
 
 disableOnInteraction:false
+
 
 }}
 
 
 
+
 freeMode={{
 
+
 enabled:true
+
 
 }}
 
@@ -168,7 +174,7 @@ enabled:true
 grabCursor={true}
 
 
-loop={true}
+loop={products.length > 4}
 
 
 
@@ -179,19 +185,16 @@ loop={true}
 
 
 
-
-
-
 {
 
-products.map((product)=>(
+products.slice(0,10).map((product)=>(
+
 
 
 <SwiperSlide key={product.id}>
 
 
 <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-
 
 
 
@@ -219,6 +222,7 @@ quality={100}
 className="w-full h-64 object-cover"
 
 
+
 />
 
 
@@ -227,13 +231,7 @@ className="w-full h-64 object-cover"
 
 
 
-
-
-
-
 <div className="p-5">
-
-
 
 
 
@@ -254,10 +252,11 @@ className="w-full h-64 object-cover"
 
 
 
-
 <h3 className="mt-3 text-lg font-bold text-[#6b4d1f]">
 
+
 {product.name}
+
 
 </h3>
 
@@ -267,12 +266,12 @@ className="w-full h-64 object-cover"
 
 
 
-
-
 <p className="text-gray-500">
+
 
 {product.purity}
 
+
 </p>
 
 
@@ -283,13 +282,11 @@ className="w-full h-64 object-cover"
 
 <p className="text-gray-500">
 
+
 Weight: {product.weight}
 
+
 </p>
-
-
-
-
 
 
 
@@ -299,12 +296,11 @@ Weight: {product.weight}
 
 <p className="mt-3 text-2xl font-bold text-[#9b7a3d]">
 
+
 ৳ {product.price.toLocaleString()}
 
+
 </p>
-
-
-
 
 
 
@@ -349,10 +345,6 @@ Add To Cart
 
 
 
-
-
-
-
 <button
 
 
@@ -381,10 +373,6 @@ className="mt-3 w-full border border-[#9b7a3d] text-[#9b7a3d] py-3 rounded-lg"
 
 
 </button>
-
-
-
-
 
 
 
@@ -422,12 +410,11 @@ Buy Now
 
 
 
-
-
 <Link
 
 
 href={`/products/${product.id}`}
+
 
 
 className="mt-3 block text-center text-[#9b7a3d]"
@@ -449,13 +436,7 @@ View Product
 
 
 
-
-
-
-
 </div>
-
-
 
 
 
@@ -480,13 +461,7 @@ View Product
 
 
 
-
-
-
-
 </Swiper>
-
-
 
 
 
@@ -498,10 +473,12 @@ View Product
 
 
 
+
 </>
 
 
 );
+
 
 
 }

@@ -10,7 +10,6 @@ import DiamondCollection from "@/components/DiamondCollection";
 import NewArrivals from "@/components/NewArrivals";
 import OfferBanner from "@/components/OfferBanner";
 import AccountButton from "@/components/AccountButton";
-import LuxurySidebar from "@/components/LuxurySidebar";
 
 import { products } from "@/data/products";
 
@@ -45,8 +44,7 @@ return(
 <main className="min-h-screen bg-[#f8f4ee]">
 
 
-
-{/* TOP MENU */}
+{/* MENU BAR */}
 
 <div className="bg-[#9b7a3d] text-white">
 
@@ -89,17 +87,13 @@ CONSULTATION
 
 
 
-
-
 {/* HEADER */}
 
-<header className="bg-white shadow sticky top-0 z-50">
+<header className="bg-white shadow">
 
 
 <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
 
-
-{/* LOGO */}
 
 <Link href="/">
 
@@ -120,9 +114,6 @@ JEWELLERS
 
 
 
-
-{/* SEARCH */}
-
 <input
 
 type="text"
@@ -141,13 +132,7 @@ className="hidden md:block border rounded-full px-6 py-3 w-96 text-black"
 
 
 
-
-{/* RIGHT */}
-
-<div className="flex items-center gap-5 text-black">
-
-
-<div className="hidden md:flex items-center gap-5">
+<div className="flex gap-6 items-center text-black">
 
 
 <AccountButton />
@@ -156,7 +141,6 @@ className="hidden md:block border rounded-full px-6 py-3 w-96 text-black"
 <Link href="/orders">
 My Orders
 </Link>
-
 
 
 <Link href="/wishlist">
@@ -173,7 +157,6 @@ Wishlist ❤️
 
 
 
-
 <Link href="/cart">
 
 Cart 🛒
@@ -187,15 +170,6 @@ Cart 🛒
 </Link>
 
 
-</div>
-
-
-
-
-{/* SIDEBAR */}
-
-<LuxurySidebar />
-
 
 </div>
 
@@ -205,7 +179,6 @@ Cart 🛒
 
 
 </header>
-
 
 
 
@@ -225,7 +198,6 @@ Search Result
 </h2>
 
 
-
 <div className="grid md:grid-cols-4 gap-6">
 
 
@@ -233,13 +205,9 @@ Search Result
 
 searchProducts.map((product)=>(
 
-
 <div
-
 key={product.id}
-
 className="bg-white rounded-xl shadow p-4"
-
 >
 
 
@@ -266,13 +234,11 @@ className="w-full h-48 object-cover rounded-xl"
 </h3>
 
 
-
 <p className="text-[#9b7a3d] font-bold">
 
 ৳ {product.price.toLocaleString()}
 
 </p>
-
 
 
 <Link
@@ -309,8 +275,6 @@ View Product
 
 
 
-
-
 {/* HERO */}
 
 
@@ -324,13 +288,11 @@ View Product
 
 src="/images/hero.jpg"
 
-alt="Bride Jewellery"
+alt="Bride"
 
 width={2000}
 
 height={1200}
-
-priority
 
 className="w-full h-[620px] object-cover"
 
@@ -342,10 +304,10 @@ className="w-full h-[620px] object-cover"
 
 
 
-<div className="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 text-white">
+<div className="absolute left-16 top-1/2 -translate-y-1/2 text-white">
 
 
-<h2 className="text-5xl md:text-7xl font-serif">
+<h2 className="text-7xl font-serif">
 
 ELEGANCE,
 
@@ -356,8 +318,7 @@ UNVEILED.
 </h2>
 
 
-
-<p className="mt-5 text-lg md:text-xl">
+<p className="mt-5 text-xl">
 
 Discover curated bridal jewellery designed for your moment.
 
@@ -365,6 +326,7 @@ Discover curated bridal jewellery designed for your moment.
 
 
 </div>
+
 
 
 </div>
@@ -376,22 +338,15 @@ Discover curated bridal jewellery designed for your moment.
 
 
 
-
-
 <TrendingProducts />
-
 
 <GoldCollection />
 
-
 <DiamondCollection />
-
 
 <NewArrivals />
 
-
 <OfferBanner />
-
 
 
 

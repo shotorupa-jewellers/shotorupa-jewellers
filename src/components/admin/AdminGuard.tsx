@@ -7,107 +7,143 @@ import { useRouter } from "next/navigation";
 
 
 import {
-onAuthStateChanged
+  onAuthStateChanged
 } from "firebase/auth";
 
 
 import {
-auth
+  auth
 } from "@/lib/firebase";
+
 
 
 
 
 export default function AdminGuard({
 
-children
+  children
 
 }:{
 
-children:React.ReactNode
+  children:React.ReactNode;
 
 }){
 
 
-const router = useRouter();
+  const router = useRouter();
 
 
-const [loading,setLoading]=useState(true);
+  const [loading,setLoading] = useState(true);
 
-
-
-
-useEffect(()=>{
-
-
-const unsubscribe = onAuthStateChanged(
-
-auth,
-
-(user)=>{
-
-
-if(!user){
-
-
-router.push("/admin/login");
-
-
-}
-
-else{
-
-
-setLoading(false);
-
-
-}
-
-
-
-}
-
-
-);
-
-
-
-return ()=>unsubscribe();
-
-
-
-},[]);
+  const [allowed,setAllowed] = useState(false);
 
 
 
 
 
 
-if(loading){
 
-
-return(
-
-<div className="
-min-h-screen
-flex
-items-center
-justify-center
-">
-
-Checking Admin...
-
-</div>
-
-)
-
-
-}
+  useEffect(()=>{
 
 
 
+    const unsubscribe = onAuthStateChanged(
 
-return <>{children}</>;
+
+      auth,
+
+
+      (user)=>{
+
+
+
+        if(user){
+
+
+          setAllowed(true);
+
+
+        }
+
+        else{
+
+
+          setAllowed(false);
+
+
+          router.replace("/admin/login");
+
+
+        }
+
+
+
+        setLoading(false);
+
+
+
+      }
+
+
+    );
+
+
+
+
+
+    return ()=>unsubscribe();
+
+
+
+
+  },[router]);
+
+
+
+
+
+
+
+
+
+  if(loading){
+
+
+    return null;
+
+
+  }
+
+
+
+
+
+
+
+
+  if(!allowed){
+
+
+    return null;
+
+
+  }
+
+
+
+
+
+
+
+  return (
+
+    <>
+
+      {children}
+
+    </>
+
+  );
 
 
 
