@@ -2,135 +2,112 @@
 
 import Image from "next/image";
 import Link from "next/link";
-
-import { useProducts } from "@/context/ProductContext";
-
-
-const defaultDiamond = [
-{
-id:"d1",
-name:"Diamond Bridal Necklace",
-image:"/images/diamond-necklace.jpg",
-purity:"VVS Diamond",
-weight:"12g",
-price:350000,
-category:"Diamond"
-},
-
-{
-id:"d2",
-name:"Luxury Diamond Earrings",
-image:"/images/earrings.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
-
-{
-id:"d3",
-name:"Luxury Diamond Earrings",
-image:"/images/diamondearrings.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
+import { useEffect, useState } from "react";
 
 
-{
-id:"d4",
-name:"Luxury Diamond Earrings",
-image:"/images/earrings1.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
+import {
+  collection,
+  query,
+  where,
+  limit,
+  onSnapshot
+} from "firebase/firestore";
 
-{
-id:"d5",
-name:"Luxury Diamond Earrings",
-image:"/images/earrings2.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
 
-{
-id:"d6",
-name:"Luxury Diamond Earrings",
-image:"/images/diamond-earrings1.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
+import { db } from "@/lib/firebase";
 
 
 
-{
-id:"d7",
-name:"Luxury Diamond Earrings",
-image:"/images/diamond-earrings2.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
+
+type Product = {
+
+id:string;
+
+name:string;
+
+image:string;
+
+purity?:string;
+
+weight?:string;
+
+price:number;
+
+category:string;
+
+};
 
 
 
-{
-id:"d8",
-name:"Diamond Engagement Ring",
-image:"/images/diamond-ring3.jpg",
-purity:"Pure Diamond",
-weight:"5g",
-price:180000,
-category:"Diamond"
-},
-
-{
-id:"d9",
-name:"Luxury Diamond Earrings",
-image:"/images/diamond-earrings4.jpg",
-purity:"VVS Diamond",
-weight:"8g",
-price:220000,
-category:"Diamond"
-},
-];
 
 
 
 export default function DiamondCollection(){
 
 
-const {products=[]}=useProducts();
+
+const [products,setProducts] = useState<Product[]>([]);
 
 
 
-const diamondProducts = products.filter(
 
-(product)=>product.category==="Diamond"
+
+
+useEffect(()=>{
+
+
+const q = query(
+
+collection(db,"products"),
+
+where("category","==","Diamond"),
+
+limit(3)
 
 );
 
 
 
-const showProducts =
 
-diamondProducts.length > 0
 
-?
+const unsubscribe = onSnapshot(
 
-diamondProducts
+q,
 
-:
+(snapshot)=>{
 
-defaultDiamond;
+
+const data = snapshot.docs.map(doc=>({
+
+id:doc.id,
+
+...doc.data()
+
+})) as Product[];
+
+
+
+
+setProducts(data);
+
+
+
+}
+
+
+
+);
+
+
+
+return ()=>unsubscribe();
+
+
+
+},[]);
+
+
+
 
 
 
@@ -144,7 +121,10 @@ return(
 
 
 
+
 <div className="flex justify-between items-center mb-8">
+
+
 
 
 
@@ -172,6 +152,8 @@ Elegant diamond jewellery for your special moments.
 
 
 
+
+
 <Link
 
 href="/products?category=Diamond"
@@ -186,6 +168,8 @@ View All
 
 
 
+
+
 </div>
 
 
@@ -193,12 +177,36 @@ View All
 
 
 
-<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
 
 {
 
-showProducts.map((product)=>(
+products.length===0 ?
+
+
+<p className="text-center text-gray-500">
+
+No Diamond Products Available
+
+</p>
+
+
+
+
+:
+
+
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+
+
+
+
+
+{
+
+products.map((product)=>(
 
 
 
@@ -212,7 +220,11 @@ className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl trans
 
 
 
+
+
+
 <div className="overflow-hidden">
+
 
 
 <Image
@@ -232,7 +244,12 @@ className="w-full h-72 object-cover hover:scale-110 transition duration-500"
 />
 
 
+
 </div>
+
+
+
+
 
 
 
@@ -241,11 +258,17 @@ className="w-full h-72 object-cover hover:scale-110 transition duration-500"
 <div className="p-6">
 
 
+
+
+
 <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
 
 DIAMOND
 
 </span>
+
+
+
 
 
 
@@ -259,11 +282,18 @@ DIAMOND
 
 
 
+
+
+
+
 <p className="mt-2 text-gray-500">
 
 {product.purity}
 
 </p>
+
+
+
 
 
 
@@ -277,11 +307,18 @@ Weight: {product.weight}
 
 
 
+
+
+
 <p className="mt-4 text-3xl font-bold text-[#9b7a3d]">
 
 ৳ {product.price.toLocaleString()}
 
 </p>
+
+
+
+
 
 
 
@@ -301,7 +338,14 @@ View Product
 
 
 
+
+
+
 </div>
+
+
+
+
 
 
 
@@ -313,11 +357,19 @@ View Product
 ))
 
 
+
 }
 
 
 
+
+
 </div>
+
+
+}
+
+
 
 
 
@@ -326,6 +378,7 @@ View Product
 
 
 );
+
 
 
 }

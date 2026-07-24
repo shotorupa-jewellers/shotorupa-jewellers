@@ -1,8 +1,10 @@
 "use client";
 
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 
 import {
   collection,
@@ -11,6 +13,7 @@ import {
   limit,
   onSnapshot
 } from "firebase/firestore";
+
 
 import { db } from "@/lib/firebase";
 
@@ -24,11 +27,11 @@ name:string;
 
 image:string;
 
+price:number;
+
 purity?:string;
 
 weight?:string;
-
-price:number;
 
 category:string;
 
@@ -38,11 +41,11 @@ category:string;
 
 
 
-export default function GoldCollection(){
+export default function CityGoldCollection(){
 
 
 
-const [products,setProducts]=useState<Product[]>([]);
+const [products,setProducts] = useState<Product[]>([]);
 
 
 
@@ -55,7 +58,7 @@ const q = query(
 
 collection(db,"products"),
 
-where("category","==","Gold"),
+where("category","==","City Gold"),
 
 limit(3)
 
@@ -82,17 +85,13 @@ id:doc.id,
 
 
 
-
 setProducts(data);
 
 
 
 }
 
-
-
 );
-
 
 
 
@@ -101,7 +100,6 @@ return ()=>unsubscribe();
 
 
 },[]);
-
 
 
 
@@ -128,7 +126,7 @@ return(
 
 <h2 className="text-4xl font-serif text-[#6b4d1f]">
 
-GOLD COLLECTION
+CITY GOLD COLLECTION
 
 </h2>
 
@@ -136,7 +134,7 @@ GOLD COLLECTION
 
 <p className="text-gray-500 mt-2">
 
-Timeless gold jewellery crafted with elegance.
+Beautiful gold plated jewellery with modern designs.
 
 </p>
 
@@ -149,9 +147,9 @@ Timeless gold jewellery crafted with elegance.
 
 <Link
 
-href="/products?category=Gold"
+href="/products?category=City%20Gold"
 
-className="border border-[#9b7a3d] px-6 py-3 rounded-full text-[#9b7a3d]"
+className="border border-[#9b7a3d] px-6 py-3 rounded-full text-[#9b7a3d] hover:bg-[#9b7a3d] hover:text-white transition"
 
 >
 
@@ -170,14 +168,16 @@ View All
 
 
 
+
+
 {
 
-products.length===0 ?
+products.length === 0 ?
 
 
 <p className="text-center text-gray-500">
 
-No Gold Products Available
+No City Gold Products Available
 
 </p>
 
@@ -186,7 +186,7 @@ No Gold Products Available
 :
 
 
-<div className="grid md:grid-cols-3 gap-8">
+<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
 
 
@@ -202,7 +202,7 @@ products.map((product)=>(
 
 key={product.id}
 
-className="bg-white rounded-2xl shadow-xl overflow-hidden hover:scale-105 transition"
+className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition"
 
 >
 
@@ -224,7 +224,7 @@ width={500}
 
 height={400}
 
-className="w-full h-72 object-cover"
+className="w-full h-72 object-cover hover:scale-110 transition duration-500"
 
 />
 
@@ -244,11 +244,14 @@ className="w-full h-72 object-cover"
 
 
 
-<span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+<span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
 
-GOLD
+CITY GOLD
 
 </span>
+
+
+
 
 
 
@@ -264,6 +267,8 @@ GOLD
 
 
 
+
+
 <p className="text-gray-500 mt-2">
 
 {product.purity}
@@ -274,11 +279,14 @@ GOLD
 
 
 
+
+
 <p className="text-gray-500">
 
 Weight: {product.weight}
 
 </p>
+
 
 
 
@@ -297,11 +305,12 @@ Weight: {product.weight}
 
 
 
+
 <Link
 
 href={`/products/${product.id}`}
 
-className="block text-center mt-6 bg-[#9b7a3d] text-white py-3 rounded-xl"
+className="block text-center mt-6 bg-[#9b7a3d] text-white py-3 rounded-xl hover:bg-[#7a602d]"
 
 >
 
@@ -321,7 +330,6 @@ View Product
 
 
 
-
 </div>
 
 
@@ -329,19 +337,14 @@ View Product
 ))
 
 
-
 }
-
-
 
 
 
 </div>
 
 
-
 }
-
 
 
 
