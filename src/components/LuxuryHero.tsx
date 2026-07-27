@@ -2,129 +2,201 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowRight } from "lucide-react";
+
+import {
+  ArrowDown,
+  ArrowRight
+} from "lucide-react";
+
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform
+} from "framer-motion";
+
+import type { MouseEvent } from "react";
 
 
 export default function LuxuryHero(){
 
+
+const mouseX = useMotionValue(0);
+const mouseY = useMotionValue(0);
+
+
+
+const springX = useSpring(mouseX,{
+  stiffness:40,
+  damping:20
+});
+
+
+const springY = useSpring(mouseY,{
+  stiffness:40,
+  damping:20
+});
+
+
+
+const imageMoveX = useTransform(
+ springX,
+ [-30,30],
+ [-20,20]
+);
+
+
+const imageMoveY = useTransform(
+ springY,
+ [-30,30],
+ [-20,20]
+);
+
+
+
+
+function handleMouseMove(
+e:MouseEvent<HTMLDivElement>
+){
+
+
+const x =
+(e.clientX / window.innerWidth - .5) * 60;
+
+
+const y =
+(e.clientY / window.innerHeight - .5) * 60;
+
+
+mouseX.set(x);
+
+mouseY.set(y);
+
+
+}
+
+
+
+
 return(
 
+
 <section
+
+onMouseMove={handleMouseMove}
+
 className="
 relative
 min-h-screen
 overflow-hidden
 bg-[#19160F]
 "
+
+
 >
 
 
-{/* ================= IMAGE ================= */}
+{/* BACKGROUND IMAGE */}
 
-<div
+
+<motion.div
+
+style={{
+
+x:imageMoveX,
+
+y:imageMoveY
+
+}}
+
 className="
 absolute
 inset-0
-overflow-hidden
+scale-110
 "
+
 >
+
 
 <Image
 
 src="/images/hero.jpg"
 
-alt="Luxury Jewellery"
-
 fill
 
 priority
 
+alt="Luxury Jewellery"
+
 className="
 object-cover
-object-center
-scale-110
-animate-heroZoom
 "
 
-/>
+ />
 
 
-
-{/* Cartier Dark Overlay */}
 
 <div
+
 className="
 absolute
 inset-0
 bg-gradient-to-r
-from-[#19160F]/85
-via-[#19160F]/45
-to-[#19160F]/10
+from-black/90
+via-black/50
+to-transparent
 "
+
 />
 
 
 
 <div
+
 className="
 absolute
 inset-0
 bg-gradient-to-t
-from-[#19160F]/70
-via-transparent
+from-black/80
 to-transparent
 "
+
 />
 
 
-</div>
+
+</motion.div>
 
 
 
 
 
 
+{/* FRAME */}
 
-{/* ================= GOLD FRAME ================= */}
 
 
-<div
+<motion.div
+
+initial={{
+opacity:0
+}}
+
+animate={{
+opacity:1
+}}
+
+transition={{
+duration:2
+}}
+
 className="
 absolute
 inset-8
 border
 border-[#D6B77A]/40
 "
-/>
 
-
-
-<div
-className="
-absolute
-top-14
-left-14
-w-24
-h-24
-border-l
-border-t
-border-[#D6B77A]
-"
-/>
-
-
-
-<div
-className="
-absolute
-bottom-14
-right-14
-w-24
-h-24
-border-r
-border-b
-border-[#D6B77A]
-"
 />
 
 
@@ -133,11 +205,12 @@ border-[#D6B77A]
 
 
 
-{/* ================= CONTENT ================= */}
+{/* CONTENT */}
 
 
 
 <div
+
 className="
 relative
 z-10
@@ -145,40 +218,50 @@ min-h-screen
 flex
 items-center
 "
+
 >
 
 
 <div
+
 className="
-max-w-[1240px]
+max-w-[1300px]
 mx-auto
-px-8
+px-10
 w-full
 "
+
 >
 
 
-<div
-className="
-max-w-2xl
-"
->
+<motion.p
 
+initial={{
+opacity:0,
+y:40
+}}
 
+animate={{
+opacity:1,
+y:0
+}}
 
-<p
+transition={{
+duration:1
+}}
+
 className="
 uppercase
-tracking-[0.5em]
+tracking-[0.6em]
 text-xs
 text-[#D6B77A]
-hero-reveal
 "
+
 >
 
 SHOTORUPA JEWELLERS
 
-</p>
+</motion.p>
 
 
 
@@ -186,15 +269,28 @@ SHOTORUPA JEWELLERS
 
 
 
-<h1
+<motion.h1
+
+initial={{
+opacity:0,
+y:80
+}}
+
+animate={{
+opacity:1,
+y:0
+}}
+
+transition={{
+duration:1.3
+}}
 
 className="
 font-luxury
 text-white
 text-[clamp(70px,10vw,140px)]
-leading-[0.88]
+leading-[0.85]
 mt-8
-hero-reveal-delay
 "
 
 >
@@ -202,14 +298,17 @@ hero-reveal-delay
 
 Light,
 
+
 <br/>
 
 
 <span
+
 className="
 italic
 text-[#D6B77A]
 "
+
 >
 
 held.
@@ -217,7 +316,7 @@ held.
 </span>
 
 
-</h1>
+</motion.h1>
 
 
 
@@ -225,28 +324,36 @@ held.
 
 
 
+<motion.p
 
-<p
+initial={{
+opacity:0
+}}
+
+animate={{
+opacity:1
+}}
+
+transition={{
+delay:0.8
+}}
 
 className="
 mt-10
-max-w-lg
+max-w-xl
 text-lg
+text-white/80
 leading-relaxed
-text-white/85
-hero-reveal-delay2
 "
 
 >
 
-Where pure gold meets
-exceptional craftsmanship.
-Jewellery created for
-moments that last forever.
 
-</p>
+Where pure gold meets exceptional craftsmanship.
+Jewellery created for moments that last forever.
 
 
+</motion.p>
 
 
 
@@ -254,17 +361,31 @@ moments that last forever.
 
 
 
-<div
+
+
+<motion.div
+
+initial={{
+opacity:0,
+y:50
+}}
+
+animate={{
+opacity:1,
+y:0
+}}
+
+transition={{
+delay:1
+}}
+
 className="
 mt-12
 flex
-flex-wrap
 gap-6
-hero-reveal-delay3
 "
+
 >
-
-
 
 
 <Link
@@ -273,9 +394,7 @@ href="/products"
 
 className="
 group
-relative
-overflow-hidden
-inline-flex
+flex
 items-center
 gap-4
 px-12
@@ -283,50 +402,31 @@ py-5
 bg-[#B08D32]
 text-white
 uppercase
+tracking-[.3em]
 text-xs
-tracking-[0.3em]
+hover:bg-[#D6B77A]
 transition
-duration-500
 "
 
 >
 
 
-<span className="relative z-10">
-
 Explore Collection
-
-</span>
 
 
 <ArrowRight
+
 size={18}
+
 className="
-relative
-z-10
-group-hover:translate-x-2
+group-hover:translate-x-3
 transition
 "
+
 />
-
-
-
-<div
-className="
-absolute
-inset-0
-bg-[#D6B77A]
-translate-x-full
-group-hover:translate-x-0
-transition
-duration-500
-"
-/>
-
 
 
 </Link>
-
 
 
 
@@ -337,40 +437,34 @@ duration-500
 href="/about"
 
 className="
+border
+border-white/50
+text-white
 px-12
 py-5
-border
-border-white/70
-text-white
 uppercase
+tracking-[.3em]
 text-xs
-tracking-[0.3em]
 hover:bg-white
 hover:text-black
 transition
-duration-500
 "
 
 >
 
+
 Our Story
+
 
 </Link>
 
 
 
-
-
-</div>
-
-
-
-</div>
+</motion.div>
 
 
 
 </div>
-
 
 
 </div>
@@ -382,28 +476,46 @@ Our Story
 
 
 
-
-{/* ================= DIAMOND ================= */}
-
+{/* ROTATING DIAMOND */}
 
 
-<div
+
+<motion.div
+
+
+animate={{
+rotate:360
+}}
+
+
+transition={{
+duration:40,
+repeat:Infinity,
+ease:"linear"
+}}
+
+
 className="
 absolute
-right-24
-bottom-24
+right-20
+bottom-20
 hidden
 lg:block
 opacity-30
-animate-spin-slow
 "
+
+
 >
 
 
 <svg
-width="160"
-height="160"
+
+width="170"
+
+height="170"
+
 viewBox="0 0 100 100"
+
 >
 
 
@@ -414,7 +526,8 @@ M50 5
 L85 35
 L70 90
 L30 90
-L15 35 Z
+L15 35
+Z
 "
 
 fill="none"
@@ -427,7 +540,7 @@ stroke="#D6B77A"
 </svg>
 
 
-</div>
+</motion.div>
 
 
 
@@ -437,27 +550,36 @@ stroke="#D6B77A"
 
 
 
-{/* Scroll */}
+{/* SCROLL */}
+
 
 
 <div
+
 className="
 absolute
 bottom-10
 left-1/2
 -translate-x-1/2
-text-white/70
+text-white/60
 "
+
+
 >
 
+
 <ArrowDown
-size={28}
-className="animate-bounce"
+
+size={30}
+
+className="
+animate-bounce
+"
+
 />
 
 
 </div>
-
 
 
 

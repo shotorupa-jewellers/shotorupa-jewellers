@@ -1,21 +1,23 @@
-export type Product = {
+export interface Product {
 
-id:string;
+  id: string;
 
-name:string;
+  name: string;
 
-price:number;
+  category: string;
 
-image:string;
+  price: number;
 
-category:string;
+  image: string;
 
-weight:string;
+  description?: string;
 
-purity:string;
+  stock?: number;
 
-metal?:string;
+  weight?: string | number;
 
-stone?:string;
+  metal?: string;
 
-};
+  purity?: string;
+
+}

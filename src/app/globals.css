@@ -3,19 +3,20 @@
 
 :root {
 
-  --ivory:#F6F3EC;
-  --ivory-soft:#EFEAE0;
+--ivory:#F6F3EC;
+--ivory-soft:#EFEAE0;
 
-  --ink:#19160F;
+--ink:#19160F;
 
-  --gold:#A6875A;
-  --gold-light:#D6C09A;
+--gold:#A6875A;
+--gold-light:#D6C09A;
 
-  --espresso:#241C16;
+--espresso:#241C16;
 
-  --white:#ffffff;
+--white:#ffffff;
 
 }
+
 
 
 
@@ -35,6 +36,8 @@
 --font-mono:var(--font-geist-mono);
 
 }
+
+
 
 
 
@@ -69,6 +72,7 @@ background:var(--ivory);
 color:var(--ink);
 
 font-family:
+
 Arial,
 Helvetica,
 sans-serif;
@@ -76,6 +80,7 @@ sans-serif;
 -webkit-font-smoothing:antialiased;
 
 }
+
 
 
 
@@ -89,6 +94,7 @@ sans-serif;
 .font-luxury{
 
 font-family:
+
 var(--font-fraunces),
 Georgia,
 serif;
@@ -96,6 +102,7 @@ serif;
 font-weight:400;
 
 }
+
 
 
 
@@ -141,9 +148,9 @@ content:"";
 
 position:absolute;
 
-bottom:-8px;
-
 left:0;
+
+bottom:-8px;
 
 width:0;
 
@@ -167,31 +174,12 @@ width:100%;
 
 
 
+
+
+
 /* =========================
-   HERO
+   HERO IMAGE ZOOM
 ========================= */
-
-
-.luxury-hero{
-
-min-height:90vh;
-
-position:relative;
-
-display:flex;
-
-align-items:center;
-
-overflow:hidden;
-
-background-size:cover;
-
-background-position:center;
-
-}
-
-
-
 
 
 .hero-image{
@@ -201,8 +189,6 @@ animation:
 heroZoom 20s ease-in-out infinite alternate;
 
 }
-
-
 
 
 
@@ -228,6 +214,13 @@ transform:scale(1.08);
 
 
 
+
+
+/* =========================
+   HERO OVERLAY
+========================= */
+
+
 .hero-overlay{
 
 position:absolute;
@@ -241,9 +234,11 @@ linear-gradient(
 
 90deg,
 
-rgba(25,22,15,.72),
+rgba(25,22,15,.85),
 
-rgba(25,22,15,.25)
+rgba(25,22,15,.35),
+
+transparent
 
 );
 
@@ -251,93 +246,6 @@ rgba(25,22,15,.25)
 }
 
 
-
-
-
-
-.hero-content{
-
-position:relative;
-
-z-index:2;
-
-max-width:650px;
-
-padding-left:8%;
-
-color:white;
-
-}
-
-
-
-
-
-.hero-small{
-
-font-size:12px;
-
-letter-spacing:.35em;
-
-color:var(--gold-light);
-
-text-transform:uppercase;
-
-}
-
-
-
-
-
-.hero-content h1{
-
-font-family:
-
-var(--font-fraunces),
-Georgia,
-serif;
-
-
-font-size:
-
-clamp(60px,8vw,110px);
-
-
-font-weight:400;
-
-line-height:.95;
-
-margin:25px 0;
-
-}
-
-
-
-
-
-.hero-content h1 em{
-
-font-style:italic;
-
-color:var(--gold-light);
-
-}
-
-
-
-
-
-.hero-content p{
-
-font-size:18px;
-
-line-height:1.8;
-
-max-width:450px;
-
-color:#eee;
-
-}
 
 
 
@@ -351,7 +259,11 @@ color:#eee;
 
 .luxury-btn{
 
-display:inline-block;
+
+position:relative;
+
+overflow:hidden;
+
 
 padding:
 
@@ -378,20 +290,13 @@ text-transform:uppercase;
 transition:.5s;
 
 
-position:relative;
-
-overflow:hidden;
-
 }
-
 
 
 
 .luxury-btn:hover{
 
 background:var(--gold);
-
-color:white;
 
 }
 
@@ -422,7 +327,7 @@ linear-gradient(
 
 transparent,
 
-rgba(255,255,255,.35),
+rgba(255,255,255,.4),
 
 transparent
 
@@ -435,12 +340,14 @@ transition:.8s;
 
 
 
-
 .luxury-btn:hover::before{
 
 left:100%;
 
 }
+
+
+
 
 
 
@@ -459,7 +366,9 @@ left:100%;
 
 opacity:0;
 
-transform:translateY(60px);
+transform:
+
+translateY(60px);
 
 }
 
@@ -469,7 +378,9 @@ transform:translateY(60px);
 
 opacity:1;
 
-transform:translateY(0);
+transform:
+
+translateY(0);
 
 }
 
@@ -490,17 +401,46 @@ revealUp 1.2s ease forwards;
 
 
 
-.section-reveal{
-
-opacity:0;
+.hero-reveal{
 
 animation:
 
 revealUp 1s ease forwards;
 
-animation-delay:.2s;
+}
+
+
+
+.hero-reveal-delay{
+
+animation:
+
+revealUp 1.3s ease forwards;
 
 }
+
+
+
+.hero-reveal-delay2{
+
+animation:
+
+revealUp 1.6s ease forwards;
+
+}
+
+
+
+.hero-reveal-delay3{
+
+animation:
+
+revealUp 1.9s ease forwards;
+
+}
+
+
+
 
 
 
@@ -532,7 +472,6 @@ transform:rotate(360deg);
 
 
 
-
 .animate-spin-slow{
 
 animation:
@@ -545,24 +484,33 @@ spinSlow 45s linear infinite;
 
 
 
+
+
 /* =========================
-   PRODUCT SLIDER
+   FLOATING
 ========================= */
 
 
-@keyframes slide{
+@keyframes floating{
 
 
 0%{
 
-transform:translateX(0);
+transform:translateY(0);
+
+}
+
+
+50%{
+
+transform:translateY(-15px);
 
 }
 
 
 100%{
 
-transform:translateX(-50%);
+transform:translateY(0);
 
 }
 
@@ -571,21 +519,23 @@ transform:translateX(-50%);
 
 
 
-
-.animate-slide{
+.float-animation{
 
 animation:
 
-slide 18s linear infinite;
+floating 6s ease-in-out infinite;
 
 }
+
+
+
 
 
 
 
 
 /* =========================
-   IMAGE EFFECT
+   PRODUCT IMAGE
 ========================= */
 
 
@@ -599,9 +549,11 @@ overflow:hidden;
 
 .image-zoom img{
 
+
 transition:
 
 transform .8s ease;
+
 
 }
 
@@ -609,9 +561,11 @@ transform .8s ease;
 
 .image-zoom:hover img{
 
+
 transform:
 
 scale(1.08);
+
 
 }
 
@@ -629,9 +583,11 @@ overflow:hidden;
 
 .product-image img{
 
+
 transition:
 
 transform 1s cubic-bezier(.2,.8,.2,1);
+
 
 }
 
@@ -639,11 +595,16 @@ transform 1s cubic-bezier(.2,.8,.2,1);
 
 .product-image:hover img{
 
+
 transform:
 
 scale(1.12);
 
+
 }
+
+
+
 
 
 
@@ -656,9 +617,11 @@ scale(1.12);
 
 .luxury-card{
 
+
 transition:
 
 all .5s ease;
+
 
 }
 
@@ -666,11 +629,90 @@ all .5s ease;
 
 .luxury-card:hover{
 
+
 transform:
 
 translateY(-12px);
 
+
 }
+
+
+
+
+
+
+
+
+
+/* =========================
+   GOLD TEXT
+========================= */
+
+
+.gold-text{
+
+
+background:
+
+linear-gradient(
+
+90deg,
+
+#A6875A,
+
+#F5E6C8,
+
+#A6875A
+
+);
+
+
+
+background-size:200%;
+
+
+-webkit-background-clip:text;
+
+background-clip:text;
+
+color:transparent;
+
+
+
+animation:
+
+goldMove 4s linear infinite;
+
+
+}
+
+
+
+
+@keyframes goldMove{
+
+
+from{
+
+background-position:0%;
+
+}
+
+
+
+to{
+
+background-position:200%;
+
+}
+
+
+}
+
+
+
+
 
 
 
@@ -700,70 +742,10 @@ transparent
 
 );
 
-}
-
-
-
-
-
-/* =========================
-   GOLD TEXT
-========================= */
-
-
-.gold-text{
-
-background:
-
-linear-gradient(
-
-90deg,
-
-#A6875A,
-
-#E8D7B0,
-
-#A6875A
-
-);
-
-
-background-size:200%;
-
-
--webkit-background-clip:text;
-
-color:transparent;
-
-
-animation:
-
-goldMove 4s infinite linear;
 
 }
 
 
-
-
-
-@keyframes goldMove{
-
-
-from{
-
-background-position:0%;
-
-}
-
-
-to{
-
-background-position:200%;
-
-}
-
-
-}
 
 
 
@@ -781,7 +763,6 @@ background-position:200%;
 position:relative;
 
 }
-
 
 
 
@@ -822,11 +803,52 @@ linear-gradient(#fff 0 0) padding-box,
 linear-gradient(#fff 0 0);
 
 
-
 mask-composite:exclude;
 
 
 }
+
+
+
+
+
+
+
+
+
+/* =========================
+   MOUSE PARALLAX
+========================= */
+
+
+.parallax-image{
+
+will-change:transform;
+
+transition:
+
+transform .3s ease;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   SECTION
+========================= */
+
+
+section{
+
+scroll-margin-top:100px;
+
+}
+
+
 
 
 
@@ -840,11 +862,16 @@ mask-composite:exclude;
 
 .footer-glow{
 
+
 box-shadow:
 
 0 -20px 60px rgba(166,135,90,.12);
 
+
 }
+
+
+
 
 
 
@@ -857,13 +884,18 @@ box-shadow:
 
 ::selection{
 
+
 background:
 
 var(--gold);
 
+
 color:white;
 
+
 }
+
+
 
 
 
@@ -883,7 +915,6 @@ width:8px;
 
 
 
-
 ::-webkit-scrollbar-track{
 
 background:
@@ -891,7 +922,6 @@ background:
 var(--ivory-soft);
 
 }
-
 
 
 
@@ -907,6 +937,9 @@ border-radius:20px;
 
 
 }
+
+
+
 
 
 
@@ -937,4 +970,113 @@ font-size:64px;
 }
 
 
+
+.inset-8{
+
+inset:1rem;
+
+}
+
+
+}
+@keyframes heroFloat{
+
+0%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-15px);
+}
+
+100%{
+transform:translateY(0);
+}
+
+}
+
+
+.hero-float{
+
+animation:
+heroFloat 8s ease-in-out infinite;
+
+}
+/* =========================
+   LUXURY CUSTOM CURSOR
+========================= */
+
+
+html,
+body{
+
+cursor:none;
+
+}
+
+
+
+a,
+button,
+input,
+textarea{
+
+cursor:none;
+
+}
+
+
+
+
+
+.cursor-circle{
+
+position:fixed;
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+border:1px solid #D6B77A;
+
+background:
+
+rgba(214,183,122,0.15);
+
+backdrop-filter:blur(8px);
+
+pointer-events:none;
+
+z-index:99999;
+
+
+box-shadow:
+
+0 0 35px rgba(214,183,122,.8);
+
+
+}
+
+
+
+
+
+/* =========================
+   LUXURY MOUSE CURSOR
+========================= */
+
+
+html,
+body{
+cursor:none;
+}
+
+
+a,
+button,
+input,
+textarea{
+cursor:none;
 }

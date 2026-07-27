@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import Navbar from "@/components/Navbar";
 import LuxuryHero from "@/components/LuxuryHero";
 import TrendingProducts from "@/components/TrendingProducts";
 import LuxuryFooter from "@/components/LuxuryFooter";
@@ -15,8 +14,6 @@ return (
 
 <>
 
-<Navbar />
-
 
 <main
 className="
@@ -28,18 +25,13 @@ overflow-hidden
 >
 
 
-
-{/* ================= HERO ================= */}
+{/* HERO */}
 
 <LuxuryHero />
 
 
 
-
-
-
-{/* ================= GOLD DIVIDER ================= */}
-
+{/* GOLD DIVIDER */}
 
 <div
 className="
@@ -54,10 +46,7 @@ mt-24
 
 
 
-
-
-{/* ================= FEATURED PRODUCTS ================= */}
-
+{/* FEATURED PRODUCTS */}
 
 <section
 className="
@@ -115,8 +104,8 @@ mx-auto
 "
 >
 
-Exceptional jewellery crafted with
-pure gold, diamonds and timeless artistry.
+Exceptional jewellery crafted with pure gold,
+diamonds and timeless artistry.
 
 </p>
 
@@ -125,10 +114,7 @@ pure gold, diamonds and timeless artistry.
 
 
 
-
-
 <TrendingProducts />
-
 
 
 </section>
@@ -139,12 +125,7 @@ pure gold, diamonds and timeless artistry.
 
 
 
-
-
-
-{/* ================= PHILOSOPHY ================= */}
-
-
+{/* PHILOSOPHY */}
 
 <section
 className="
@@ -158,9 +139,6 @@ gap-20
 items-center
 "
 >
-
-
-
 
 
 <div
@@ -183,7 +161,6 @@ border-[#CBB088]
 />
 
 
-
 <div
 className="
 absolute
@@ -196,10 +173,7 @@ justify-center
 
 
 <svg
-className="
-w-2/3
-opacity-80
-"
+className="w-2/3 opacity-80"
 viewBox="0 0 100 100"
 >
 
@@ -229,11 +203,7 @@ stroke="#CBB088"
 </div>
 
 
-
 </div>
-
-
-
 
 
 
@@ -261,8 +231,6 @@ Our Philosophy
 
 
 
-
-
 <h2
 className="
 font-luxury
@@ -272,18 +240,13 @@ mt-6
 "
 >
 
-
 An atelier
 
 <br/>
 
 of one idea
 
-
 </h2>
-
-
-
 
 
 
@@ -295,14 +258,10 @@ text-[#51483c]
 "
 >
 
-Shotorupa Jewellers was founded
-on the belief that jewellery should
-capture light, emotion and memories.
-
+Shotorupa Jewellers was founded on the belief
+that jewellery should capture light, emotion and memories.
 
 </p>
-
-
 
 
 
@@ -314,21 +273,16 @@ text-[#51483c]
 "
 >
 
-Every piece is designed with
-precision, purity and a commitment
-to timeless beauty.
-
+Every piece is designed with precision,
+purity and a commitment to timeless beauty.
 
 </p>
 
 
 
-
-
-
 <Link
 
-href="/about"
+href="/our-story"
 
 className="
 inline-block
@@ -352,7 +306,6 @@ Discover Our Story
 </Link>
 
 
-
 </div>
 
 
@@ -366,18 +319,17 @@ Discover Our Story
 
 
 
-
-{/* ================= NEWSLETTER ================= */}
-
-
+{/* NEWSLETTER */}
 
 <section
+
 className="
 bg-[#241C16]
 py-24
 text-center
 text-[#F6F3EC]
 "
+
 >
 
 
@@ -459,10 +411,7 @@ Contact Us
 </div>
 
 
-
 </section>
-
-
 
 
 
@@ -472,9 +421,7 @@ Contact Us
 
 
 
-
 <LuxuryFooter />
-
 
 
 </>

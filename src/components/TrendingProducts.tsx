@@ -5,16 +5,36 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import {
+  Heart,
+  ShoppingCart,
+  Zap
+} from "lucide-react";
+
+
+import { motion } from "framer-motion";
+
+
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, FreeMode } from "swiper/modules";
+import {
+  Autoplay,
+  FreeMode
+} from "swiper/modules";
 
 import "swiper/css";
+
 
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useProducts } from "@/context/ProductContext";
 
 import Toast from "@/components/Toast";
+
+
+
+
+
+
 
 
 const defaultProducts = [
@@ -29,6 +49,7 @@ weight:"25g",
 purity:"22K Gold"
 },
 
+
 {
 id:"2",
 name:"Diamond Ring",
@@ -38,6 +59,7 @@ image:"/images/ring.jpg",
 weight:"8g",
 purity:"18K Diamond"
 },
+
 
 {
 id:"3",
@@ -49,6 +71,7 @@ weight:"60g",
 purity:"22K Gold"
 },
 
+
 {
 id:"4",
 name:"Luxury Earrings",
@@ -57,9 +80,37 @@ price:45000,
 image:"/images/earrings.jpg",
 weight:"10g",
 purity:"22K Gold"
+},
+
+
+{
+id:"5",
+name:"Royal Diamond Necklace",
+category:"Diamond",
+price:350000,
+image:"/images/diamond-necklace.jpg",
+weight:"35g",
+purity:"18K Diamond"
+},
+
+
+{
+id:"6",
+name:"Gold Bracelet",
+category:"Gold",
+price:70000,
+image:"/images/bracelet.jpg",
+weight:"15g",
+purity:"22K Gold"
 }
 
+
 ];
+
+
+
+
+
 
 
 
@@ -67,26 +118,25 @@ purity:"22K Gold"
 export default function TrendingProducts(){
 
 
+
 const {products:adminProducts}=useProducts();
 
 
-const products = (
 
-adminProducts && adminProducts.length > 0
+const products=[
 
-?
+...defaultProducts,
 
-adminProducts
+...(adminProducts || [])
 
-:
+].sort(
 
-defaultProducts
-
-).sort(
-
-(a:any,b:any)=>b.price-a.price
+(a,b)=>b.price-a.price
 
 );
+
+
+
 
 
 
@@ -95,10 +145,16 @@ const {addToCart}=useCart();
 const {addToWishlist}=useWishlist();
 
 
-const router = useRouter();
+const router=useRouter();
 
 
 const [toast,setToast]=useState("");
+
+const [addedId,setAddedId]=useState("");
+
+
+
+
 
 
 
@@ -113,8 +169,46 @@ setToast("");
 
 },2000);
 
+}
+
+
+
+
+
+
+
+function handleAddToCart(product:any){
+
+
+addToCart({
+
+...product,
+
+id:String(product.id)
+
+});
+
+
+setAddedId(product.id);
+
+
+showToast("Added To Cart");
+
+
+setTimeout(()=>{
+
+setAddedId("");
+
+},1500);
+
 
 }
+
+
+
+
+
+
 
 
 
@@ -130,7 +224,7 @@ id:String(product.id)
 });
 
 
-showToast("⚡ Added To Cart");
+showToast("Added To Cart");
 
 
 setTimeout(()=>{
@@ -141,6 +235,11 @@ router.push("/checkout");
 
 
 }
+
+
+
+
+
 
 
 
@@ -161,7 +260,21 @@ show={toast!==""}
 
 
 
-<section className="max-w-7xl mx-auto px-6 py-14">
+
+
+
+
+<section
+
+className="
+max-w-7xl
+mx-auto
+px-6
+py-12
+"
+
+>
+
 
 
 
@@ -169,11 +282,10 @@ show={toast!==""}
 
 className="
 text-4xl
-text-center
 font-serif
-font-bold
+text-center
 text-[#6b4d1f]
-mb-12
+mb-10
 "
 
 >
@@ -181,6 +293,11 @@ mb-12
 TRENDING PRODUCTS
 
 </h2>
+
+
+
+
+
 
 
 
@@ -198,9 +315,7 @@ slidesPerView={1}
 
 
 
-breakpoints={
-
-{
+breakpoints={{
 
 640:{
 slidesPerView:2
@@ -211,9 +326,7 @@ slidesPerView:2
 slidesPerView:4
 }
 
-}
-
-}
+}}
 
 
 
@@ -238,8 +351,7 @@ enabled:true
 grabCursor={true}
 
 
-
-loop={products.length>4}
+loop={true}
 
 
 
@@ -247,57 +359,59 @@ loop={products.length>4}
 
 
 
+
+
+
+
 {
 
-products.slice(0,10).map((product:any)=>(
+products.map((product)=>(
 
 
-<SwiperSlide key={product.id}>
+
+<SwiperSlide
+
+key={product.id}
+
+>
+
 
 
 <div
 
 className="
 bg-white
-rounded-3xl
+rounded-2xl
 shadow-xl
 overflow-hidden
-border
-hover:shadow-2xl
+hover:-translate-y-2
 transition
+duration-500
 "
-
-
 
 >
 
 
 
-<Image
 
+
+<Image
 
 src={product.image}
 
-
 alt={product.name}
-
 
 width={500}
 
-
-height={500}
-
+height={400}
 
 quality={100}
 
-
 className="
 w-full
-h-72
+h-64
 object-cover
 "
-
-
 
 />
 
@@ -305,7 +419,14 @@ object-cover
 
 
 
-<div className="p-6">
+
+
+
+<div className="p-5">
+
+
+
+
 
 
 
@@ -315,8 +436,8 @@ className="
 bg-[#9b7a3d]
 text-white
 text-xs
-px-4
-py-2
+px-3
+py-1
 rounded-full
 "
 
@@ -330,12 +451,14 @@ rounded-full
 
 
 
+
+
 <h3
 
 className="
+mt-4
 text-xl
 font-bold
-mt-5
 text-[#6b4d1f]
 "
 
@@ -344,6 +467,8 @@ text-[#6b4d1f]
 {product.name}
 
 </h3>
+
+
 
 
 
@@ -358,11 +483,14 @@ text-[#6b4d1f]
 
 
 
+
 <p className="text-gray-500">
 
 Weight: {product.weight}
 
 </p>
+
+
 
 
 
@@ -374,7 +502,7 @@ className="
 text-2xl
 font-bold
 text-[#9b7a3d]
-mt-4
+mt-3
 "
 
 >
@@ -388,25 +516,53 @@ mt-4
 
 
 
-<button
 
 
-onClick={()=>{
+
+{/* ADD CART ANIMATION */}
 
 
-addToCart({
-
-...product,
-
-id:String(product.id)
-
-});
+<motion.button
 
 
-showToast("🛒 Added To Cart");
+whileTap={{
 
+scale:0.92
 
 }}
+
+
+
+animate={
+
+addedId===product.id
+
+?
+
+{
+
+scale:[1,1.08,1]
+
+}
+
+:
+
+{}
+
+}
+
+
+
+transition={{
+
+duration:0.4
+
+}}
+
+
+
+onClick={()=>handleAddToCart(product)}
+
 
 
 className="
@@ -416,17 +572,69 @@ bg-[#9b7a3d]
 text-white
 py-3
 rounded-xl
-hover:bg-[#7c622f]
+flex
+items-center
+justify-center
+gap-2
+shadow-lg
+hover:shadow-[#9b7a3d]/50
 transition
 "
 
 >
 
 
-🛒 Add To Cart
+<motion.div
 
 
-</button>
+animate={
+
+addedId===product.id
+
+?
+
+{
+
+rotate:[0,-20,20,0]
+
+}
+
+:
+
+{}
+
+}
+
+
+
+>
+
+
+<ShoppingCart size={18}/>
+
+
+</motion.div>
+
+
+
+
+{
+
+addedId===product.id
+
+?
+
+"Added ✓"
+
+:
+
+"Add To Cart"
+
+}
+
+
+
+</motion.button>
 
 
 
@@ -434,7 +642,20 @@ transition
 
 
 
-<button
+
+
+{/* WISHLIST */}
+
+
+<motion.button
+
+
+whileTap={{
+
+scale:0.92
+
+}}
+
 
 
 onClick={()=>{
@@ -449,10 +670,11 @@ id:String(product.id)
 });
 
 
-showToast("❤️ Added To Wishlist");
+showToast("Added To Wishlist");
 
 
 }}
+
 
 
 
@@ -464,19 +686,24 @@ border-[#9b7a3d]
 text-[#9b7a3d]
 py-3
 rounded-xl
+flex
+items-center
+justify-center
+gap-2
 hover:bg-[#9b7a3d]
 hover:text-white
 transition
 "
 
-
 >
 
 
-♡ Wishlist
+<Heart size={18}/>
+
+Wishlist
 
 
-</button>
+</motion.button>
 
 
 
@@ -484,10 +711,26 @@ transition
 
 
 
-<button
+
+
+
+{/* BUY NOW */}
+
+
+
+<motion.button
+
+
+whileTap={{
+
+scale:0.92
+
+}}
+
 
 
 onClick={()=>buyNow(product)}
+
 
 
 className="
@@ -497,18 +740,24 @@ bg-black
 text-white
 py-3
 rounded-xl
-hover:bg-gray-800
+flex
+items-center
+justify-center
+gap-2
+hover:bg-[#222]
 transition
 "
-
 
 >
 
 
-⚡ Buy Now
+<Zap size={18}/>
+
+Buy Now
 
 
-</button>
+</motion.button>
+
 
 
 
@@ -518,26 +767,23 @@ transition
 
 <Link
 
-
 href={`/products/${product.id}`}
-
 
 className="
 block
 text-center
-mt-5
+mt-4
 text-[#9b7a3d]
 font-semibold
 "
 
-
 >
-
 
 View Product
 
 
 </Link>
+
 
 
 
@@ -554,7 +800,6 @@ View Product
 </SwiperSlide>
 
 
-
 ))
 
 
@@ -562,12 +807,18 @@ View Product
 
 
 
+
+
+
 </Swiper>
 
 
 
-</section>
 
+
+
+
+</section>
 
 
 </>

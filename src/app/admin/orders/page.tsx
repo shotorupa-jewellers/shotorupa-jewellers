@@ -33,25 +33,26 @@ import {
 
 
 
+
 export default function OrdersPage(){
 
 
 
-const [orders,setOrders]=useState<any[]>([]);
+const [orders,setOrders] = useState<any[]>([]);
 
-const [search,setSearch]=useState("");
-
-
+const [search,setSearch] = useState("");
 
 
 
 
+
+
+// GET ORDERS FROM FIREBASE
 
 useEffect(()=>{
 
 
-
-const q=query(
+const q = query(
 
 collection(db,"orders"),
 
@@ -65,15 +66,14 @@ orderBy(
 
 
 
-
-const unsubscribe=onSnapshot(
+const unsubscribe = onSnapshot(
 
 q,
 
 (snapshot)=>{
 
 
-const data=snapshot.docs.map(item=>(
+const data = snapshot.docs.map((item)=>(
 
 {
 
@@ -86,13 +86,11 @@ id:item.id,
 ));
 
 
-
 setOrders(data);
 
 
 
 }
-
 
 );
 
@@ -114,8 +112,7 @@ return()=>unsubscribe();
 
 
 
-
-// Update Status
+// CHANGE STATUS
 
 
 async function changeStatus(
@@ -126,6 +123,8 @@ status:string
 
 ){
 
+
+try{
 
 
 await updateDoc(
@@ -138,7 +137,7 @@ id
 
 {
 
-orderStatus:status
+status:status
 
 }
 
@@ -148,6 +147,16 @@ orderStatus:status
 
 }
 
+catch(error){
+
+
+console.log(error);
+
+
+}
+
+
+}
 
 
 
@@ -158,7 +167,8 @@ orderStatus:status
 
 
 
-// Delete Order
+
+// DELETE ORDER
 
 
 async function deleteOrder(
@@ -169,16 +179,17 @@ id:string
 
 
 
-const confirmDelete=confirm(
-
+const ok = confirm(
 "Delete this order?"
-
 );
 
 
 
-if(!confirmDelete)return;
+if(!ok) return;
 
+
+
+try{
 
 
 await deleteDoc(
@@ -195,6 +206,17 @@ id
 
 }
 
+catch(error){
+
+
+console.log(error);
+
+
+}
+
+
+
+}
 
 
 
@@ -203,32 +225,44 @@ id
 
 
 
-const filteredOrders=orders.filter((order)=>{
 
 
-const text=
 
-search.toLowerCase();
+
+// SEARCH
+
+
+const filteredOrders = orders.filter((order)=>{
+
+
+const text = search.toLowerCase();
 
 
 
 return (
 
-order.orderId
+order.id
+.toLowerCase()
+.includes(text)
+
+||
+
+order.customerName
 ?.toLowerCase()
 .includes(text)
 
 ||
 
-order.customer?.name
-?.toLowerCase()
-.includes(text)
+order.phone
+?.includes(search)
 
 );
 
 
-
 });
+
+
+
 
 
 
@@ -242,33 +276,42 @@ return(
 
 
 
-<main className="
+<main
+
+className="
 min-h-screen
 bg-[#f8f4ee]
 p-6
-lg:p-8
+lg:p-10
 text-black
-">
+"
+
+>
 
 
 
-<section className="
+<section
+
+className="
 max-w-7xl
 mx-auto
-">
+"
+
+>
 
 
 
+<h1
 
-
-
-<h1 className="
+className="
 text-4xl
 font-serif
 font-bold
 text-[#6b4d1f]
 mb-8
-">
+"
+
+>
 
 📦 Admin Orders
 
@@ -282,11 +325,12 @@ mb-8
 
 
 
-{/* Search */}
+{/* SEARCH */}
 
 
+<div
 
-<div className="
+className="
 bg-white
 rounded-xl
 shadow
@@ -295,22 +339,24 @@ mb-8
 flex
 items-center
 gap-3
-">
+"
+
+>
 
 
 <Search
-
 className="
 text-gray-400
 "
-
 />
 
 
 
 <input
 
-placeholder="Search Order ID or Customer Name"
+placeholder="
+Search Customer Name or Phone
+"
 
 value={search}
 
@@ -324,7 +370,6 @@ outline-none
 "
 
 />
-
 
 
 </div>
@@ -342,12 +387,16 @@ outline-none
 filteredOrders.length===0 ?
 
 
-<div className="
+<div
+
+className="
 bg-white
 p-8
 rounded-xl
 shadow
-">
+"
+
+>
 
 No Orders Found
 
@@ -361,15 +410,17 @@ No Orders Found
 
 
 
-<div className="
+<div
+
+className="
 space-y-8
-">
+"
 
-
-
+>
 
 
 {
+
 
 filteredOrders.map((order)=>(
 
@@ -394,31 +445,54 @@ p-6
 
 
 
-{/* Header */}
 
 
 
-<div className="
+{/* HEADER */}
+
+
+
+<div
+
+className="
 flex
 justify-between
 items-center
-mb-6
 flex-wrap
-gap-3
-">
+gap-4
+mb-6
+"
+
+>
 
 
 
-<h2 className="
+<div>
+
+
+<h2
+
+className="
 text-xl
 font-bold
-">
+"
+
+>
 
 Order ID:
 
-{order.orderId || order.id}
+<span className="text-[#A6875A]">
+
+{order.id}
+
+</span>
+
 
 </h2>
+
+
+
+</div>
 
 
 
@@ -428,13 +502,16 @@ Order ID:
 <span
 
 className={`
+
 px-4
 py-2
 rounded-full
 text-white
+text-sm
+
 
 ${
-order.orderStatus==="Delivered"
+order.status==="Delivered"
 
 ?
 
@@ -442,7 +519,7 @@ order.orderStatus==="Delivered"
 
 :
 
-order.orderStatus==="Cancelled"
+order.status==="Cancelled"
 
 ?
 
@@ -458,10 +535,11 @@ order.orderStatus==="Cancelled"
 
 >
 
-{order.orderStatus || "Pending"}
+
+{order.status || "Pending"}
+
 
 </span>
-
 
 
 
@@ -475,17 +553,23 @@ order.orderStatus==="Cancelled"
 
 
 
-{/* Customer Payment Total */}
 
 
 
-<div className="
+
+{/* CUSTOMER INFO */}
+
+
+
+<div
+
+className="
 grid
 md:grid-cols-3
-gap-6
-">
+gap-8
+"
 
-
+>
 
 
 
@@ -494,11 +578,15 @@ gap-6
 <div>
 
 
-<h3 className="
+<h3
+
+className="
 font-bold
 text-lg
 mb-3
-">
+"
+
+>
 
 Customer
 
@@ -510,17 +598,7 @@ Customer
 
 Name:
 
-{order.customer?.name || "N/A"}
-
-</p>
-
-
-
-<p>
-
-Email:
-
-{order.customer?.email || "N/A"}
+{order.customerName || "N/A"}
 
 </p>
 
@@ -530,7 +608,17 @@ Email:
 
 Phone:
 
-{order.customer?.phone || "N/A"}
+{order.phone || "N/A"}
+
+</p>
+
+
+
+<p>
+
+City:
+
+{order.city || "N/A"}
 
 </p>
 
@@ -540,7 +628,7 @@ Phone:
 
 Address:
 
-{order.customer?.address || "N/A"}
+{order.address || "N/A"}
 
 </p>
 
@@ -556,14 +644,25 @@ Address:
 
 
 
+
+
+
+{/* PAYMENT */}
+
+
+
 <div>
 
 
-<h3 className="
+<h3
+
+className="
 font-bold
 text-lg
 mb-3
-">
+"
+
+>
 
 Payment
 
@@ -575,7 +674,7 @@ Payment
 
 Method:
 
-{order.payment || "N/A"}
+Cash On Delivery
 
 </p>
 
@@ -585,9 +684,10 @@ Method:
 
 Payment Status:
 
-{order.paymentStatus || "Pending"}
+Pending
 
 </p>
+
 
 
 </div>
@@ -600,14 +700,26 @@ Payment Status:
 
 
 
+
+
+
+
+{/* TOTAL */}
+
+
+
 <div>
 
 
-<h3 className="
+<h3
+
+className="
 font-bold
 text-lg
 mb-3
-">
+"
+
+>
 
 Total Amount
 
@@ -615,17 +727,29 @@ Total Amount
 
 
 
-<p className="
+<p
+
+className="
 text-3xl
 font-bold
 text-[#9b7a3d]
-">
+"
+
+>
 
 ৳ {order.total?.toLocaleString()}
+
 
 </p>
 
 
+
+</div>
+
+
+
+
+
 </div>
 
 
@@ -634,26 +758,26 @@ text-[#9b7a3d]
 
 
 
-</div>
 
 
 
 
 
 
+{/* PRODUCTS */}
 
 
 
-{/* Products */}
+<h3
 
-
-
-<h3 className="
+className="
 font-bold
 text-xl
 mt-8
 mb-4
-">
+"
+
+>
 
 Products
 
@@ -665,8 +789,17 @@ Products
 
 
 
+<div
+
+className="
+space-y-3
+"
+
+>
+
 
 {
+
 
 order.products?.map((item:any)=>(
 
@@ -680,7 +813,7 @@ className="
 flex
 justify-between
 border-b
-py-3
+pb-3
 "
 
 >
@@ -689,9 +822,13 @@ py-3
 <div>
 
 
-<p className="
+<p
+
+className="
 font-semibold
-">
+"
+
+>
 
 {item.name}
 
@@ -699,10 +836,14 @@ font-semibold
 
 
 
-<p className="
+<p
+
+className="
 text-sm
 text-gray-500
-">
+"
+
+>
 
 Quantity:
 
@@ -717,10 +858,13 @@ Quantity:
 
 
 
+<p
 
-<p className="
-font-semibold
-">
+className="
+font-bold
+"
+
+>
 
 ৳ {(item.price * item.quantity)
 .toLocaleString()}
@@ -741,6 +885,7 @@ font-semibold
 
 
 
+</div>
 
 
 
@@ -751,30 +896,34 @@ font-semibold
 
 
 
-{/* Action Buttons */}
 
 
 
-<div className="
-mt-6
+
+{/* BUTTONS */}
+
+
+
+<div
+
+className="
+mt-8
 flex
 gap-3
 flex-wrap
-">
+"
 
+>
 
 
 
 
 <button
 
-onClick={()=>
-changeStatus(
+onClick={()=>changeStatus(
 order.id,
 "Processing"
-)
-
-}
+)}
 
 className="
 bg-blue-600
@@ -796,17 +945,12 @@ Processing
 
 
 
-
-
 <button
 
-onClick={()=>
-changeStatus(
+onClick={()=>changeStatus(
 order.id,
 "Delivered"
-)
-
-}
+)}
 
 className="
 bg-green-600
@@ -831,13 +975,10 @@ Delivered
 
 <button
 
-onClick={()=>
-changeStatus(
+onClick={()=>changeStatus(
 order.id,
 "Cancelled"
-)
-
-}
+)}
 
 className="
 bg-red-600
@@ -893,12 +1034,9 @@ Invoice
 
 
 
-
 <button
 
-onClick={()=>
-deleteOrder(order.id)
-}
+onClick={()=>deleteOrder(order.id)}
 
 className="
 border
@@ -926,7 +1064,10 @@ Delete
 
 
 
+
+
 </div>
+
 
 
 
@@ -948,8 +1089,6 @@ Delete
 
 
 
-
-
 </div>
 
 
@@ -958,18 +1097,13 @@ Delete
 
 
 
-
-
 </section>
-
 
 
 </main>
 
 
-
 );
-
 
 
 }

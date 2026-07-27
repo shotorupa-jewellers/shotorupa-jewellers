@@ -1,26 +1,45 @@
 "use client";
 
+
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-import { useProducts } from "@/context/ProductContext";
-
-import { db } from "@/lib/firebase";
 
 import {
-  collection,
-  onSnapshot
+useEffect,
+useState
+} from "react";
+
+
+import {
+useProducts
+} from "@/context/ProductContext";
+
+
+import {
+db
+} from "@/lib/firebase";
+
+
+import {
+collection,
+onSnapshot
 } from "firebase/firestore";
 
 
 import {
-  Package,
-  ShoppingCart,
-  Users,
-  Gem,
-  Plus,
-  TrendingUp
+
+Package,
+ShoppingCart,
+Users,
+Gem,
+Plus,
+TrendingUp,
+Crown,
+ArrowUpRight
+
 } from "lucide-react";
+
+
+
 
 
 
@@ -30,11 +49,15 @@ export default function AdminPage(){
 
 
 
+
+
 const {
+
 products=[],
 deleteProduct
 
 }=useProducts();
+
 
 
 
@@ -51,7 +74,10 @@ const [goldStock,setGoldStock]=useState(0);
 
 
 
-// Orders
+
+
+// ORDERS
+
 
 useEffect(()=>{
 
@@ -81,12 +107,12 @@ setOrders(data);
 }
 
 
+
 );
 
 
 
 return()=>unsubscribe();
-
 
 
 },[]);
@@ -98,7 +124,11 @@ return()=>unsubscribe();
 
 
 
-// Customers + Gold Stock
+
+
+
+// CUSTOMERS + GOLD STOCK
+
 
 
 useEffect(()=>{
@@ -129,7 +159,10 @@ setCustomers(data);
 
 }
 
+
+
 );
+
 
 
 
@@ -175,17 +208,24 @@ setGoldStock(total);
 
 
 
+
 return()=>{
+
 
 customerUnsub();
 
 stockUnsub();
 
-}
+
+};
 
 
 
 },[]);
+
+
+
+
 
 
 
@@ -211,6 +251,10 @@ sum + Number(order.total || 0),
 
 
 
+
+
+
+
 const dashboardCards=[
 
 
@@ -221,11 +265,13 @@ icon:Package
 },
 
 
+
 {
 title:"Total Orders",
 value:orders.length,
 icon:ShoppingCart
 },
+
 
 
 {
@@ -235,11 +281,13 @@ icon:Users
 },
 
 
+
 {
 title:"Gold Stock",
 value:`${goldStock} gm`,
 icon:Gem
 },
+
 
 
 {
@@ -260,40 +308,56 @@ icon:TrendingUp
 
 
 
+
+
+
+
 return(
 
 
 
-<main className="
+<main
+
+
+className="
+
 min-h-screen
-bg-[#f8f4ee]
-text-black
-">
+
+bg-gradient-to-br
+
+from-black
+
+via-[#100c06]
+
+to-black
 
 
-<section className="
+text-white
+
+
+p-5
+
+lg:p-8
+
+
+"
+
+
+>
+
+
+<section
+
+className="
+
 max-w-7xl
+
 mx-auto
-">
+
+"
 
 
-
-
-
-
-
-
-<h1 className="
-text-4xl
-font-serif
-font-bold
-text-[#6b4d1f]
-mb-10
-">
-
-SHOTORUPA DASHBOARD
-
-</h1>
+>
 
 
 
@@ -303,45 +367,22 @@ SHOTORUPA DASHBOARD
 
 
 
-{/* Dashboard Cards */}
+{/* HEADER */}
 
-
-
-<div className="
-grid
-md:grid-cols-2
-xl:grid-cols-5
-gap-5
-mb-10
-">
-
-
-
-{
-
-dashboardCards.map((card,index)=>{
-
-
-const Icon=card.icon;
-
-
-return(
 
 
 <div
 
-key={index}
-
 className="
-bg-white
-rounded-2xl
-shadow
-border
-border-[#ead9b0]
-p-6
+
 flex
+
 justify-between
+
 items-center
+
+mb-10
+
 "
 
 
@@ -351,29 +392,355 @@ items-center
 <div>
 
 
-<p className="
-text-gray-500
-text-sm
-">
+<h1
 
-{card.title}
+
+className="
+
+text-3xl
+
+lg:text-5xl
+
+
+font-serif
+
+
+tracking-wide
+
+
+text-yellow-400
+
+
+"
+
+>
+
+
+SHOTORUPA
+
+
+DASHBOARD
+
+
+
+</h1>
+
+
+
+<p
+
+className="
+
+text-gray-400
+
+mt-3
+
+"
+
+
+>
+
+
+Luxury Jewellery Management System
+
 
 </p>
 
 
 
-<h2 className="
+</div>
+
+
+
+
+
+
+
+
+<div
+
+
+className="
+
+hidden
+
+md:flex
+
+
+items-center
+
+gap-3
+
+
+bg-yellow-500/10
+
+
+border
+
+border-yellow-500/30
+
+
+px-5
+
+py-3
+
+
+rounded-full
+
+
+"
+
+>
+
+
+<Crown
+
+className="
+
+text-yellow-400
+
+"
+
+/>
+
+
+<span
+
+className="
+
+text-yellow-400
+
+"
+
+>
+
+Premium Admin
+
+</span>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* DASHBOARD CARDS */}
+
+
+
+<div
+
+className="
+
+grid
+
+grid-cols-1
+
+sm:grid-cols-2
+
+xl:grid-cols-5
+
+gap-5
+
+
+mb-10
+
+
+"
+
+
+>
+
+
+{
+
+
+dashboardCards.map((card,index)=>{
+
+
+const Icon=card.icon;
+
+
+
+return(
+
+
+<div
+
+
+key={index}
+
+
+className="
+
+group
+
+
+bg-white/5
+
+
+backdrop-blur-xl
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-3xl
+
+
+p-6
+
+
+hover:border-yellow-400
+
+
+hover:-translate-y-1
+
+
+transition
+
+
+"
+
+
+>
+
+
+
+<div
+
+className="
+
+flex
+
+justify-between
+
+items-start
+
+"
+
+>
+
+
+<div>
+
+
+<p
+
+className="
+
+text-gray-400
+
+text-sm
+
+"
+
+>
+
+{card.title}
+
+
+</p>
+
+
+
+<h2
+
+className="
+
 text-3xl
+
 font-bold
-text-[#9b7a3d]
+
+text-yellow-400
+
 mt-3
-">
+
+"
+
+>
 
 {card.value}
+
 
 </h2>
 
 
+</div>
+
+
+
+
+
+
+<div
+
+className="
+
+w-14
+
+h-14
+
+
+rounded-2xl
+
+
+bg-yellow-500/10
+
+
+flex
+
+items-center
+
+justify-center
+
+
+group-hover:bg-yellow-500
+
+
+transition
+
+
+"
+
+>
+
+
+<Icon
+
+size={28}
+
+className="
+
+text-yellow-400
+
+group-hover:text-black
+
+"
+
+/>
+
+
+
+</div>
+
+
 
 </div>
 
@@ -381,25 +748,53 @@ mt-3
 
 
 
-<div className="
-bg-[#f3e5c5]
-text-[#9b7a3d]
-p-4
-rounded-full
-">
 
-<Icon size={28}/>
+<div
+
+className="
+
+flex
+
+items-center
+
+gap-2
+
+mt-5
+
+
+text-xs
+
+text-gray-400
+
+"
+
+
+>
+
+
+<ArrowUpRight
+
+size={14}
+
+className="text-green-400"
+
+/>
+
+
+Live Updated
+
 
 </div>
 
 
 
 
-</div>
 
+</div>
 
 
 )
+
 
 
 })
@@ -410,46 +805,79 @@ rounded-full
 
 
 </div>
+// QUICK MANAGEMENT
 
 
+<div
+
+className="
+
+bg-white/5
+
+backdrop-blur-xl
 
 
+border
+
+border-yellow-600/30
 
 
+rounded-3xl
 
 
-
-{/* Quick Menu */}
-
-
-
-<div className="
-bg-white
-rounded-xl
-shadow
 p-6
+
+
 mb-10
-">
 
 
-<h2 className="
+"
+
+>
+
+
+<h2
+
+className="
+
 text-2xl
-font-bold
-mb-6
-">
 
-⚙ Admin Panel
+font-serif
+
+text-yellow-400
+
+
+mb-6
+
+
+"
+
+>
+
+⚙ Quick Management
 
 </h2>
 
 
 
 
-<div className="
+
+<div
+
+className="
+
 grid
+
 md:grid-cols-4
-gap-4
-">
+
+gap-5
+
+
+"
+
+>
+
+
 
 
 
@@ -458,20 +886,52 @@ gap-4
 href="/admin/add-product"
 
 className="
-bg-[#9b7a3d]
-text-white
-p-4
-rounded-lg
+
+bg-gradient-to-r
+
+from-yellow-400
+
+to-yellow-600
+
+
+text-black
+
+
+font-semibold
+
+
+rounded-xl
+
+
+p-5
+
+
 text-center
+
+
+hover:scale-105
+
+
+transition
+
+
 "
 
 >
 
-<Plus className="inline mr-2"/>
+
+<Plus
+
+className="inline mr-2"
+
+/>
+
 
 Add Product
 
+
 </Link>
+
 
 
 
@@ -483,16 +943,36 @@ Add Product
 href="/admin/products"
 
 className="
-bg-black
-text-white
-p-4
-rounded-lg
+
+bg-white/10
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-xl
+
+
+p-5
+
+
 text-center
+
+
+hover:bg-yellow-500/20
+
+
+transition
+
+
 "
 
 >
 
-Products
+💍 Products
+
 
 </Link>
 
@@ -507,19 +987,38 @@ Products
 href="/admin/orders"
 
 className="
-bg-[#9b7a3d]
-text-white
-p-4
-rounded-lg
+
+bg-white/10
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-xl
+
+
+p-5
+
+
 text-center
+
+
+hover:bg-yellow-500/20
+
+
+transition
+
+
 "
 
 >
 
-Orders
+🛒 Orders
+
 
 </Link>
-
 
 
 
@@ -532,53 +1031,128 @@ Orders
 href="/admin/customers"
 
 className="
-bg-black
-text-white
-p-4
-rounded-lg
+
+bg-white/10
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-xl
+
+
+p-5
+
+
 text-center
+
+
+hover:bg-yellow-500/20
+
+
+transition
+
+
 "
 
 >
 
-Customers
+👥 Customers
+
 
 </Link>
 
 
 
-</div>
 
 
 </div>
 
 
 
+</div>
 
 
 
 
 
 
-{/* Orders */}
 
 
 
 
-<div className="
-bg-white
-shadow
-rounded-xl
+
+
+
+{/* ORDERS SECTION */}
+
+
+
+<div
+
+
+className="
+
+bg-white/5
+
+
+backdrop-blur-xl
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-3xl
+
+
 p-6
+
+
 mb-10
-">
 
 
-<h2 className="
-text-2xl
-font-bold
+"
+
+>
+
+
+
+<div
+
+className="
+
+flex
+
+justify-between
+
+items-center
+
+
 mb-6
-">
+
+
+"
+
+>
+
+
+<h2
+
+className="
+
+text-2xl
+
+font-serif
+
+text-yellow-400
+
+"
+
+>
 
 📦 Customer Orders
 
@@ -586,20 +1160,78 @@ mb-6
 
 
 
+<Link
+
+href="/admin/orders"
+
+className="
+
+text-sm
+
+text-yellow-400
+
+
+hover:underline
+
+
+"
+
+>
+
+View All
+
+</Link>
+
+
+</div>
+
+
+
+
+
+
 
 
 {
 
+
 orders.length===0 ?
 
 
-<p>
+
+<p
+
+className="
+
+text-gray-400
+
+"
+
+>
+
 No Orders Found
+
 </p>
 
 
 
+
+
 :
+
+
+<div
+
+className="
+
+space-y-4
+
+"
+
+>
+
+
+{
 
 
 orders.slice(0,5).map((order)=>(
@@ -607,60 +1239,237 @@ orders.slice(0,5).map((order)=>(
 
 <div
 
+
 key={order.id}
 
+
 className="
-border-b
-py-4
+
+
+bg-black/40
+
+
+border
+
+border-yellow-600/20
+
+
+rounded-2xl
+
+
+p-5
+
+
+hover:border-yellow-400
+
+
+transition
+
+
+"
+
+
+>
+
+
+<div
+
+className="
+
+flex
+
+flex-col
+
+md:flex-row
+
+
+justify-between
+
+
+gap-4
+
+
 "
 
 >
 
 
-<h3 className="font-bold">
 
-{order.orderId || order.id}
+
+
+<div>
+
+
+<h3
+
+className="
+
+font-bold
+
+text-lg
+
+text-yellow-400
+
+"
+
+>
+
+{
+
+order.orderId || order.id
+
+}
+
 
 </h3>
 
 
 
+<p
 
-<p>
+className="
 
-Customer: {order.customer?.name}
+text-gray-300
+
+mt-2
+
+"
+
+>
+
+Customer:
+
+{" "}
+
+{
+
+order.customer?.name || "Guest"
+
+}
+
 
 </p>
 
 
 
 
-<p>
+<p
 
-Phone: {order.customer?.phone}
+className="
+
+text-gray-400
+
+text-sm
+
+"
+
+>
+
+Phone:
+
+{" "}
+
+{
+
+order.customer?.phone || "N/A"
+
+}
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+
+className="
+
+md:text-right
+
+"
+
+>
+
+
+<p
+
+className="
+
+text-xl
+
+font-bold
+
+"
+
+>
+
+৳ {
+
+order.total?.toLocaleString()
+
+}
 
 </p>
 
 
 
 
-<p>
+<span
 
-Total: ৳ {order.total?.toLocaleString()}
+className="
 
-</p>
+inline-block
+
+mt-2
+
+px-4
+
+py-1
+
+rounded-full
+
+text-xs
+
+
+bg-yellow-500/20
+
+text-yellow-400
+
+
+"
+
+>
+
+{
+
+order.orderStatus || "Pending"
+
+}
+
+
+</span>
+
+
+
+</div>
 
 
 
 
-<p className="
-text-[#9b7a3d]
-">
 
-Status: {order.orderStatus || "Pending"}
 
-</p>
 
+</div>
 
 
 
@@ -670,77 +1479,84 @@ Status: {order.orderStatus || "Pending"}
 ))
 
 
-
 }
-
-
-
-
-<Link
-
-href="/admin/orders"
-
-className="
-inline-block
-mt-5
-bg-[#9b7a3d]
-text-white
-px-6
-py-3
-rounded-lg
-"
-
->
-
-View All Orders
-
-</Link>
 
 
 
 </div>
 
 
+}
 
 
 
+</div>
+// PRODUCT LIST
 
 
+<div
+
+className="
+
+bg-white/5
 
 
+backdrop-blur-xl
 
 
+border
+
+border-yellow-600/30
 
 
-{/* Product List */}
+rounded-3xl
 
 
-
-
-<div className="
-bg-white
-shadow
-rounded-xl
 p-6
-">
+
+
+"
+
+>
 
 
 
-<div className="
+<div
+
+className="
+
 flex
+
 justify-between
+
 items-center
+
+
 mb-6
-">
+
+
+"
+
+>
 
 
 
-<h2 className="
+<h2
+
+className="
+
 text-2xl
-font-bold
-">
 
-💎 Product List
+font-serif
+
+text-yellow-400
+
+
+"
+
+>
+
+💎 Product Collection
 
 </h2>
 
@@ -752,12 +1568,36 @@ font-bold
 
 href="/admin/add-product"
 
+
 className="
-bg-[#9b7a3d]
-text-white
+
+bg-gradient-to-r
+
+from-yellow-400
+
+to-yellow-600
+
+
+text-black
+
+
 px-5
+
 py-3
-rounded-lg
+
+
+rounded-xl
+
+
+font-semibold
+
+
+hover:scale-105
+
+
+transition
+
+
 "
 
 >
@@ -780,11 +1620,20 @@ rounded-lg
 
 {
 
+
 products.length===0 ?
 
 
 
-<p>
+<p
+
+className="
+
+text-gray-400
+
+"
+
+>
 
 No Product Found
 
@@ -793,28 +1642,98 @@ No Product Found
 
 
 
+
+
 :
 
 
-products.map((product)=>(
+<div
 
+className="
+
+space-y-5
+
+"
+
+>
+
+
+
+{
+
+
+products.map((product:any)=>(
+
+
+<div
+
+
+key={product.id}
+
+
+className="
+
+
+bg-black/40
+
+
+border
+
+border-yellow-600/20
+
+
+rounded-2xl
+
+
+p-5
+
+
+flex
+
+flex-col
+
+lg:flex-row
+
+
+justify-between
+
+
+gap-5
+
+
+hover:border-yellow-400
+
+
+transition
+
+
+"
+
+
+>
+
+
+
+
+
+
+
+
+{/* PRODUCT INFO */}
 
 
 
 <div
 
-key={product.id}
-
 className="
+
 flex
-flex-col
-md:flex-row
-justify-between
-items-start
-md:items-center
+
+items-center
+
 gap-5
-border-b
-py-5
+
+
 "
 
 >
@@ -822,34 +1741,43 @@ py-5
 
 
 
-<div className="
-flex
-items-center
-gap-5
-">
-
-
-
 
 
 {
+
 
 product.image &&
 
 
 <img
 
+
 src={product.image}
+
 
 alt={product.name}
 
+
 className="
+
 w-24
+
 h-24
-rounded-xl
+
+
+rounded-2xl
+
+
 object-cover
+
+
 border
+
+border-yellow-600/30
+
+
 "
+
 
 />
 
@@ -863,13 +1791,24 @@ border
 
 
 
+
+
 <div>
 
 
-<h3 className="
+<h3
+
+className="
+
+text-xl
+
 font-bold
-text-lg
-">
+
+text-white
+
+"
+
+>
 
 {product.name}
 
@@ -878,43 +1817,72 @@ text-lg
 
 
 
+<p
 
-<p className="
-text-[#9b7a3d]
+className="
+
+text-yellow-400
+
 font-semibold
-">
 
-৳ {product.price?.toLocaleString()}
+mt-2
+
+"
+
+>
+
+৳ {
+
+product.price?.toLocaleString()
+
+}
 
 </p>
 
 
 
 
+<p
 
-<p className="
-text-gray-500
+className="
+
+text-gray-400
+
 text-sm
-">
 
-{product.category}
+mt-2
+
+"
+
+>
+
+{
+
+product.category
+
+}
 
 {" | "}
 
-{product.weight}
+{
+
+product.weight
+
+}
 
 {" | "}
 
-{product.purity}
+{
+
+product.purity
+
+}
+
 
 </p>
 
 
 
-</div>
-
-
-
 
 </div>
 
@@ -923,34 +1891,77 @@ text-sm
 
 
 
+</div>
 
 
 
-<div className="
+
+
+
+
+
+
+{/* ACTIONS */}
+
+
+
+<div
+
+className="
+
 flex
-gap-3
-">
 
+gap-3
+
+items-center
+
+"
+
+>
 
 
 
 
 <Link
 
+
 href={`/admin/edit-product/${product.id}`}
 
+
 className="
-border
-border-[#9b7a3d]
-text-[#9b7a3d]
-px-4
+
+px-5
+
 py-2
-rounded-lg
+
+
+rounded-xl
+
+
+border
+
+border-yellow-500
+
+
+text-yellow-400
+
+
+hover:bg-yellow-500
+
+
+hover:text-black
+
+
+transition
+
+
 "
 
 >
 
+
 Edit
+
 
 </Link>
 
@@ -962,20 +1973,44 @@ Edit
 
 <button
 
+
 onClick={()=>deleteProduct(product.id)}
 
+
 className="
-border
-border-red-500
-text-red-600
-px-4
+
+px-5
+
 py-2
-rounded-lg
+
+
+rounded-xl
+
+
+border
+
+border-red-500
+
+
+text-red-400
+
+
+hover:bg-red-500
+
+
+hover:text-white
+
+
+transition
+
+
 "
 
 >
 
+
 Delete
+
 
 </button>
 
@@ -983,16 +2018,18 @@ Delete
 
 
 
-</div>
-
-
-
-
-
-
 
 </div>
 
+
+
+
+
+
+
+
+
+</div>
 
 
 
@@ -1001,6 +2038,15 @@ Delete
 
 
 }
+
+
+
+</div>
+
+
+
+}
+
 
 
 
@@ -1021,6 +2067,5 @@ Delete
 
 
 );
-
 
 }

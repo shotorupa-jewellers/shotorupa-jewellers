@@ -3,11 +3,22 @@
 import Link from "next/link";
 import { Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
+
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 
 
 export default function Header() {
 
+
   const [open, setOpen] = useState(false);
+
+
+  const { cart } = useCart();
+
+  const { wishlist } = useWishlist();
+
 
 
   return (
@@ -47,6 +58,8 @@ export default function Header() {
         >
           SHOTORUPA
         </Link>
+
+
 
 
 
@@ -97,13 +110,17 @@ export default function Header() {
 
 
 
+
+
         {/* ICONS */}
+
 
         <div className="
         flex
         items-center
         gap-5
         ">
+
 
 
           <span className="
@@ -117,21 +134,153 @@ export default function Header() {
 
 
 
+
+
+
+          {/* WISHLIST */}
+
+
           <Link
           href="/wishlist"
-          className="hover:text-[#A6875A]"
+          className="
+          relative
+          hover:text-[#A6875A]
+          "
           >
-            <Heart size={19} strokeWidth={1.4}/>
+
+
+            <Heart 
+            size={19} 
+            strokeWidth={1.4}
+            />
+
+
+
+            {
+              wishlist.length > 0 &&
+
+              <motion.span
+
+              initial={{
+                scale:0
+              }}
+
+              animate={{
+                scale:1
+              }}
+
+              transition={{
+                type:"spring",
+                stiffness:500
+              }}
+
+              className="
+              absolute
+              -top-3
+              -right-3
+              bg-[#A6875A]
+              text-white
+              text-[10px]
+              w-5
+              h-5
+              rounded-full
+              flex
+              items-center
+              justify-center
+              shadow-lg
+              "
+              >
+
+                {wishlist.length}
+
+              </motion.span>
+
+            }
+
+
           </Link>
 
+
+
+
+
+
+
+
+
+          {/* CART */}
 
 
           <Link
+
           href="/cart"
-          className="hover:text-[#A6875A]"
+
+          className="
+          relative
+          hover:text-[#A6875A]
+          "
+
           >
-            <ShoppingBag size={19} strokeWidth={1.4}/>
+
+
+            <ShoppingBag 
+            size={19} 
+            strokeWidth={1.4}
+            />
+
+
+
+            {
+              cart.length > 0 &&
+
+
+              <motion.span
+
+              initial={{
+                scale:0,
+                opacity:0
+              }}
+
+              animate={{
+                scale:1,
+                opacity:1
+              }}
+
+              transition={{
+                type:"spring",
+                stiffness:500
+              }}
+
+              className="
+              absolute
+              -top-3
+              -right-3
+              bg-[#A6875A]
+              text-white
+              text-[10px]
+              w-5
+              h-5
+              rounded-full
+              flex
+              items-center
+              justify-center
+              shadow-lg
+              "
+              >
+
+                {cart.length}
+
+              </motion.span>
+
+
+            }
+
+
           </Link>
+
+
+
+
 
 
 
@@ -139,10 +288,13 @@ export default function Header() {
           {/* MOBILE MENU BUTTON */}
 
           <button
+
           onClick={()=>setOpen(!open)}
+
           className="
           md:hidden
           "
+
           >
 
             {
@@ -156,6 +308,7 @@ export default function Header() {
           </button>
 
 
+
         </div>
 
 
@@ -165,12 +318,29 @@ export default function Header() {
 
 
 
+
+
+
+
       {/* MOBILE MENU */}
+
 
       {
         open && (
 
-          <div className="
+          <motion.div
+
+          initial={{
+            height:0,
+            opacity:0
+          }}
+
+          animate={{
+            height:"auto",
+            opacity:1
+          }}
+
+          className="
           md:hidden
           bg-[#F6F3EC]
           border-t
@@ -181,7 +351,9 @@ export default function Header() {
           flex-col
           gap-5
           "
+
           >
+
 
             <Link href="/" onClick={()=>setOpen(false)}>
               Home
@@ -203,7 +375,7 @@ export default function Header() {
             </Link>
 
 
-          </div>
+          </motion.div>
 
         )
       }

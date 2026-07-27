@@ -5,27 +5,11 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
 } from "react";
 
+import type { ReactNode } from "react";
 
-export type Product = {
-
-  id:string;
-
-  name:string;
-
-  price:number;
-
-  image:string;
-
-  category:string;
-
-  weight:string;
-
-  purity:string;
-
-};
+import type { Product } from "@/types/product";
 
 
 
@@ -60,8 +44,7 @@ type CartContextType = {
 
 
 
-const CartContext = createContext<CartContextType | null>(null);
-
+const CartContext = createContext<CartContextType | undefined>(undefined);
 
 
 
@@ -88,8 +71,10 @@ const [cart,setCart] = useState<CartItem[]>([]);
 
 
 
+// ===============================
+// LOAD CART FROM LOCAL STORAGE
+// ===============================
 
-// Load cart
 
 useEffect(()=>{
 
@@ -97,23 +82,27 @@ useEffect(()=>{
 if(typeof window !== "undefined"){
 
 
+try{
+
+
 const savedCart = localStorage.getItem("cart");
 
 
 if(savedCart){
 
-try{
-
 setCart(JSON.parse(savedCart));
 
 }
 
-catch{
-
-setCart([]);
 
 }
 
+catch(error){
+
+console.log(
+"Cart Load Error:",
+error
+);
 
 }
 
@@ -131,8 +120,10 @@ setCart([]);
 
 
 
+// ===============================
+// SAVE CART
+// ===============================
 
-// Save cart
 
 useEffect(()=>{
 
@@ -162,10 +153,12 @@ JSON.stringify(cart)
 
 
 
-// Add Product
+// ===============================
+// ADD TO CART
+// ===============================
 
-function addToCart(product:Product){
 
+const addToCart = (product:Product)=>{
 
 
 setCart((prev)=>{
@@ -173,7 +166,9 @@ setCart((prev)=>{
 
 const existing = prev.find(
 
-(item)=>item.id === product.id
+(item)=>
+
+item.id === product.id
 
 );
 
@@ -182,7 +177,6 @@ const existing = prev.find(
 
 
 if(existing){
-
 
 
 return prev.map((item)=>
@@ -208,11 +202,7 @@ item
 );
 
 
-
 }
-
-
-
 
 
 
@@ -220,9 +210,7 @@ item
 
 return [
 
-
 ...prev,
-
 
 {
 
@@ -232,17 +220,13 @@ quantity:1
 
 }
 
-
 ];
-
 
 
 });
 
 
-
-}
-
+};
 
 
 
@@ -253,10 +237,13 @@ quantity:1
 
 
 
-// Remove Product
 
-function removeFromCart(id:string){
+// ===============================
+// REMOVE FROM CART
+// ===============================
 
+
+const removeFromCart = (id:string)=>{
 
 
 setCart((prev)=>
@@ -264,7 +251,9 @@ setCart((prev)=>
 
 prev.filter(
 
-(item)=>item.id !== id
+(item)=>
+
+item.id !== id
 
 )
 
@@ -272,7 +261,7 @@ prev.filter(
 );
 
 
-}
+};
 
 
 
@@ -284,10 +273,12 @@ prev.filter(
 
 
 
-// Increase Quantity
+// ===============================
+// INCREASE QUANTITY
+// ===============================
 
-function increaseQuantity(id:string){
 
+const increaseQuantity = (id:string)=>{
 
 
 setCart((prev)=>
@@ -308,7 +299,6 @@ quantity:item.quantity + 1
 
 }
 
-
 :
 
 item
@@ -320,9 +310,7 @@ item
 );
 
 
-
-}
-
+};
 
 
 
@@ -333,10 +321,13 @@ item
 
 
 
-// Decrease Quantity
 
-function decreaseQuantity(id:string){
+// ===============================
+// DECREASE QUANTITY
+// ===============================
 
+
+const decreaseQuantity = (id:string)=>{
 
 
 setCart((prev)=>
@@ -357,7 +348,6 @@ quantity:item.quantity - 1
 
 }
 
-
 :
 
 item
@@ -369,9 +359,7 @@ item
 );
 
 
-
-}
-
+};
 
 
 
@@ -382,9 +370,13 @@ item
 
 
 
-// Clear Cart
 
-function clearCart(){
+// ===============================
+// CLEAR CART
+// ===============================
+
+
+const clearCart = ()=>{
 
 
 setCart([]);
@@ -399,7 +391,10 @@ localStorage.removeItem("cart");
 }
 
 
-}
+};
+
+
+
 
 
 
@@ -417,7 +412,6 @@ return(
 
 value={{
 
-
 cart,
 
 addToCart,
@@ -429,7 +423,6 @@ increaseQuantity,
 decreaseQuantity,
 
 clearCart
-
 
 }}
 
@@ -446,8 +439,11 @@ clearCart
 );
 
 
-
 }
+
+
+
+
 
 
 
@@ -479,7 +475,6 @@ throw new Error(
 
 
 return context;
-
 
 
 }
