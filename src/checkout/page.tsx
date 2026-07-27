@@ -6,6 +6,14 @@ import Image from "next/image";
 
 import { useCart } from "@/context/CartContext";
 
+import {
+  collection,
+  addDoc,
+  Timestamp
+} from "firebase/firestore";
+
+import { db } from "@/lib/firebase";
+
 
 
 export default function CheckoutPage(){
@@ -44,18 +52,43 @@ sum + item.price * item.quantity,
 
 
 
-
-function placeOrder(){
+async function placeOrder(){
 
 
 if(!name || !phone || !address){
 
-alert("Please fill all information");
+
+alert(
+"Please fill all information"
+);
+
 
 return;
 
+
 }
 
+
+
+if(cart.length===0){
+
+
+alert(
+"Your cart is empty"
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+try{
 
 
 setLoading(true);
@@ -64,25 +97,53 @@ setLoading(true);
 
 
 
-const order={
+const orderData={
+
 
 
 customerName:name,
 
+
 phone:phone,
 
-address:address,
 
 city:city,
 
 
-products:cart,
+address:address,
+
+
+
+products:cart.map(item=>({
+
+id:item.id,
+
+name:item.name,
+
+image:item.image,
+
+price:item.price,
+
+quantity:item.quantity,
+
+category:item.category,
+
+weight:item.weight,
+
+purity:item.purity
+
+})),
+
 
 
 total:total,
 
 
-date:new Date().toISOString()
+status:"Pending",
+
+
+createdAt:Timestamp.now()
+
 
 
 };
@@ -90,18 +151,66 @@ date:new Date().toISOString()
 
 
 
-console.log(order);
+
+
+
+await addDoc(
+
+collection(db,"orders"),
+
+orderData
+
+);
+
+
+
+
+
 
 
 
 clearCart();
 
 
+
+alert(
+"Order placed successfully!"
+);
+
+
+
+window.location.href="/";
+
+
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"Order Error:",
+error
+);
+
+
+alert(
+"Order failed. Try again!"
+);
+
+
+
+}
+
+finally{
+
+
 setLoading(false);
 
 
-
-alert("Order placed successfully!");
+}
 
 
 
@@ -118,24 +227,26 @@ alert("Order placed successfully!");
 return(
 
 
-<main className="
+<main
+className="
 min-h-screen
 bg-[#F6F3EC]
 py-24
 px-6
-">
+"
+>
 
 
 
-
-
-<div className="
+<div
+className="
 max-w-6xl
 mx-auto
 grid
 md:grid-cols-2
 gap-10
-">
+"
+>
 
 
 
@@ -143,24 +254,26 @@ gap-10
 
 
 
+{/* CUSTOMER FORM */}
 
-{/* CUSTOMER INFORMATION */}
 
-
-<section className="
+<section
+className="
 bg-white
 p-8
 rounded-2xl
 shadow
-">
+"
+>
 
 
-<h1 className="
+<h1
+className="
 font-serif
 text-4xl
 mb-8
-text-[#19160F]
-">
+"
+>
 
 Checkout
 
@@ -170,10 +283,13 @@ Checkout
 
 
 
-
-<div className="
+<div
+className="
 space-y-5
-">
+"
+>
+
+
 
 
 
@@ -185,7 +301,9 @@ placeholder="Full Name"
 
 value={name}
 
-onChange={(e)=>setName(e.target.value)}
+onChange={(e)=>
+setName(e.target.value)
+}
 
 className="
 w-full
@@ -193,10 +311,11 @@ border
 px-5
 py-4
 rounded-lg
-outline-none
 "
 
-/>
+ />
+
+
 
 
 
@@ -211,7 +330,9 @@ placeholder="Phone Number"
 
 value={phone}
 
-onChange={(e)=>setPhone(e.target.value)}
+onChange={(e)=>
+setPhone(e.target.value)
+}
 
 className="
 w-full
@@ -219,10 +340,11 @@ border
 px-5
 py-4
 rounded-lg
-outline-none
 "
 
-/>
+ />
+
+
 
 
 
@@ -238,7 +360,9 @@ placeholder="City"
 
 value={city}
 
-onChange={(e)=>setCity(e.target.value)}
+onChange={(e)=>
+setCity(e.target.value)
+}
 
 className="
 w-full
@@ -246,10 +370,11 @@ border
 px-5
 py-4
 rounded-lg
-outline-none
 "
 
-/>
+ />
+
+
 
 
 
@@ -263,7 +388,9 @@ placeholder="Full Address"
 
 value={address}
 
-onChange={(e)=>setAddress(e.target.value)}
+onChange={(e)=>
+setAddress(e.target.value)
+}
 
 className="
 w-full
@@ -272,10 +399,12 @@ px-5
 py-4
 rounded-lg
 h-32
-outline-none
 "
 
-/>
+ />
+
+
+
 
 
 
@@ -294,14 +423,15 @@ w-full
 bg-[#A6875A]
 text-white
 py-4
-uppercase
-tracking-widest
 rounded-lg
+tracking-widest
+uppercase
 hover:bg-[#8d7048]
 transition
 "
 
 >
+
 
 {
 
@@ -318,7 +448,10 @@ loading
 }
 
 
+
 </button>
+
+
 
 
 
@@ -327,7 +460,11 @@ loading
 </div>
 
 
+
 </section>
+
+
+
 
 
 
@@ -341,19 +478,23 @@ loading
 
 
 
-<section className="
+<section
+className="
 bg-white
 p-8
 rounded-2xl
 shadow
-">
+"
+>
 
 
-<h2 className="
-text-3xl
+<h2
+className="
 font-serif
+text-3xl
 mb-8
-">
+"
+>
 
 Order Summary
 
@@ -363,14 +504,26 @@ Order Summary
 
 
 
-<div className="
-space-y-5
-">
+
 
 
 {
 
-cart.map((item)=>(
+cart.length===0 ?
+
+
+
+<p>
+Cart is empty
+</p>
+
+
+
+:
+
+
+
+cart.map(item=>(
 
 
 <div
@@ -382,8 +535,8 @@ flex
 gap-4
 border-b
 pb-4
+mb-5
 "
-
 
 >
 
@@ -394,9 +547,9 @@ src={item.image}
 
 alt={item.name}
 
-width={80}
+width={90}
 
-height={80}
+height={90}
 
 className="
 rounded-lg
@@ -409,34 +562,48 @@ object-cover
 
 
 
+
 <div>
 
-<h3 className="font-semibold">
+
+<h3
+className="
+font-semibold
+"
+>
 
 {item.name}
 
 </h3>
 
 
-<p className="text-sm text-gray-500">
 
+<p>
 Qty: {item.quantity}
-
 </p>
 
 
-<p className="text-[#A6875A]">
+
+<p
+className="
+text-[#A6875A]
+"
+>
 
 ৳ {(item.price * item.quantity).toLocaleString()}
 
 </p>
 
 
-</div>
-
-
 
 </div>
+
+
+
+
+
+</div>
+
 
 
 ))
@@ -448,40 +615,42 @@ Qty: {item.quantity}
 
 
 
-</div>
 
 
 
-
-
-
-
-<div className="
-mt-8
+<div
+className="
 border-t
 pt-5
+mt-8
 flex
 justify-between
 text-xl
 font-bold
-">
+"
+>
 
 
 <span>
-
 Total
-
 </span>
 
 
-<span className="text-[#A6875A]">
+<span
+className="
+text-[#A6875A]
+"
+>
 
 ৳ {total.toLocaleString()}
 
 </span>
 
 
+
 </div>
+
+
 
 
 
@@ -494,9 +663,9 @@ href="/cart"
 className="
 block
 mt-8
-text-center
 border
 py-3
+text-center
 rounded
 "
 
@@ -509,16 +678,14 @@ Back To Cart
 
 
 
-
 </section>
 
 
 
 
 
-
-
 </div>
+
 
 
 </main>
