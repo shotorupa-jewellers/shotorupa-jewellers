@@ -1,35 +1,36 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState
+} from "react";
 
 import {
-useParams
+  useParams
 } from "next/navigation";
 
-
 import {
-doc,
-getDoc
+  doc,
+  getDoc
 } from "firebase/firestore";
 
-
 import {
-db
+  db
 } from "@/lib/firebase";
 
-
-
+import {
+  Printer,
+  Gem,
+  Crown
+} from "lucide-react";
 
 
 export default function InvoicePage(){
 
 
-
 const params = useParams();
 
 const id = params.id as string;
-
 
 
 const [order,setOrder]=useState<any>(null);
@@ -38,14 +39,10 @@ const [order,setOrder]=useState<any>(null);
 
 
 
-
-
-
 useEffect(()=>{
 
 
-async function loadOrder(){
-
+async function load(){
 
 
 const snap = await getDoc(
@@ -75,13 +72,14 @@ id:snap.id,
 }
 
 
+
 }
 
 
 
 if(id){
 
-loadOrder();
+load();
 
 }
 
@@ -95,22 +93,26 @@ loadOrder();
 
 
 
-
-
 if(!order){
 
 
 return(
 
-<div className="
+<div
+
+className="
 min-h-screen
 flex
 items-center
 justify-center
-">
+bg-[#F6F3EC]
+text-[#A6875A]
+text-xl
+"
+
+>
 
 Loading Invoice...
-
 
 </div>
 
@@ -125,70 +127,151 @@ Loading Invoice...
 
 
 
-
-
 return(
 
 
-<main className="
+
+<main
+
+className="
 min-h-screen
-bg-gray-100
-p-8
-text-black
-">
+bg-[#F6F3EC]
+p-5
+lg:p-10
+text-[#19160F]
+"
+
+>
 
 
+<div
 
-
-
-
-<div className="
-max-w-4xl
+className="
+max-w-5xl
 mx-auto
 bg-white
+rounded-3xl
 shadow-xl
-p-10
-rounded-xl
-">
+border
+border-[#A6875A]/30
+p-8
+lg:p-12
+"
+
+>
 
 
 
 
 
+{/* HEADER */}
 
 
-{/* Header */}
+<div
 
-
-
-<div className="
+className="
 flex
 justify-between
+items-start
 border-b
-pb-6
-mb-6
-">
+border-[#A6875A]/20
+pb-8
+"
 
-
+>
 
 
 
 <div>
 
 
-<h1 className="
+<div
+
+className="
+flex
+items-center
+gap-3
+"
+
+>
+
+
+<div
+
+className="
+w-14
+h-14
+rounded-full
+bg-[#A6875A]/10
+flex
+items-center
+justify-center
+"
+
+>
+
+
+<Crown
+
+className="
+text-[#A6875A]
+"
+
+/>
+
+
+</div>
+
+
+
+<div>
+
+
+<h1
+
+className="
 text-3xl
 font-serif
-font-bold
-text-[#6b4d1f]
-">
+text-[#A6875A]
+tracking-wide
+"
 
-SHOTORUPA JEWELLERS
+>
+
+SHOTORUPA
 
 </h1>
 
 
-<p>
+<p
+
+className="
+text-xs
+tracking-[0.3em]
+"
+
+>
+
+JEWELLERS
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+<p
+
+className="
+mt-5
+text-gray-500
+"
+
+>
 
 Premium Gold & Diamond Jewellery
 
@@ -201,93 +284,158 @@ Premium Gold & Diamond Jewellery
 
 
 
+<div
 
-<div className="text-right">
+className="
+text-right
+"
+
+>
 
 
-<h2 className="
-text-xl
-font-bold
-">
+<h2
+
+className="
+text-3xl
+font-serif
+"
+
+>
 
 INVOICE
 
 </h2>
 
 
-<p>
 
-Order ID:
+<p className="text-sm mt-3">
 
-{order.orderId}
+Invoice ID:
+
+<span className="font-semibold">
+
+{order.orderId || order.id}
+
+</span>
 
 </p>
 
 
+
+<p className="text-sm text-gray-500">
+
+{
+
+order.createdAt?.toDate
+
+?
+
+order.createdAt.toDate().toLocaleDateString()
+
+:
+
+""
+
+}
+
+</p>
+
+
+
 </div>
 
 
 
-
 </div>
+{/* CUSTOMER INFO */}
 
 
+<div
 
-
-
-
-
-
-
-{/* Customer */}
-
-
-
-<div className="
+className="
 grid
 md:grid-cols-2
 gap-6
-mb-8
-">
+my-8
+"
+
+>
 
 
 
-<div>
 
 
-<h3 className="
-font-bold
-mb-2
-">
+<div
+
+className="
+bg-[#F6F3EC]
+rounded-2xl
+p-6
+"
+
+>
+
+
+<h3
+
+className="
+font-serif
+text-xl
+mb-4
+text-[#A6875A]
+"
+
+>
 
 Bill To
 
 </h3>
 
 
+
 <p>
 
 Name:
 
+<b>
+
+{" "}
+
 {order.customer?.name}
 
+</b>
+
 </p>
+
 
 
 <p>
 
 Phone:
 
+<b>
+
+{" "}
+
 {order.customer?.phone}
 
+</b>
+
 </p>
+
 
 
 <p>
 
 Address:
 
+<b>
+
+{" "}
+
 {order.customer?.address}
+
+</b>
 
 </p>
 
@@ -301,13 +449,29 @@ Address:
 
 
 
-<div>
 
 
-<h3 className="
-font-bold
-mb-2
-">
+<div
+
+className="
+bg-[#F6F3EC]
+rounded-2xl
+p-6
+"
+
+>
+
+
+<h3
+
+className="
+font-serif
+text-xl
+mb-4
+text-[#A6875A]
+"
+
+>
 
 Payment
 
@@ -319,7 +483,13 @@ Payment
 
 Method:
 
+<b>
+
+{" "}
+
 {order.payment}
+
+</b>
 
 </p>
 
@@ -327,9 +497,15 @@ Method:
 
 <p>
 
-Status:
+Payment Status:
 
-{order.paymentStatus}
+<b>
+
+{" "}
+
+{order.paymentStatus || "Paid"}
+
+</b>
 
 </p>
 
@@ -339,7 +515,13 @@ Status:
 
 Order Status:
 
-{order.orderStatus}
+<b>
+
+{" "}
+
+{order.orderStatus || "Pending"}
+
+</b>
 
 </p>
 
@@ -350,6 +532,7 @@ Order Status:
 
 
 
+
 </div>
 
 
@@ -360,60 +543,99 @@ Order Status:
 
 
 
-{/* Product Table */}
+{/* PRODUCTS TABLE */}
 
 
 
-<table className="
+<div
+
+className="
+overflow-x-auto
+"
+
+>
+
+
+
+<table
+
+className="
 w-full
-border
-">
+border-collapse
+"
+
+>
 
 
 
-<thead className="
-bg-[#f3e5c5]
-">
+<thead>
 
 
-<tr>
+<tr
+
+className="
+bg-gradient-to-r
+from-[#D4AF37]
+to-[#A6875A]
+text-white
+"
+
+>
 
 
-<th className="
-border
-p-3
+
+<th
+
+className="
+p-4
 text-left
-">
+rounded-tl-xl
+"
+
+>
 
 Product
 
 </th>
 
 
-<th className="
-border
-p-3
-">
+
+<th
+
+className="
+p-4
+"
+
+>
 
 Qty
 
 </th>
 
 
-<th className="
-border
-p-3
-">
+
+<th
+
+className="
+p-4
+"
+
+>
 
 Price
 
 </th>
 
 
-<th className="
-border
-p-3
-">
+
+<th
+
+className="
+p-4
+rounded-tr-xl
+"
+
+>
 
 Total
 
@@ -422,7 +644,6 @@ Total
 
 
 </tr>
-
 
 
 </thead>
@@ -442,25 +663,100 @@ Total
 order.products?.map((item:any)=>(
 
 
-<tr key={item.id}>
+
+<tr
+
+key={item.id}
+
+className="
+border-b
+hover:bg-[#F6F3EC]
+transition
+"
+
+>
 
 
-<td className="
-border
-p-3
-">
+
+<td
+
+className="
+p-4
+"
+
+>
+
+
+<div
+
+className="
+flex
+items-center
+gap-3
+"
+
+>
+
+
+<Gem
+
+size={18}
+
+className="
+text-[#A6875A]
+"
+
+/>
+
+
+
+<div>
+
+
+<p className="font-semibold">
 
 {item.name}
+
+</p>
+
+
+
+{
+
+item.purity &&
+
+<p className="text-sm text-gray-500">
+
+{item.purity}
+
+</p>
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
 
 </td>
 
 
 
-<td className="
-border
-p-3
+
+
+
+
+<td
+
+className="
 text-center
-">
+"
+
+>
 
 {item.quantity}
 
@@ -469,10 +765,15 @@ text-center
 
 
 
-<td className="
-border
-p-3
-">
+
+
+<td
+
+className="
+text-center
+"
+
+>
 
 ৳ {item.price?.toLocaleString()}
 
@@ -482,10 +783,16 @@ p-3
 
 
 
-<td className="
-border
-p-3
-">
+
+<td
+
+className="
+text-center
+font-semibold
+text-[#A6875A]
+"
+
+>
 
 ৳ {(item.price * item.quantity)
 .toLocaleString()}
@@ -494,7 +801,10 @@ p-3
 
 
 
+
+
 </tr>
+
 
 
 ))
@@ -512,33 +822,66 @@ p-3
 
 
 
+</div>
+{/* TOTAL SECTION */}
 
 
+<div
 
-
-
-
-{/* Total */}
-
-
-
-<div className="
-text-right
+className="
 mt-8
-">
+flex
+justify-end
+"
+
+>
 
 
-<h2 className="
-text-3xl
+<div
+
+className="
+bg-[#F6F3EC]
+rounded-2xl
+p-6
+text-right
+border
+border-[#A6875A]/20
+"
+
+>
+
+
+<p
+
+className="
+text-gray-500
+"
+
+>
+
+Grand Total
+
+</p>
+
+
+
+<h2
+
+className="
+text-4xl
 font-bold
-text-[#9b7a3d]
-">
+text-[#A6875A]
+"
 
-Total:
+>
 
 ৳ {order.total?.toLocaleString()}
 
 </h2>
+
+
+
+</div>
 
 
 
@@ -552,24 +895,120 @@ Total:
 
 
 
-<button
+{/* FOOTER MESSAGE */}
 
-onClick={()=>window.print()}
+
+
+<div
 
 className="
-mt-8
-bg-[#9b7a3d]
-text-white
-px-8
-py-3
-rounded-lg
+mt-10
+text-center
+border-t
+pt-6
+text-gray-500
 "
 
 >
 
-🖨 Print Invoice
+
+<p>
+
+Thank you for choosing
+
+</p>
+
+
+<h3
+
+className="
+font-serif
+text-xl
+text-[#A6875A]
+mt-2
+"
+
+>
+
+SHOTORUPA JEWELLERS
+
+</h3>
+
+
+<p className="text-sm mt-2">
+
+Crafting Timeless Beauty With Pure Gold
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* PRINT BUTTON */}
+
+
+
+<button
+
+
+onClick={()=>window.print()}
+
+
+className="
+mt-10
+bg-gradient-to-r
+from-[#D4AF37]
+via-[#F5D76E]
+to-[#A6875A]
+
+text-white
+
+px-10
+
+py-4
+
+rounded-xl
+
+flex
+
+items-center
+
+gap-3
+
+font-semibold
+
+shadow-lg
+
+shadow-[#D4AF37]/30
+
+hover:scale-105
+
+hover:shadow-xl
+
+transition
+
+"
+
+
+>
+
+
+<Printer size={20}/>
+
+
+Print Invoice
+
 
 </button>
+
 
 
 

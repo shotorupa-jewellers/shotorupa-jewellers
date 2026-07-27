@@ -1,14 +1,28 @@
 "use client";
 
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+  useState
+} from "react";
 
 import {
-signInWithEmailAndPassword
+  useRouter
+} from "next/navigation";
+
+import {
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
-import { auth } from "@/lib/firebase";
+import {
+  auth
+} from "@/lib/firebase";
+
+import {
+  Crown,
+  Eye,
+  EyeOff,
+  Loader2
+} from "lucide-react";
 
 
 
@@ -22,11 +36,13 @@ const [email,setEmail]=useState("");
 
 const [password,setPassword]=useState("");
 
+const [showPassword,setShowPassword]=useState(false);
+
 const [error,setError]=useState("");
 
 const [loading,setLoading]=useState(false);
 
-
+const [resetLoading,setResetLoading]=useState(false);
 
 
 
@@ -57,11 +73,8 @@ password
 
 
 localStorage.setItem(
-
 "admin",
-
 "true"
-
 );
 
 
@@ -72,14 +85,26 @@ router.push("/admin");
 
 }
 
-catch(err:any){
+catch(error:any){
 
 
-setError(
+if(error.code==="auth/user-not-found"){
 
-"Invalid Email or Password"
+setError("Admin account not found");
 
-);
+}
+
+else if(error.code==="auth/wrong-password"){
+
+setError("Wrong password");
+
+}
+
+else{
+
+setError("Invalid login details");
+
+}
 
 
 }
@@ -93,9 +118,69 @@ setLoading(false);
 }
 
 
+}
+
+
+
+
+
+
+
+async function forgotPassword(){
+
+
+if(!email){
+
+setError("Enter admin email first");
+
+return;
 
 }
 
+
+
+try{
+
+
+setResetLoading(true);
+
+
+await sendPasswordResetEmail(
+
+auth,
+
+email
+
+);
+
+
+alert(
+"Password reset email sent"
+);
+
+
+}
+
+catch(error){
+
+
+setError(
+"Reset email failed"
+);
+
+
+}
+
+finally{
+
+
+setResetLoading(false);
+
+
+}
+
+
+}
 
 
 
@@ -106,14 +191,20 @@ setLoading(false);
 return(
 
 
+
 <main
 
 className="
 min-h-screen
-bg-[#f8f4ee]
+bg-gradient-to-br
+from-black
+via-[#171008]
+to-black
+
 flex
 items-center
 justify-center
+
 p-6
 "
 
@@ -123,30 +214,106 @@ p-6
 <div
 
 className="
-bg-white
 w-full
 max-w-md
-rounded-2xl
-shadow-xl
+
+bg-white/10
+
+backdrop-blur-xl
+
+border
+border-yellow-600/30
+
+rounded-3xl
+
+shadow-2xl
+
 p-8
+
 "
 
 >
+
+
+
+
+
+{/* LOGO */}
+
+
+<div
+
+className="
+flex
+justify-center
+mb-6
+"
+
+>
+
+
+<div
+
+className="
+w-24
+h-24
+
+rounded-full
+
+border
+border-yellow-500
+
+flex
+items-center
+justify-center
+
+bg-black
+
+shadow-[0_0_40px_rgba(212,175,55,.3)]
+
+"
+
+>
+
+
+<Crown
+
+size={45}
+
+className="
+text-yellow-400
+"
+
+/>
+
+
+</div>
+
+
+</div>
+
+
+
 
 
 <h1
 
 className="
-text-3xl
-font-serif
 text-center
-text-[#6b4d1f]
-mb-2
+
+text-4xl
+
+font-serif
+
+tracking-widest
+
+text-yellow-400
+
 "
 
 >
 
-Shotorupa
+SHOTORUPA
 
 </h1>
 
@@ -156,15 +323,23 @@ Shotorupa
 
 className="
 text-center
-text-gray-500
+
+text-gray-400
+
+mt-2
+
 mb-8
+
 "
 
 >
 
-Admin Login
+Luxury Jewellery Admin Panel
 
 </p>
+
+
+
 
 
 
@@ -185,19 +360,36 @@ value={email}
 onChange={(e)=>setEmail(e.target.value)}
 
 
+onKeyDown={(e)=>{
+
+if(e.key==="Enter") login();
+
+}}
+
+
 className="
+
 w-full
+
+bg-black/40
+
 border
-p-3
-rounded-lg
+
+border-yellow-600/30
+
+text-white
+
+p-4
+
+rounded-xl
+
 mb-4
+
+outline-none
+
+focus:border-yellow-400
+
 "
-
-
-
-
-
-
 
 />
 
@@ -209,10 +401,26 @@ mb-4
 
 
 
+<div
+
+className="
+relative
+"
+
+>
+
+
 <input
 
 
-type="password"
+type={
+showPassword
+?
+"text"
+:
+"password"
+}
+
 
 placeholder="Password"
 
@@ -223,21 +431,80 @@ value={password}
 onChange={(e)=>setPassword(e.target.value)}
 
 
+onKeyDown={(e)=>{
+
+if(e.key==="Enter") login();
+
+}}
+
+
 className="
+
 w-full
+
+bg-black/40
+
 border
-p-3
-rounded-lg
-mb-4
+
+border-yellow-600/30
+
+text-white
+
+p-4
+
+rounded-xl
+
+outline-none
+
+focus:border-yellow-400
+
+pr-12
+
 "
 
-
-
-
-
-
-
 />
+
+
+
+
+
+<button
+
+type="button"
+
+onClick={()=>setShowPassword(!showPassword)}
+
+className="
+absolute
+right-4
+top-4
+text-yellow-400
+"
+
+>
+
+
+{
+
+showPassword
+
+?
+
+<EyeOff size={22}/>
+
+:
+
+<Eye size={22}/>
+
+}
+
+
+</button>
+
+
+</div>
+
+
 
 
 
@@ -249,12 +516,18 @@ mb-4
 
 error &&
 
+
 <p
 
 className="
-text-red-600
+text-red-400
+
 text-center
-mb-4
+
+mt-4
+
+text-sm
+
 "
 
 >
@@ -263,7 +536,12 @@ mb-4
 
 </p>
 
+
 }
+
+
+
+
 
 
 
@@ -281,12 +559,42 @@ disabled={loading}
 
 
 className="
+
 w-full
-bg-[#d4af37]
+
+mt-6
+
+py-4
+
+rounded-xl
+
+
+bg-gradient-to-r
+
+from-yellow-400
+
+to-yellow-600
+
+
 text-black
+
+
 font-bold
-py-3
-rounded-lg
+
+
+flex
+
+justify-center
+
+items-center
+
+gap-2
+
+
+hover:scale-105
+
+transition
+
 "
 
 >
@@ -298,11 +606,75 @@ loading
 
 ?
 
-"Logging..."
+<>
+
+<Loader2
+
+className="
+animate-spin
+"
+
+/>
+
+Checking...
+
+</>
+
 
 :
 
-"Login"
+"Login To Dashboard"
+
+}
+
+
+
+</button>
+
+
+
+
+
+
+
+
+
+<button
+
+
+onClick={forgotPassword}
+
+
+disabled={resetLoading}
+
+
+className="
+w-full
+
+mt-5
+
+text-yellow-400
+
+text-sm
+
+hover:underline
+
+"
+
+>
+
+
+{
+
+resetLoading
+
+?
+
+"Sending..."
+
+:
+
+"Forgot Password?"
 
 }
 

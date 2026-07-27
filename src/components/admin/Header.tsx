@@ -1,10 +1,12 @@
 "use client";
 
+
 import {
   useEffect,
   useRef,
   useState
 } from "react";
+
 
 import {
   useRouter
@@ -22,6 +24,25 @@ import {
 
 
 
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  limit
+} from "firebase/firestore";
+
+
+import {
+  db
+} from "@/lib/firebase";
+
+
+
+
+
+
+
 
 export default function Header({
 
@@ -30,7 +51,15 @@ setOpen
 }:any){
 
 
+
 const [open,setOpenMenu]=useState(false);
+
+
+const [showNotification,setShowNotification]=useState(false);
+
+
+const [notifications,setNotifications]=useState<any[]>([]);
+
 
 
 const router=useRouter();
@@ -40,41 +69,72 @@ const menuRef=useRef<HTMLDivElement>(null);
 
 
 
-const today = new Date();
 
+const today=new Date();
+
+
+
+
+
+
+
+
+// LIVE ORDER NOTIFICATION
 
 
 useEffect(()=>{
 
 
-function closeMenu(e:any){
 
-if(
-menuRef.current &&
-!menuRef.current.contains(e.target)
-){
+const q=query(
 
-setOpenMenu(false);
+collection(db,"orders"),
 
-}
+orderBy(
+"createdAt",
+"desc"
+),
 
-}
+limit(5)
 
-
-document.addEventListener(
-"mousedown",
-closeMenu
 );
 
 
-return()=>{
 
-document.removeEventListener(
-"mousedown",
-closeMenu
-);
+
+
+const unsubscribe=onSnapshot(q,(snapshot)=>{
+
+
+
+const data=snapshot.docs.map(doc=>(
+
+
+{
+
+id:doc.id,
+
+...doc.data()
 
 }
+
+
+));
+
+
+
+setNotifications(data);
+
+
+
+});
+
+
+
+
+
+return()=>unsubscribe();
+
 
 
 },[]);
@@ -84,11 +144,80 @@ closeMenu
 
 
 
+
+
+
+
+
+
+
+// CLOSE PROFILE MENU
+
+
+useEffect(()=>{
+
+
+
+function closeMenu(e:any){
+
+
+if(
+
+menuRef.current &&
+
+!menuRef.current.contains(e.target)
+
+){
+
+setOpenMenu(false);
+
+
+}
+
+
+}
+
+
+
+document.addEventListener(
+"mousedown",
+closeMenu
+);
+
+
+
+return()=>{
+
+
+document.removeEventListener(
+"mousedown",
+closeMenu
+);
+
+
+}
+
+
+
+},[]);
+
+
+
+
+
+
+
+
+
+
 function logout(){
+
 
 localStorage.removeItem("admin");
 
+
 router.push("/admin/login");
+
 
 }
 
@@ -96,7 +225,12 @@ router.push("/admin/login");
 
 
 
+
+
+
+
 return(
+
 
 
 <header
@@ -106,30 +240,21 @@ h-20
 sticky
 top-0
 z-40
-
-bg-gradient-to-r
-from-black
-via-[#17110a]
-to-black
-
+bg-[#F6F3EC]
 border-b
-border-yellow-700/40
-
-shadow-[0_5px_30px_rgba(212,175,55,.15)]
-
+border-[#A6875A]/20
+shadow-sm
 flex
 items-center
 justify-between
-
 px-4
 lg:px-8
-
-backdrop-blur-xl
-
 "
 
-
 >
+
+
+
 
 
 
@@ -140,13 +265,14 @@ backdrop-blur-xl
 
 
 <div
+
 className="
 flex
 items-center
-gap-4
+gap-5
 "
->
 
+>
 
 
 <button
@@ -155,24 +281,20 @@ onClick={()=>setOpen(true)}
 
 className="
 lg:hidden
-text-yellow-400
-hover:scale-110
-transition
+text-[#A6875A]
 "
 
 >
 
-<Menu size={28}/>
+
+<Menu size={26}/>
+
 
 </button>
 
 
 
 
-
-
-
-{/* LOGO */}
 
 
 
@@ -190,22 +312,15 @@ gap-3
 <div
 
 className="
-w-12
-h-12
-
+w-11
+h-11
 rounded-full
-
 border
-border-yellow-500
-
-bg-yellow-500/10
-
+border-[#A6875A]
 flex
 items-center
 justify-center
-
-shadow-[0_0_25px_rgba(212,175,55,.5)]
-
+bg-white
 "
 
 >
@@ -214,10 +329,9 @@ shadow-[0_0_25px_rgba(212,175,55,.5)]
 <span
 
 className="
-text-yellow-400
 font-serif
 text-xl
-font-bold
+text-[#A6875A]
 "
 
 >
@@ -233,21 +347,17 @@ S
 
 
 
+
 <div>
 
 
 <h1
 
 className="
-text-lg
-lg:text-xl
 font-serif
-font-bold
-
-text-yellow-400
-
+text-xl
 tracking-wide
-
+text-[#19160F]
 "
 
 >
@@ -257,15 +367,12 @@ Shotorupa Admin
 </h1>
 
 
+
 <p
 
 className="
-hidden
-sm:block
-
 text-xs
-text-gray-400
-
+text-gray-500
 "
 
 >
@@ -278,11 +385,15 @@ Luxury Jewellery Management
 </div>
 
 
+
+</div>
+
+
 </div>
 
 
 
-</div>
+
 
 
 
@@ -295,81 +406,58 @@ Luxury Jewellery Management
 {/* SEARCH */}
 
 
-
 <div
 
 className="
 hidden
 lg:flex
-
 relative
-
 w-[350px]
-
 "
 
 >
 
 
-<input
-
-
-placeholder="
-Search products, orders...
-"
-
-
-className="
-
-w-full
-
-rounded-full
-
-bg-white/10
-
-border
-
-border-yellow-600/40
-
-text-white
-
-placeholder:text-gray-400
-
-py-2.5
-
-pl-12
-
-pr-5
-
-outline-none
-
-focus:border-yellow-400
-
-"
-
-
-/>
-
-
-
 <Search
 
-size={20}
+size={19}
 
 className="
 absolute
 left-4
 top-3
-
-text-yellow-400
-
+text-[#A6875A]
 "
 
 />
 
 
 
+<input
+
+placeholder="Search products, orders..."
+
+className="
+w-full
+rounded-full
+bg-white
+border
+border-[#A6875A]/30
+py-2.5
+pl-12
+pr-5
+outline-none
+text-sm
+"
+
+/>
+
+
 </div>
+
+
+
+
 
 
 
@@ -388,7 +476,6 @@ className="
 flex
 items-center
 gap-5
-
 "
 
 >
@@ -397,7 +484,9 @@ gap-5
 
 
 
-{/* DATE */}
+
+
+
 
 
 <div
@@ -411,18 +500,10 @@ text-right
 >
 
 
-<p
-
-className="
-text-sm
-text-white
-font-semibold
-"
-
->
-
+<p className="text-sm font-semibold">
 
 {
+
 today.toLocaleDateString(
 "en-US",
 {
@@ -432,21 +513,14 @@ weekday:"long"
 
 }
 
-
 </p>
 
 
-<p
 
-className="
-text-xs
-text-gray-400
-"
-
->
-
+<p className="text-xs text-gray-500">
 
 {
+
 today.toLocaleDateString(
 "en-US",
 {
@@ -457,7 +531,6 @@ year:"numeric"
 )
 
 }
-
 
 </p>
 
@@ -473,61 +546,75 @@ year:"numeric"
 
 
 
-{/* Notification */}
 
 
-<button
+
+{/* NOTIFICATION */}
+
+
+
+<div
 
 className="
 relative
-
-text-yellow-400
-
-hover:scale-110
-
-transition
-
 "
 
 >
 
 
-<Bell size={24}/>
+<button
+
+onClick={()=>setShowNotification(!showNotification)}
+
+className="
+relative
+text-[#A6875A]
+"
+
+>
+
+
+<Bell size={22}/>
+
+
+
+
+
+{
+
+notifications.length>0 &&
 
 
 <span
 
 className="
-
 absolute
-
--top-1
-
--right-2
-
-bg-red-500
-
+top-[-8px]
+right-[-8px]
+bg-red-600
 text-white
-
 text-[10px]
-
 w-5
-
 h-5
-
 rounded-full
-
 flex
 items-center
 justify-center
-
 "
 
 >
 
-3
+
+{notifications.length}
+
 
 </span>
+
+
+}
+
+
+
 
 
 </button>
@@ -540,16 +627,156 @@ justify-center
 
 
 
+{
+
+showNotification &&
+
+
+
+<div
+
+className="
+absolute
+right-0
+mt-4
+w-80
+bg-white
+border
+border-[#A6875A]/20
+rounded-2xl
+shadow-xl
+p-5
+z-50
+"
+
+>
+
+
+<h3
+
+className="
+font-serif
+text-lg
+text-[#A6875A]
+mb-4
+"
+
+>
+
+New Orders
+
+</h3>
+
+
+
+
+
+
+{
+
+notifications.length===0 ?
+
+
+<p className="text-gray-500">
+
+No New Order
+
+</p>
+
+
+
+
+
+:
+
+
+notifications.map((order)=>(
+
+
+<div
+
+key={order.id}
+
+className="
+border-b
+py-3
+"
+
+>
+
+
+<p className="font-semibold">
+
+🛒 New Order
+
+</p>
+
+
+
+<p className="text-sm text-gray-500">
+
+{
+
+order.customer?.name || "Customer"
+
+}
+
+</p>
+
+
+
+<p className="text-[#A6875A] font-bold">
+
+৳ {order.total?.toLocaleString()}
+
+</p>
+
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+
+</div>
+
+
+}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {/* PROFILE */}
+
 
 
 <div
 
 ref={menuRef}
 
-className="
-relative
-"
+className="relative"
 
 >
 
@@ -568,33 +795,19 @@ gap-3
 >
 
 
+
 <div
 
 className="
-
-w-11
-h-11
-
+w-10
+h-10
 rounded-full
-
-bg-gradient-to-br
-
-from-yellow-300
-
-to-yellow-600
-
-
+bg-[#A6875A]
+text-white
 flex
 items-center
 justify-center
-
-
-font-bold
-
-text-black
-
-shadow-lg
-
+font-semibold
 "
 
 >
@@ -607,40 +820,18 @@ A
 
 
 
-
-<div
-
-className="
-hidden
-md:block
-text-left
-"
-
->
+<div className="hidden md:block">
 
 
-<p
-
-className="
-text-white
-font-semibold
-"
-
->
+<p className="text-sm font-semibold">
 
 Admin
 
 </p>
 
 
-<p
 
-className="
-text-xs
-text-gray-400
-"
-
->
+<p className="text-xs text-gray-500">
 
 Owner
 
@@ -651,15 +842,16 @@ Owner
 
 
 
+
+
 <ChevronDown
 
 size={18}
 
-className="
-text-yellow-400
-"
+className="text-[#A6875A]"
 
 />
+
 
 
 </button>
@@ -673,33 +865,24 @@ text-yellow-400
 
 
 {
+
 open &&
+
 
 
 <div
 
 className="
-
 absolute
-
 right-0
-
 mt-4
-
 w-52
-
-bg-black
-
+bg-white
 border
-
-border-yellow-600/40
-
+border-[#A6875A]/20
 rounded-xl
-
-shadow-[0_0_30px_rgba(212,175,55,.2)]
-
+shadow-xl
 p-2
-
 "
 
 >
@@ -710,27 +893,14 @@ p-2
 onClick={()=>router.push("/admin/profile")}
 
 className="
-
 flex
-
 items-center
-
 gap-3
-
 w-full
-
 px-4
-
 py-3
-
-text-white
-
-hover:bg-yellow-500/20
-
 rounded-lg
-
-transition
-
+hover:bg-[#F6F3EC]
 "
 
 >
@@ -739,8 +909,8 @@ transition
 
 Profile
 
-
 </button>
+
 
 
 
@@ -751,27 +921,15 @@ Profile
 onClick={logout}
 
 className="
-
 flex
-
 items-center
-
 gap-3
-
 w-full
-
 px-4
-
 py-3
-
-text-red-400
-
-hover:bg-red-500/10
-
 rounded-lg
-
-transition
-
+text-red-600
+hover:bg-red-50
 "
 
 >
@@ -783,6 +941,7 @@ Logout
 
 
 </button>
+
 
 
 </div>
@@ -798,7 +957,12 @@ Logout
 
 
 
+
+
+
 </div>
+
+
 
 
 
@@ -806,6 +970,7 @@ Logout
 
 
 );
+
 
 
 }

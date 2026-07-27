@@ -1,20 +1,47 @@
 "use client";
 
 
-import { useState } from "react";
+import {
+useState
+} from "react";
+
 
 import {
-  collection,
-  addDoc,
-  serverTimestamp
+useRouter
+} from "next/navigation";
+
+
+import {
+collection,
+addDoc,
+serverTimestamp
 } from "firebase/firestore";
 
 
-import { db } from "@/lib/firebase";
+import {
+db
+} from "@/lib/firebase";
+
+
+import {
+Save,
+ArrowLeft,
+Image as ImageIcon,
+Loader2
+} from "lucide-react";
+
+
+import Link from "next/link";
+
+
 
 
 
 export default function AddProduct(){
+
+
+
+const router = useRouter();
 
 
 
@@ -28,9 +55,19 @@ const [purity,setPurity]=useState("");
 
 const [weight,setWeight]=useState("");
 
+const [stock,setStock]=useState("");
+
+const [makingCharge,setMakingCharge]=useState("");
+
 const [image,setImage]=useState("");
 
+const [description,setDescription]=useState("");
+
 const [loading,setLoading]=useState(false);
+
+
+
+
 
 
 
@@ -40,18 +77,21 @@ const [loading,setLoading]=useState(false);
 async function addProduct(){
 
 
+
 if(
 !name ||
 !price ||
-!category ||
 !image
 ){
 
-alert("Please fill all required fields");
+
+alert("Please fill required fields");
 
 return;
 
+
 }
+
 
 
 
@@ -62,8 +102,6 @@ setLoading(true);
 
 
 
-
-
 await addDoc(
 
 collection(db,"products"),
@@ -71,46 +109,44 @@ collection(db,"products"),
 {
 
 
-name:name,
+name,
 
 price:Number(price),
 
-category:category,
+category,
 
-purity:purity,
+purity,
 
-weight:weight,
+weight,
 
-image:image,
+stock:Number(stock),
 
-createdAt:serverTimestamp()
+makingCharge:Number(makingCharge),
+
+image,
+
+description,
+
+
+createdAt:serverTimestamp(),
+
+
+status:"active"
 
 
 }
+
 
 );
 
 
 
 
-
-alert("Product Added Successfully");
-
+alert("Product Added Successfully ✅");
 
 
 
-
-setName("");
-
-setPrice("");
-
-setCategory("Gold");
-
-setPurity("");
-
-setWeight("");
-
-setImage("");
+router.push("/admin/products");
 
 
 
@@ -121,8 +157,7 @@ catch(error){
 
 console.log(error);
 
-
-alert("Error Adding Product");
+alert("Product Adding Failed");
 
 
 }
@@ -151,21 +186,83 @@ return(
 
 
 
-<div className="min-h-screen bg-[#f8f4ee] p-8">
+<main
+
+className="
+min-h-screen
+bg-gradient-to-br
+from-black
+via-[#120d06]
+to-black
+
+p-6
+text-white
+"
+
+>
+
+
+
+<section
+
+className="
+max-w-4xl
+mx-auto
+"
+
+>
 
 
 
 
 
 
-<div className="max-w-xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+
+<div
+
+className="
+flex
+items-center
+gap-4
+mb-8
+"
+
+>
+
+
+<Link
+
+href="/admin/products"
+
+className="
+p-3
+rounded-xl
+bg-yellow-500/10
+text-yellow-400
+"
+
+>
+
+
+<ArrowLeft/>
+
+
+</Link>
 
 
 
+<div>
 
 
+<h1
 
-<h1 className="text-3xl font-serif text-[#6b4d1f] mb-6">
+className="
+text-4xl
+font-serif
+text-yellow-400
+"
+
+>
 
 Add New Jewellery
 
@@ -173,6 +270,47 @@ Add New Jewellery
 
 
 
+<p className="text-gray-400">
+
+Create premium jewellery product
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+
+className="
+bg-white/10
+backdrop-blur-xl
+
+border
+border-yellow-600/30
+
+rounded-3xl
+
+p-8
+
+space-y-5
+
+"
+
+>
+
+
+
 
 
 
@@ -180,53 +318,43 @@ Add New Jewellery
 
 
 <input
-
 
 placeholder="Product Name"
 
-
 value={name}
-
 
 onChange={(e)=>setName(e.target.value)}
 
+className="
+inputStyle
+"
 
-className="w-full border p-3 rounded mb-4"
-
-
-/>
-
-
+ />
 
 
 
 
 
+
+
+
+
+<div className="grid md:grid-cols-2 gap-5">
 
 
 <input
 
+type="number"
 
 placeholder="Price"
 
-
-type="number"
-
-
 value={price}
-
 
 onChange={(e)=>setPrice(e.target.value)}
 
-
-className="w-full border p-3 rounded mb-4"
-
+className="inputStyle"
 
 />
-
-
-
-
 
 
 
@@ -234,99 +362,109 @@ className="w-full border p-3 rounded mb-4"
 
 <select
 
-
 value={category}
-
 
 onChange={(e)=>setCategory(e.target.value)}
 
-
-className="w-full border p-3 rounded mb-4"
-
+className="inputStyle text-black"
 
 >
 
 
+<option>Gold</option>
 
-<option value="Gold">
+<option>Diamond</option>
 
-Gold
+<option>City Gold</option>
 
-</option>
+<option>Wedding</option>
 
-
-
-
-
-<option value="Diamond">
-
-Diamond
-
-</option>
-
-
-
-
-
-<option value="City Gold">
-
-City Gold
-
-</option>
-
-
-
+<option>Platinum</option>
 
 
 </select>
 
 
+</div>
 
 
 
 
 
+
+
+
+<div className="grid md:grid-cols-3 gap-5">
 
 
 <input
 
-
-placeholder="Purity (22K Gold / VVS Diamond)"
-
+placeholder="Purity"
 
 value={purity}
 
-
 onChange={(e)=>setPurity(e.target.value)}
 
-
-className="w-full border p-3 rounded mb-4"
-
+className="inputStyle"
 
 />
 
 
 
 
-
-
-
-
-
 <input
 
-
-placeholder="Weight (example: 10g)"
-
+placeholder="Weight"
 
 value={weight}
 
-
 onChange={(e)=>setWeight(e.target.value)}
 
+className="inputStyle"
 
-className="w-full border p-3 rounded mb-4"
+/>
 
+
+
+
+
+<input
+
+type="number"
+
+placeholder="Stock"
+
+value={stock}
+
+onChange={(e)=>setStock(e.target.value)}
+
+className="inputStyle"
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<input
+
+type="number"
+
+placeholder="Making Charge"
+
+value={makingCharge}
+
+onChange={(e)=>setMakingCharge(e.target.value)}
+
+className="inputStyle"
 
 />
 
@@ -340,18 +478,75 @@ className="w-full border p-3 rounded mb-4"
 
 <input
 
-
 placeholder="Image URL"
-
 
 value={image}
 
-
 onChange={(e)=>setImage(e.target.value)}
 
+className="inputStyle"
 
-className="w-full border p-3 rounded mb-6"
+/>
 
+
+
+
+
+
+
+{
+
+image &&
+
+
+<div className="mt-4">
+
+
+<img
+
+src={image}
+
+alt="preview"
+
+className="
+w-40
+h-40
+object-cover
+rounded-xl
+border
+border-yellow-500
+"
+
+/>
+
+
+</div>
+
+
+}
+
+
+
+
+
+
+
+
+
+
+<textarea
+
+placeholder="Product Description"
+
+value={description}
+
+onChange={(e)=>setDescription(e.target.value)}
+
+rows={5}
+
+className="
+inputStyle
+"
 
 />
 
@@ -365,32 +560,76 @@ className="w-full border p-3 rounded mb-6"
 
 <button
 
-
 onClick={addProduct}
-
 
 disabled={loading}
 
+className="
 
-className="w-full bg-[#9b7a3d] text-white py-3 rounded-xl"
+w-full
 
+py-4
+
+rounded-xl
+
+
+bg-gradient-to-r
+
+from-yellow-400
+
+to-yellow-600
+
+
+text-black
+
+font-bold
+
+
+flex
+
+justify-center
+
+items-center
+
+gap-3
+
+
+hover:scale-[1.02]
+
+transition
+
+"
 
 >
 
 
-
 {
 
-loading ?
+loading
 
-"Adding Product..."
+?
+
+<>
+
+<Loader2 className="animate-spin"/>
+
+Saving...
+
+</>
+
 
 :
 
-"Add Product"
+<>
+
+<Save/>
+
+Add Product
+
+</>
+
 
 }
-
 
 
 </button>
@@ -402,19 +641,27 @@ loading ?
 
 
 
-</div>
-
-
-
-
 
 
 </div>
 
+
+
+
+
+
+
+
+</section>
+
+
+
+
+
+</main>
 
 
 );
-
 
 
 }

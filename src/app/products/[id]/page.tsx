@@ -1,296 +1,114 @@
 "use client";
 
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 
-import { products } from "@/data/products";
 
-import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/context/WishlistContext";
 
-import Toast from "@/components/Toast";
+const product = {
+
+name:"The Meridian Ring",
+
+price:460000,
+
+image:"/images/ring.jpg",
+
+metal:"18K Yellow Gold",
+
+stone:"Diamond",
+
+carat:"0.62ct",
+
+clarity:"VS1",
+
+cut:"Excellent",
+
+description:
+"A single line of diamonds traces the finger like a horizon — our founding design, still hand-set one stone at a time."
+
+};
+
+
+
+
+const infoData = [
+
+{
+title:"Details & Craftsmanship",
+text:"Cast and hand-finished in our own atelier. Every stone is graded independently before setting."
+},
+
+{
+title:"Shipping & Returns",
+text:"Insured shipping worldwide, 3–5 business days. Complimentary returns within 30 days."
+},
+
+{
+title:"Care Instructions",
+text:"Store separately in the pouch provided. Professional cleaning recommended annually."
+}
+
+];
+
+
+
 
 
 export default function ProductDetails(){
 
 
-const params = useParams();
+const [size,setSize]=useState("7");
 
-const router = useRouter();
-
-
-const id = Number(params.id);
-
-
-
-const product = products.find(
-
-(item)=>item.id === id
-
-);
-
-
-
-const { addToCart } = useCart();
-
-const { addToWishlist } = useWishlist();
-
-
-
-const [toast,setToast] = useState("");
-
-
-
-
-
-function showToast(message:string){
-
-setToast(message);
-
-
-setTimeout(()=>{
-
-setToast("");
-
-},2000);
-
-
-}
-
-
-
-
-
-
-
-function convertProduct(product:any){
-
-return {
-
-id:String(product.id),
-
-name:product.name,
-
-price:product.price,
-
-image:product.image,
-
-category:product.category,
-
-weight:product.weight,
-
-purity:product.purity,
-
-};
-
-}
-
-
-
-
-
-
-
-
-
-if(!product){
-
-
-return(
-
-<div className="min-h-screen flex items-center justify-center">
-
-<h1 className="text-3xl">
-
-Product Not Found
-
-</h1>
-
-</div>
-
-);
-
-}
-
-
-
-
-
-
-
-
-
-function addCart(){
-
-
-addToCart(
-
-convertProduct(product)
-
-);
-
-
-showToast("🛒 Added to Cart");
-
-
-}
-
-
-
-
-
-
-
-
-
-function addWish(){
-
-
-addToWishlist(
-
-convertProduct(product)
-
-);
-
-
-showToast("❤️ Added to Wishlist");
-
-
-}
-
-
-
-
-
-
-
-
-
-function buyNow(){
-
-
-addToCart(
-
-convertProduct(product)
-
-);
-
-
-showToast("⚡ Added to Cart");
-
-
-
-setTimeout(()=>{
-
-router.push("/checkout");
-
-},500);
-
-
-}
-
-
-
-
-
-
-
-
-
-function shareWhatsapp(){
-
-
-if(!product) return;
-
-
-
-const message =
-
-`আমি এই Jewellery টি দেখতে চাই:
-
-${product.name}
-
-Price:
-৳ ${product.price.toLocaleString()}
-
-SHOTORUPA JEWELLERS`;
-
-
-
-
-
-const url =
-
-`https://wa.me/8801828784693?text=${encodeURIComponent(message)}`;
-
-
-
-window.open(url,"_blank");
-
-
-}
-
-
-
-
-
-
-
-
-
-function callShop(){
-
-
-window.open(
-
-"tel:+8801828784693"
-
-);
-
-
-}
-
-
-
-
-
-
+const [openInfo,setOpenInfo]=useState<number | null>(null);
 
 
 
 return(
 
 
-<main className="min-h-screen bg-[#f8f4ee] py-12">
+<div
 
+className="
+bg-[#F6F3EC]
+text-[#19160F]
+"
 
-
-<Toast
-
-message={toast}
-
-show={toast !== ""}
-
-/>
-
+>
 
 
 
 
+<section
 
-<section className="max-w-6xl mx-auto px-6">
+className="
+max-w-7xl
+mx-auto
+px-6
+py-20
+grid
+grid-cols-1
+md:grid-cols-2
+gap-20
+"
+
+>
 
 
 
-<div className="grid md:grid-cols-2 gap-10 bg-white rounded-3xl shadow-xl p-8">
 
 
+{/* IMAGE LEFT */}
 
 
+<div
 
+className="
+bg-white
+overflow-hidden
+"
 
-<div>
+>
 
 
 <Image
@@ -301,11 +119,15 @@ alt={product.name}
 
 width={700}
 
-height={700}
+height={800}
 
 quality={100}
 
-className="w-full h-[600px] object-cover rounded-2xl"
+className="
+w-full
+h-[700px]
+object-cover
+"
 
 />
 
@@ -319,22 +141,32 @@ className="w-full h-[600px] object-cover rounded-2xl"
 
 
 
-<div className="flex flex-col justify-center">
+
+{/* DETAILS RIGHT */}
 
 
 
-<span className="bg-[#9b7a3d] text-white px-5 py-2 rounded-full w-fit">
+<div
 
-{product.category}
+className="
+flex
+flex-col
+justify-center
+"
 
-</span>
+>
 
 
 
+<h1
 
+className="
+font-serif
+text-5xl
+tracking-wide
+"
 
-
-<h1 className="text-5xl font-serif text-[#6b4d1f] mt-6">
+>
 
 {product.name}
 
@@ -344,11 +176,31 @@ className="w-full h-[600px] object-cover rounded-2xl"
 
 
 
+<p
+
+className="
+mt-6
+text-lg
+"
+
+>
+
+{product.metal}
+
+</p>
 
 
-<p className="text-gray-600 mt-6 text-lg">
 
-Purity: {product.purity}
+
+<p
+
+className="
+text-gray-500
+"
+
+>
+
+{product.stone}
 
 </p>
 
@@ -357,18 +209,19 @@ Purity: {product.purity}
 
 
 
-<p className="text-gray-600 text-lg">
 
-Weight: {product.weight}
+<h2
 
-</p>
+className="
+mt-10
+text-[22px]
+font-serif
+font-normal
+tracking-wider
+text-[#A6875A]
+"
 
-
-
-
-
-
-<h2 className="text-4xl font-bold text-[#9b7a3d] mt-8">
+>
 
 ৳ {product.price.toLocaleString()}
 
@@ -381,43 +234,20 @@ Weight: {product.weight}
 
 
 
-<div className="grid grid-cols-2 gap-4 mt-8">
+<p
 
-
-
-
-
-
-
-<button
-
-onClick={addCart}
-
-className="bg-[#9b7a3d] text-white py-4 rounded-xl"
+className="
+mt-8
+leading-8
+text-gray-600
+max-w-lg
+"
 
 >
 
-🛒 Add To Cart
+{product.description}
 
-</button>
-
-
-
-
-
-
-
-<button
-
-onClick={buyNow}
-
-className="bg-black text-white py-4 rounded-xl"
-
->
-
-⚡ Buy Now
-
-</button>
+</p>
 
 
 
@@ -425,39 +255,46 @@ className="bg-black text-white py-4 rounded-xl"
 
 
 
-<button
 
-onClick={addWish}
 
-className="border border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
+{/* SPECIFICATION */}
+
+
+
+<div
+
+className="
+mt-8
+space-y-2
+text-sm
+"
 
 >
 
-♡ Wishlist
 
-</button>
-
-
-
+<p>
+Metal: {product.metal}
+</p>
 
 
+<p>
+Stone: {product.stone}
+</p>
 
 
-<button
-
-onClick={shareWhatsapp}
-
-className="bg-green-600 text-white py-4 rounded-xl"
-
->
-
-💬 WhatsApp
-
-</button>
+<p>
+Carat: {product.carat}
+</p>
 
 
+<p>
+Clarity: {product.clarity}
+</p>
 
 
+<p>
+Cut: {product.cut}
+</p>
 
 
 </div>
@@ -469,15 +306,257 @@ className="bg-green-600 text-white py-4 rounded-xl"
 
 
 
-<button
 
-onClick={callShop}
+{/* SIZE */}
 
-className="mt-5 w-full border-2 border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
+
+
+<div
+
+className="
+mt-8
+"
 
 >
 
-📞 Call Shop
+
+<p
+
+className="
+mb-3
+text-sm
+"
+
+>
+
+Ring Size
+
+</p>
+
+
+
+<div
+
+className="
+flex
+gap-3
+"
+
+>
+
+
+{
+
+["6","7","8","9"].map((item)=>(
+
+
+<button
+
+key={item}
+
+onClick={()=>setSize(item)}
+
+className={`
+
+w-11
+h-11
+border
+
+${
+size===item
+
+?
+
+"bg-[#A6875A] text-white border-[#A6875A]"
+
+:
+
+"border-gray-400"
+
+}
+
+`}
+
+>
+
+{item}
+
+</button>
+
+
+))
+
+}
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* BUTTON */}
+
+
+
+<div
+
+className="
+flex
+gap-4
+mt-10
+"
+
+>
+
+
+<button
+
+className="
+border
+border-[#A6875A]
+px-8
+py-4
+text-xs
+tracking-[0.25em]
+hover:bg-[#A6875A]
+hover:text-white
+transition
+"
+
+>
+
+ADD TO CART
+
+</button>
+
+
+
+
+<button
+
+className="
+bg-[#A6875A]
+text-white
+px-8
+py-4
+text-xs
+tracking-[0.25em]
+"
+
+>
+
+BUY NOW
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* SMALL INFORMATION RIGHT SIDE */}
+
+
+
+<div
+
+className="
+mt-8
+border-t
+border-gray-300
+"
+
+>
+
+
+{
+
+infoData.map((item,index)=>(
+
+
+<div
+
+key={index}
+
+className="
+border-b
+border-gray-200
+py-3
+"
+
+>
+
+
+<button
+
+onClick={()=>setOpenInfo(
+openInfo===index ? null : index
+)}
+
+className="
+w-full
+flex
+justify-between
+items-center
+"
+
+>
+
+
+<h3
+
+className="
+font-serif
+text-sm
+"
+
+>
+
+{item.title}
+
+</h3>
+
+
+
+<span
+
+className="
+text-[#A6875A]
+"
+
+>
+
+{
+
+openInfo===index
+
+?
+
+"−"
+
+:
+
+"+"
+
+}
+
+</span>
+
 
 </button>
 
@@ -485,6 +564,38 @@ className="mt-5 w-full border-2 border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
 
 
 
+
+
+{
+
+openInfo===index &&
+
+<p
+
+className="
+mt-3
+text-xs
+text-gray-600
+leading-6
+"
+
+>
+
+{item.text}
+
+</p>
+
+}
+
+
+
+</div>
+
+
+))
+
+
+}
 
 
 
@@ -504,7 +615,223 @@ className="mt-5 w-full border-2 border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
 
 
 
-</main>
+
+
+
+
+
+
+{/* FOOTER */}
+
+
+
+<footer
+
+className="
+bg-[#19160F]
+text-white
+px-8
+py-16
+"
+
+>
+
+
+<div
+
+className="
+max-w-7xl
+mx-auto
+"
+
+>
+
+
+<h2
+
+className="
+font-serif
+text-5xl
+tracking-[0.2em]
+"
+
+>
+
+SHOTORUPA
+
+</h2>
+
+
+
+<p
+
+className="
+mt-5
+text-gray-300
+"
+
+>
+
+Fine jewelry, cast slowly, worn for life.
+
+</p>
+
+
+
+<p
+
+className="
+text-gray-400
+mt-2
+"
+
+>
+
+Magura, Bangladesh.
+
+</p>
+
+
+
+
+
+
+
+<div
+
+className="
+grid
+grid-cols-2
+md:grid-cols-4
+gap-5
+mt-12
+text-sm
+"
+
+>
+
+<Link href="#">Shop</Link>
+
+<Link href="#">Rings</Link>
+
+<Link href="#">Necklaces</Link>
+
+<Link href="#">Earrings</Link>
+
+<Link href="#">Company</Link>
+
+<Link href="#">About</Link>
+
+<Link href="#">Contact</Link>
+
+<Link href="#">Admin</Link>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div
+
+className="
+mt-12
+"
+
+>
+
+
+<p>
+
+Stay in Light
+
+</p>
+
+
+
+<div
+
+className="
+flex
+mt-4
+"
+
+>
+
+
+<input
+
+placeholder="Email address"
+
+className="
+px-5
+py-3
+bg-white
+text-black
+placeholder:text-gray-500
+outline-none
+w-64
+"
+
+/>
+
+
+
+<button
+
+className="
+bg-[#A6875A]
+px-6
+"
+
+>
+
+Join
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<p
+
+className="
+mt-12
+text-gray-400
+text-sm
+"
+
+>
+
+© 2026 Shotorupa Jewellers
+
+</p>
+
+
+
+</div>
+
+
+</footer>
+
+
+
+
+
+</div>
 
 
 );

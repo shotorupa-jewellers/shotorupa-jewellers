@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import LuxuryHero from "@/components/LuxuryHero";
+
 
 import TrendingProducts from "@/components/TrendingProducts";
 import GoldCollection from "@/components/GoldCollection";
@@ -38,7 +38,7 @@ pt-24
 
 {/* HERO */}
 
-<LuxuryHero />
+
 
 
 

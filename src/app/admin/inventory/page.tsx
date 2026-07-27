@@ -1,28 +1,32 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState
+} from "react";
 
 
 import {
-db
+  db
 } from "@/lib/firebase";
 
 
 import {
-collection,
-addDoc,
-onSnapshot,
-serverTimestamp
+  collection,
+  addDoc,
+  onSnapshot,
+  serverTimestamp
 } from "firebase/firestore";
 
 
 import {
-Gem,
-Plus,
-Minus,
-Scale
+  Gem,
+  Plus,
+  Scale,
+  TrendingUp,
+  ShoppingBag
 } from "lucide-react";
+
 
 
 
@@ -44,7 +48,6 @@ const [purity,setPurity]=useState("22K");
 const [weight,setWeight]=useState("");
 
 
-
 const [loading,setLoading]=useState(false);
 
 
@@ -57,41 +60,34 @@ const [loading,setLoading]=useState(false);
 useEffect(()=>{
 
 
-const unsubscribe = onSnapshot(
+const unsub = onSnapshot(
 
 collection(db,"goldStock"),
 
 (snapshot)=>{
 
 
-const data=snapshot.docs.map(doc=>(
+setStock(
 
+snapshot.docs.map(doc=>(
 
 {
-
 id:doc.id,
-
 ...doc.data()
-
 }
 
+))
 
-));
-
-
-setStock(data);
-
+);
 
 
 }
-
 
 );
 
 
 
-return()=>unsubscribe();
-
+return()=>unsub();
 
 
 },[]);
@@ -104,12 +100,7 @@ return()=>unsubscribe();
 
 
 
-
-
-
-
 async function addStock(){
-
 
 
 if(!weight){
@@ -135,20 +126,15 @@ collection(db,"goldStock"),
 
 {
 
-
 type,
 
 purity,
 
 weight:Number(weight),
 
-
 createdAt:serverTimestamp()
 
-
-
 }
-
 
 );
 
@@ -157,13 +143,7 @@ createdAt:serverTimestamp()
 setWeight("");
 
 
-
-alert("Gold Stock Updated ✅");
-
-
-
 }
-
 
 catch(error){
 
@@ -171,11 +151,7 @@ catch(error){
 console.log(error);
 
 
-alert("Failed");
-
-
 }
-
 
 finally{
 
@@ -204,14 +180,13 @@ const totalGold = stock.reduce(
 
 if(item.type==="Purchase"){
 
-return sum + Number(item.weight);
+return sum + Number(item.weight || 0);
 
 }
 
-
 else{
 
-return sum - Number(item.weight);
+return sum - Number(item.weight || 0);
 
 }
 
@@ -229,26 +204,66 @@ return sum - Number(item.weight);
 
 
 
+const totalPurchase = stock.filter(
+
+(item)=>item.type==="Purchase"
+
+).reduce(
+
+(sum,item)=>sum+Number(item.weight||0),
+
+0
+
+);
+
+
+
+
+const totalSale = stock.filter(
+
+(item)=>item.type==="Sale"
+
+).reduce(
+
+(sum,item)=>sum+Number(item.weight||0),
+
+0
+
+);
+
+
+
+
+
+
+
+
 
 return(
 
 
 
-<main className="
+<main
+
+className="
 min-h-screen
-bg-[#f8f4ee]
-p-6
-text-black
-">
+bg-[#F6F3EC]
+p-5
+lg:p-10
+"
+
+>
 
 
 
+<div
 
-
-<section className="
+className="
 max-w-7xl
 mx-auto
-">
+"
+
+>
 
 
 
@@ -256,20 +271,54 @@ mx-auto
 
 
 
+{/* HEADER */}
 
-<h1 className="
-text-4xl
-font-serif
-font-bold
-text-[#6b4d1f]
+
+
+<div className="
 mb-10
 ">
 
-🪙 Gold Stock Management
+
+<p className="
+text-xs
+uppercase
+tracking-[0.3em]
+text-[#A6875A]
+">
+
+Inventory Management
+
+</p>
+
+
+<h1
+
+className="
+text-4xl
+font-serif
+mt-3
+text-[#19160F]
+"
+
+>
+
+Gold Stock Management
 
 </h1>
 
 
+<p className="
+text-gray-500
+mt-2
+">
+
+Manage gold purchase, sale and purity stock
+
+</p>
+
+
+</div>
 
 
 
@@ -277,39 +326,56 @@ mb-10
 
 
 
-{/* Stock Card */}
+
+
+{/* CARDS */}
 
 
 
-<div className="
+<div
+
+className="
 grid
 md:grid-cols-3
 gap-6
 mb-10
-">
+"
+
+>
 
 
 
 
 
-<div className="
+<div
+
+className="
 bg-white
-rounded-2xl
-shadow
+rounded-3xl
 p-6
-">
+border
+border-[#A6875A]/20
+shadow-sm
+"
+
+>
 
 
 <Gem
-className="text-[#9b7a3d]"
+
 size={35}
+
+className="
+text-[#A6875A]
+"
+
 />
 
 
 
 <p className="
-mt-4
 text-gray-500
+mt-5
 ">
 
 Current Gold Stock
@@ -318,11 +384,16 @@ Current Gold Stock
 
 
 
-<h2 className="
+<h2
+
+className="
 text-4xl
 font-bold
-text-[#9b7a3d]
-">
+text-[#A6875A]
+mt-2
+"
+
+>
 
 {totalGold} gm
 
@@ -339,97 +410,52 @@ text-[#9b7a3d]
 
 
 
+<div
 
-<div className="
+className="
 bg-white
-rounded-2xl
-shadow
+rounded-3xl
 p-6
-">
+border
+border-[#A6875A]/20
+"
+
+>
 
 
-<Scale
-className="text-[#9b7a3d]"
+<TrendingUp
+
 size={35}
+
+className="
+text-green-600
+"
+
 />
 
 
 
 <p className="
-mt-4
 text-gray-500
+mt-5
 ">
 
-Total Entries
+Total Purchase
 
 </p>
 
 
 
-<h2 className="
-text-4xl
-font-bold
-">
+<h2
 
-{stock.length}
-
-</h2>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div className="
-bg-white
-rounded-2xl
-shadow
-p-6
-">
-
-
-<Gem
-className="text-[#9b7a3d]"
-size={35}
-/>
-
-
-
-<p className="
-mt-4
-text-gray-500
-">
-
-22K Gold
-
-</p>
-
-
-
-<h2 className="
+className="
 text-3xl
 font-bold
-">
+"
 
-{
+>
 
-stock
-.filter(
-(item)=>item.purity==="22K"
-)
-.reduce(
-(sum,item)=>sum+Number(item.weight),
-0
-)
-
-}
-
-gm
++ {totalPurchase} gm
 
 </h2>
 
@@ -440,6 +466,68 @@ gm
 
 
 
+
+
+
+
+<div
+
+className="
+bg-white
+rounded-3xl
+p-6
+border
+border-[#A6875A]/20
+"
+
+>
+
+
+<ShoppingBag
+
+size={35}
+
+className="
+text-red-500
+"
+
+/>
+
+
+
+<p className="
+text-gray-500
+mt-5
+">
+
+Total Sale
+
+</p>
+
+
+
+<h2
+
+className="
+text-3xl
+font-bold
+"
+
+>
+
+- {totalSale} gm
+
+</h2>
+
+
+
+</div>
+
+
+
+
+
+
 </div>
 
 
@@ -452,26 +540,33 @@ gm
 
 
 
-
-{/* Add Stock */}
-
+{/* ADD STOCK */}
 
 
-<div className="
+
+<div
+
+className="
 bg-white
-rounded-2xl
-shadow
+rounded-3xl
 p-8
+border
+border-[#A6875A]/20
 mb-10
-">
+"
+
+>
 
 
+<h2
 
-<h2 className="
+className="
 text-2xl
-font-bold
+font-serif
 mb-6
-">
+"
+
+>
 
 Add Gold Transaction
 
@@ -481,11 +576,15 @@ Add Gold Transaction
 
 
 
-<div className="
+<div
+
+className="
 grid
 md:grid-cols-4
-gap-4
-">
+gap-5
+"
+
+>
 
 
 
@@ -500,8 +599,9 @@ onChange={(e)=>setType(e.target.value)}
 
 className="
 border
+rounded-xl
 p-3
-rounded-lg
+outline-none
 "
 
 >
@@ -535,8 +635,8 @@ onChange={(e)=>setPurity(e.target.value)}
 
 className="
 border
+rounded-xl
 p-3
-rounded-lg
 "
 
 >
@@ -562,9 +662,7 @@ rounded-lg
 </option>
 
 
-
 </select>
-
 
 
 
@@ -577,19 +675,21 @@ rounded-lg
 
 type="number"
 
-placeholder="Weight Gram"
-
 value={weight}
 
 onChange={(e)=>setWeight(e.target.value)}
 
+placeholder="Gold Weight (gm)"
+
 className="
 border
+rounded-xl
 p-3
-rounded-lg
 "
 
 />
+
+
 
 
 
@@ -604,9 +704,12 @@ onClick={addStock}
 disabled={loading}
 
 className="
-bg-[#9b7a3d]
+bg-gradient-to-r
+from-[#D4AF37]
+to-[#A6875A]
 text-white
-rounded-lg
+rounded-xl
+font-semibold
 flex
 items-center
 justify-center
@@ -618,15 +721,17 @@ gap-2
 
 <Plus size={20}/>
 
+
 {
 
 loading
 ?
 "Saving..."
 :
-"Add"
+"Add Stock"
 
 }
+
 
 
 </button>
@@ -640,7 +745,6 @@ loading
 
 
 
-
 </div>
 
 
@@ -655,23 +759,33 @@ loading
 
 
 
-{/* History */}
+
+{/* HISTORY */}
 
 
 
-<div className="
+<div
+
+className="
 bg-white
-rounded-2xl
-shadow
+rounded-3xl
 p-8
-">
+border
+border-[#A6875A]/20
+"
+
+>
 
 
-<h2 className="
+<h2
+
+className="
 text-2xl
-font-bold
+font-serif
 mb-6
-">
+"
+
+>
 
 Stock History
 
@@ -688,8 +802,11 @@ Stock History
 stock.length===0 ?
 
 
-<p>
+
+<p className="text-gray-500">
+
 No Stock History
+
 </p>
 
 
@@ -698,8 +815,13 @@ No Stock History
 
 
 
-stock.map((item)=>(
+<div className="space-y-4">
 
+
+
+{
+
+stock.map((item)=>(
 
 
 <div
@@ -709,24 +831,33 @@ key={item.id}
 className="
 flex
 justify-between
-border-b
-py-4
+items-center
+bg-[#F6F3EC]
+rounded-2xl
+p-5
 "
 
 >
 
 
+
 <div>
 
 
-<p className="font-bold">
+<h3 className="
+font-bold
+">
 
 {item.type}
 
-</p>
+</h3>
 
 
-<p className="text-gray-500">
+
+<p className="
+text-sm
+text-gray-500
+">
 
 {item.purity}
 
@@ -741,39 +872,58 @@ py-4
 
 
 
-<div className="
-font-bold
-text-[#9b7a3d]
-">
 
-{
+<div
+
+className={`
+
+font-bold
+
+px-4
+py-2
+rounded-full
+
+${
 
 item.type==="Purchase"
 
 ?
 
-"+"
+"bg-green-100 text-green-700"
 
 :
 
+"bg-red-100 text-red-700"
+
+}
+
+`}
+
+>
+
+
+{
+
+item.type==="Purchase"
+?
+"+"
+:
 "-"
 
 }
 
-
 {item.weight} gm
 
 
-</div>
-
-
-
-
-
 
 </div>
 
 
+
+
+
+
+</div>
 
 
 ))
@@ -783,6 +933,12 @@ item.type==="Purchase"
 
 
 
+</div>
+
+
+
+}
+
 
 
 
@@ -797,14 +953,10 @@ item.type==="Purchase"
 
 
 
-</section>
-
-
-
+</div>
 
 
 </main>
-
 
 
 );

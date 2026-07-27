@@ -1,6 +1,5 @@
 "use client";
 
-
 import Link from "next/link";
 
 import {
@@ -19,12 +18,11 @@ import {
   LayoutDashboard,
   Package,
   PlusCircle,
-  Layers,
   Boxes,
   ShoppingCart,
   Users,
   Gem,
-  Image,
+  ImageIcon,
   Flame,
   BarChart3,
   UserCog,
@@ -45,7 +43,6 @@ setOpen
 }:any){
 
 
-
 const pathname = usePathname();
 
 const router = useRouter();
@@ -57,9 +54,8 @@ const [openMenu,setOpenMenu]=useState<string|null>(null);
 
 
 
-
-
 const menu=[
+
 
 
 {
@@ -70,16 +66,19 @@ link:"/admin"
 
 
 
+
 {
 name:"Products",
 icon:Package,
 
 children:[
 
+
 {
 name:"All Products",
 link:"/admin/products"
 },
+
 
 {
 name:"Add Product",
@@ -87,10 +86,12 @@ link:"/admin/add-product",
 icon:PlusCircle
 },
 
+
 {
 name:"Categories",
 link:"/admin/categories"
 },
+
 
 {
 name:"Inventory",
@@ -98,9 +99,12 @@ link:"/admin/inventory",
 icon:Boxes
 }
 
+
+
 ]
 
 },
+
 
 
 
@@ -113,25 +117,31 @@ icon:ShoppingCart,
 
 children:[
 
+
 {
 name:"All Orders",
 link:"/admin/orders"
 },
+
 
 {
 name:"Pending Orders",
 link:"/admin/orders/pending"
 },
 
+
 {
 name:"Completed",
 link:"/admin/orders/completed"
 },
 
+
 {
 name:"Cancelled",
 link:"/admin/orders/cancelled"
 }
+
+
 
 ]
 
@@ -152,30 +162,49 @@ link:"/admin/customers"
 
 
 
+
+
 {
 name:"Jewellery",
 icon:Gem,
 
+
 children:[
+
+
 
 {
 name:"Gold Collection",
 link:"/admin/jewellery/gold"
 },
 
+
+
 {
 name:"Diamond Collection",
 link:"/admin/jewellery/diamond"
 },
+
+
+
+{
+name:"City Gold Collection",
+link:"/admin/jewellery/city-gold"
+},
+
+
 
 {
 name:"Wedding Collection",
 link:"/admin/jewellery/wedding"
 }
 
+
+
 ]
 
 },
+
 
 
 
@@ -184,23 +213,30 @@ link:"/admin/jewellery/wedding"
 
 {
 name:"Media",
-icon:Image,
+icon:ImageIcon,
+
 
 children:[
+
 
 {
 name:"Images",
 link:"/admin/media/images"
 },
 
+
 {
 name:"Banners",
 link:"/admin/media/banners"
 }
 
+
+
 ]
 
 },
+
+
 
 
 
@@ -211,6 +247,7 @@ name:"Offers",
 icon:Flame,
 link:"/admin/offers"
 },
+
 
 
 
@@ -227,30 +264,32 @@ link:"/admin/reports"
 
 
 
+
 {
 name:"Admin Control",
 icon:UserCog,
 
+
 children:[
+
 
 {
 name:"Admin Users",
 link:"/admin/users"
 },
 
-{
-name:"Roles & Permission",
-link:"/admin/roles"
-},
 
 {
-name:"Activity Logs",
-link:"/admin/logs"
+name:"Roles Permission",
+link:"/admin/roles"
 }
+
+
 
 ]
 
 },
+
 
 
 
@@ -265,8 +304,9 @@ link:"/admin/settings"
 
 
 
-];
 
+
+];
 
 
 
@@ -289,15 +329,13 @@ router.push("/admin/login");
 
 
 
-
-
 return(
+
 
 <>
 
 
-
-{/* Mobile Overlay */}
+{/* MOBILE OVERLAY */}
 
 
 {
@@ -309,19 +347,12 @@ open &&
 onClick={()=>setOpen(false)}
 
 className="
-
 fixed
-
 inset-0
-
-bg-black/70
-
+bg-black/40
 backdrop-blur-sm
-
 z-40
-
 lg:hidden
-
 "
 
 />
@@ -341,6 +372,7 @@ lg:hidden
 
 className={`
 
+
 fixed
 
 top-0
@@ -358,23 +390,15 @@ h-screen
 overflow-y-auto
 
 
-bg-gradient-to-b
-
-from-[#050505]
-
-via-[#120d05]
-
-to-black
-
+bg-[#F6F3EC]
 
 
 border-r
 
-border-yellow-600/30
+border-[#A6875A]/30
 
 
-
-shadow-[15px_0_50px_rgba(212,175,55,.15)]
+shadow-xl
 
 
 transition-transform
@@ -405,6 +429,7 @@ lg:translate-x-0
 `}
 
 
+
 >
 
 
@@ -415,7 +440,7 @@ lg:translate-x-0
 
 
 
-{/* MOBILE CLOSE */}
+{/* CLOSE BUTTON */}
 
 
 <button
@@ -423,22 +448,17 @@ lg:translate-x-0
 onClick={()=>setOpen(false)}
 
 className="
-
 lg:hidden
-
 absolute
-
 right-5
-
 top-5
-
-text-yellow-400
-
+text-[#A6875A]
 "
 
 >
 
-<X size={28}/>
+<X size={25}/>
+
 
 </button>
 
@@ -450,11 +470,12 @@ text-yellow-400
 
 
 
-{/* LOGO AREA */}
+{/* BRAND */}
 
 
 
 <div
+
 
 className="
 
@@ -464,31 +485,32 @@ text-center
 
 border-b
 
-border-yellow-600/30
+border-[#A6875A]/20
 
 "
+
 
 >
 
 
-
 <div
+
 
 className="
 
-relative
+w-20
 
-w-24
-
-h-24
+h-20
 
 mx-auto
 
 rounded-full
 
+
 border
 
-border-yellow-500
+border-[#A6875A]
+
 
 flex
 
@@ -496,49 +518,26 @@ items-center
 
 justify-center
 
-shadow-[0_0_35px_rgba(212,175,55,.4)]
+
+shadow-lg
+
 
 "
+
 
 >
 
 
-
-<div
-
-className="
-
-absolute
-
-inset-3
-
-rounded-full
-
-border
-
-border-yellow-500/40
-
-"
-
-/>
-
-
-
 <Crown
 
-size={38}
+size={35}
 
-className="
-
-text-yellow-400
-
-"
+className="text-[#A6875A]"
 
 />
 
 
 </div>
-
 
 
 
@@ -551,13 +550,13 @@ className="
 
 mt-5
 
-text-2xl
-
 font-serif
 
-tracking-[6px]
+text-2xl
 
-text-yellow-400
+tracking-[5px]
+
+text-[#19160F]
 
 "
 
@@ -574,11 +573,11 @@ SHOTORUPA
 
 className="
 
-text-xs
+text-[10px]
 
-tracking-[5px]
+tracking-[4px]
 
-text-gray-400
+text-[#A6875A]
 
 mt-2
 
@@ -592,21 +591,22 @@ JEWELLERS
 
 
 
+
 <p
 
 className="
 
 mt-4
 
-text-[11px]
+text-xs
 
-text-yellow-500/70
+text-gray-500
 
 "
 
 >
 
-Luxury Management System
+Luxury Management
 
 </p>
 
@@ -622,11 +622,7 @@ Luxury Management System
 
 
 
-
-
-
 {/* MENU */}
-
 
 
 
@@ -643,19 +639,18 @@ space-y-2
 >
 
 
-
-
-
 {
 
-menu.map((item:any)=>{
 
+menu.map((item:any)=>{
 
 
 const Icon=item.icon;
 
 
 const active=item.link===pathname;
+
+
 
 
 
@@ -672,12 +667,12 @@ key={item.name}
 
 
 
-{/* SINGLE MENU */}
-
-
 {
 
 item.link ?
+
+
+
 
 
 <Link
@@ -687,6 +682,7 @@ href={item.link}
 
 
 onClick={()=>setOpen(false)}
+
 
 
 className={`
@@ -708,23 +704,27 @@ rounded-xl
 
 transition-all
 
-duration-300
-
 
 
 ${
 
 active
 
+
 ?
 
-"bg-gradient-to-r from-yellow-400 to-yellow-600 text-black shadow-[0_0_25px_rgba(212,175,55,.5)]"
+
+"bg-[#A6875A] text-white shadow-md"
+
 
 :
 
-"text-gray-300 hover:bg-yellow-500/10 hover:text-yellow-400"
+
+"text-[#19160F] hover:bg-[#A6875A]/10 hover:text-[#A6875A]"
+
 
 }
+
 
 
 `}
@@ -733,10 +733,10 @@ active
 >
 
 
-<Icon size={21}/>
+<Icon size={20}/>
 
 
-<span className="font-medium">
+<span className="text-sm font-medium">
 
 {item.name}
 
@@ -748,7 +748,12 @@ active
 
 
 
+
+
+
+
 :
+
 
 
 
@@ -758,11 +763,13 @@ active
 <>
 
 
-
 <button
 
 
-onClick={()=>setOpenMenu(
+onClick={()=>
+
+
+setOpenMenu(
 
 openMenu===item.name
 
@@ -774,7 +781,9 @@ null
 
 item.name
 
-)}
+)
+
+}
 
 
 className="
@@ -787,45 +796,38 @@ justify-between
 
 items-center
 
+
 px-4
 
 py-3
 
+
 rounded-xl
 
-text-gray-300
 
-hover:bg-yellow-500/10
+text-[#19160F]
 
-hover:text-yellow-400
+
+hover:bg-[#A6875A]/10
+
 
 transition
 
+
 "
+
 
 >
 
 
 
-<div
-
-className="
-
-flex
-
-items-center
-
-gap-4
-
-"
-
->
+<div className="flex items-center gap-4">
 
 
-<Icon size={21}/>
+<Icon size={20}/>
 
 
-<span>
+<span className="text-sm">
 
 {item.name}
 
@@ -840,13 +842,13 @@ gap-4
 
 <ChevronDown
 
+
 size={18}
+
 
 className={`
 
 transition
-
-duration-300
 
 ${
 
@@ -854,7 +856,7 @@ openMenu===item.name
 
 ?
 
-"rotate-180 text-yellow-400"
+"rotate-180 text-[#A6875A]"
 
 :
 
@@ -863,6 +865,7 @@ openMenu===item.name
 }
 
 `}
+
 
 />
 
@@ -879,6 +882,7 @@ openMenu===item.name
 
 {
 
+
 openMenu===item.name &&
 
 
@@ -892,17 +896,14 @@ mt-2
 
 border-l
 
-border-yellow-600/40
+border-[#A6875A]/30
 
 pl-4
 
 space-y-2
 
-animate-in
-
-fade-in
-
 "
+
 
 >
 
@@ -911,6 +912,7 @@ fade-in
 
 
 item.children.map((sub:any)=>(
+
 
 
 <Link
@@ -925,16 +927,18 @@ href={sub.link}
 onClick={()=>setOpen(false)}
 
 
+
 className={`
+
 
 block
 
-py-2
-
 text-sm
 
-transition
+py-2
 
+
+transition
 
 
 ${
@@ -943,13 +947,15 @@ pathname===sub.link
 
 ?
 
-"text-yellow-400 font-semibold"
+"text-[#A6875A] font-semibold"
 
 :
 
-"text-gray-400 hover:text-white"
+"text-gray-500 hover:text-[#19160F]"
+
 
 }
+
 
 
 `}
@@ -968,8 +974,8 @@ pathname===sub.link
 ))
 
 
-}
 
+}
 
 
 </div>
@@ -980,12 +986,12 @@ pathname===sub.link
 
 
 
-
 </>
 
 
-
 }
+
+
 
 
 
@@ -1002,8 +1008,6 @@ pathname===sub.link
 
 
 
-
-
 </nav>
 
 
@@ -1014,11 +1018,7 @@ pathname===sub.link
 
 
 
-
-
-
-
-{/* BOTTOM PREMIUM CARD */}
+{/* PREMIUM CARD */}
 
 
 
@@ -1028,33 +1028,37 @@ className="
 
 mx-5
 
-mt-10
+mt-8
 
 mb-5
 
-p-4
+p-5
+
 
 rounded-2xl
 
-bg-yellow-500/5
+
+bg-white
+
 
 border
 
-border-yellow-600/30
+border-[#A6875A]/20
+
 
 "
 
->
 
+>
 
 
 <p
 
 className="
 
-text-yellow-400
+text-[#A6875A]
 
-font-semibold
+font-serif
 
 text-sm
 
@@ -1067,26 +1071,31 @@ text-sm
 </p>
 
 
+
 <p
 
 className="
 
-text-gray-400
+text-gray-500
 
 text-xs
 
 mt-2
 
+leading-5
+
 "
 
 >
 
-Manage gold, diamond & customer business
+Manage gold, diamond, stock and customer business.
 
 </p>
 
 
+
 </div>
+
 
 
 
@@ -1106,7 +1115,9 @@ Manage gold, diamond & customer business
 onClick={logout}
 
 
+
 className="
+
 
 mx-5
 
@@ -1122,10 +1133,19 @@ py-3
 rounded-xl
 
 
-bg-red-600/90
+border
+
+border-red-300
 
 
-hover:bg-red-700
+text-red-600
+
+
+
+hover:bg-red-600
+
+hover:text-white
+
 
 
 flex
@@ -1134,15 +1154,17 @@ items-center
 
 justify-center
 
+
 gap-3
 
-
-font-semibold
 
 
 transition
 
+
+
 "
+
 
 >
 
@@ -1161,13 +1183,16 @@ Logout
 
 
 
+
 </aside>
 
 
 
 </>
 
-)
+
+);
+
 
 
 }

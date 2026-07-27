@@ -5,7 +5,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+
+import {
+  Trash2,
+  Minus,
+  Plus,
+  ShoppingBag,
+  Gem,
+  Truck,
+  Tag
+} from "lucide-react";
+
+
 import { useCart } from "@/context/CartContext";
+
+
+
 
 
 
@@ -37,16 +52,18 @@ const [removeId,setRemoveId]=useState<string | null>(null);
 
 
 
-const total = cart.reduce(
+
+
+
+const subtotal = cart.reduce(
 
 (sum,item)=>
 
-sum + item.price * item.quantity,
+sum + Number(item.price) * item.quantity,
 
 0
 
 );
-
 
 
 
@@ -61,6 +78,21 @@ sum + item.quantity,
 0
 
 );
+
+
+
+
+
+const shipping = subtotal > 50000 ? 0 : 500;
+
+
+
+const discount = 0;
+
+
+
+const total = subtotal + shipping - discount;
+
 
 
 
@@ -100,21 +132,72 @@ setRemoveId(null);
 
 
 
+
 return(
 
 
 
-<main className="min-h-screen bg-[#f8f4ee] py-12">
+<main
+
+className="
+min-h-screen
+bg-[#F8F4EE]
+py-14
+"
+
+>
 
 
 
-<section className="max-w-7xl mx-auto px-6">
+<section
+
+className="
+max-w-7xl
+mx-auto
+px-5
+"
+
+>
 
 
 
 
 
-<h1 className="text-5xl font-serif text-[#6b4d1f] mb-3">
+
+
+
+<div className="mb-12">
+
+
+<p
+
+className="
+text-xs
+tracking-[0.3em]
+uppercase
+text-[#A6875A]
+"
+
+>
+
+Luxury Collection
+
+</p>
+
+
+
+
+
+<h1
+
+className="
+mt-3
+text-5xl
+font-serif
+text-[#19160F]
+"
+
+>
 
 Shopping Cart
 
@@ -124,11 +207,27 @@ Shopping Cart
 
 
 
-<p className="text-gray-500 mb-10">
+<p
 
-{totalItems} Jewellery Item(s)
+className="
+mt-3
+text-gray-500
+"
+
+>
+
+{totalItems} jewellery item(s) selected
 
 </p>
+
+
+
+</div>
+
+
+
+
+
 
 
 
@@ -142,48 +241,125 @@ cart.length===0 ?
 
 
 
-<div className="bg-white rounded-3xl shadow-xl p-12 text-center">
 
 
-<div className="text-6xl mb-5">
+<div
 
-💎
+className="
+bg-white
+rounded-3xl
+shadow-xl
+p-14
+text-center
+"
+
+>
+
+
+
+<div
+
+className="
+w-20
+h-20
+mx-auto
+rounded-full
+bg-[#A6875A]/10
+flex
+items-center
+justify-center
+"
+
+>
+
+
+<Gem
+
+size={40}
+
+className="text-[#A6875A]"
+
+/>
+
 
 </div>
 
 
-<h2 className="text-3xl font-serif text-[#6b4d1f]">
 
-Your Cart is Empty
+
+
+
+
+<h2
+
+className="
+mt-8
+text-3xl
+font-serif
+text-[#19160F]
+"
+
+>
+
+Your Cart Is Empty
 
 </h2>
 
 
 
-<p className="text-gray-500 mt-3">
 
-Add your favourite jewellery collection
+
+
+
+<p
+
+className="
+text-gray-500
+mt-3
+"
+
+>
+
+Discover our handcrafted jewellery collection
 
 </p>
 
 
 
 
+
+
+
+
 <Link
 
-href="/"
+href="/shop"
 
-className="inline-block mt-8 bg-[#9b7a3d] text-white px-10 py-4 rounded-xl"
+className="
+inline-block
+mt-8
+px-10
+py-4
+bg-[#A6875A]
+text-white
+rounded-xl
+hover:bg-[#8b6d42]
+transition
+"
 
 >
 
-Continue Shopping
+Explore Collection
 
 </Link>
 
 
 
+
+
 </div>
+
+
 
 
 
@@ -193,21 +369,47 @@ Continue Shopping
 
 
 
-<div className="grid lg:grid-cols-3 gap-8">
+
+
+<div
+
+className="
+grid
+lg:grid-cols-3
+gap-8
+"
+
+>
 
 
 
 
 
-<div className="lg:col-span-2 space-y-5">
 
 
+
+
+{/* CART ITEMS */}
+
+
+
+<div
+
+className="
+lg:col-span-2
+space-y-6
+"
+
+>
 
 
 
 {
 
+
 cart.map((item)=>(
+
+
 
 
 
@@ -216,9 +418,30 @@ cart.map((item)=>(
 key={item.id}
 
 className={`
-bg-white rounded-2xl shadow p-6 flex gap-6 items-center transition duration-300
+bg-white
+rounded-3xl
+p-6
+flex
+flex-col
+sm:flex-row
+gap-6
+items-start
+sm:items-center
 
-${removeId===item.id ? "opacity-0 scale-95" : ""}
+border
+border-[#A6875A]/10
+
+transition-all
+duration-300
+
+${
+removeId===item.id
+?
+"opacity-0 scale-95"
+:
+"hover:shadow-xl"
+}
+
 `}
 
 >
@@ -227,19 +450,71 @@ ${removeId===item.id ? "opacity-0 scale-95" : ""}
 
 
 
+
+
+<div
+
+className="
+relative
+"
+
+>
+
+
 <Image
 
-src={item.image}
+
+src={
+item.image ||
+"/images/product-placeholder.jpg"
+}
+
 
 alt={item.name}
 
-width={150}
 
-height={150}
+width={160}
 
-className="rounded-xl object-cover"
+
+height={160}
+
+
+className="
+rounded-2xl
+object-cover
+w-40
+h-40
+"
 
 />
+
+
+
+
+
+<div
+
+className="
+absolute
+bottom-2
+right-2
+bg-[#A6875A]
+text-white
+rounded-full
+p-2
+"
+
+>
+
+<Gem size={14}/>
+
+</div>
+
+
+</div>
+
+
+
 
 
 
@@ -250,7 +525,17 @@ className="rounded-xl object-cover"
 
 
 
-<h2 className="text-xl font-bold text-[#6b4d1f]">
+
+
+<h2
+
+className="
+text-xl
+font-serif
+text-[#19160F]
+"
+
+>
 
 {item.name}
 
@@ -270,7 +555,7 @@ className="rounded-xl object-cover"
 
 
 
-<p className="text-gray-500">
+<p className="text-gray-500 text-sm">
 
 Weight: {item.weight}
 
@@ -281,7 +566,16 @@ Weight: {item.weight}
 
 
 
-<p className="text-[#9b7a3d] text-2xl font-bold mt-3">
+<p
+
+className="
+mt-4
+text-2xl
+font-bold
+text-[#A6875A]
+"
+
+>
 
 ৳ {(item.price * item.quantity).toLocaleString()}
 
@@ -293,19 +587,54 @@ Weight: {item.weight}
 
 
 
-<div className="flex items-center gap-4 mt-5">
+<div
+
+className="
+flex
+items-center
+gap-4
+mt-5
+"
+
+>
+
+
 
 
 
 <button
 
-onClick={()=>decreaseQuantity(item.id)}
 
-className="w-10 h-10 rounded-full bg-gray-200 text-xl"
+onClick={()=>{
+
+if(item.quantity>1){
+
+decreaseQuantity(item.id)
+
+}
+
+}}
+
+
+className="
+w-10
+h-10
+rounded-full
+border
+border-[#A6875A]
+flex
+items-center
+justify-center
+hover:bg-[#A6875A]
+hover:text-white
+transition
+"
 
 >
 
-−
+
+<Minus size={18}/>
+
 
 </button>
 
@@ -315,7 +644,8 @@ className="w-10 h-10 rounded-full bg-gray-200 text-xl"
 
 
 
-<span className="text-xl font-bold">
+
+<span className="font-bold text-lg">
 
 {item.quantity}
 
@@ -327,15 +657,31 @@ className="w-10 h-10 rounded-full bg-gray-200 text-xl"
 
 
 
+
 <button
+
 
 onClick={()=>increaseQuantity(item.id)}
 
-className="w-10 h-10 rounded-full bg-[#9b7a3d] text-white text-xl"
+
+className="
+w-10
+h-10
+rounded-full
+bg-[#A6875A]
+text-white
+flex
+items-center
+justify-center
+hover:bg-[#8b6d42]
+transition
+"
 
 >
 
-+
+
+<Plus size={18}/>
+
 
 </button>
 
@@ -349,8 +695,9 @@ className="w-10 h-10 rounded-full bg-[#9b7a3d] text-white text-xl"
 
 
 
-
 </div>
+
+
 
 
 
@@ -360,13 +707,20 @@ className="w-10 h-10 rounded-full bg-[#9b7a3d] text-white text-xl"
 
 <button
 
+
 onClick={()=>removeItem(item.id)}
 
-className="text-red-500 hover:text-red-700"
+
+className="
+text-red-500
+hover:text-red-700
+"
 
 >
 
-Remove
+
+<Trash2 size={22}/>
+
 
 </button>
 
@@ -376,11 +730,12 @@ Remove
 
 
 </div>
+
+
 
 
 
 ))
-
 
 
 }
@@ -398,13 +753,45 @@ Remove
 
 
 
-<div className="bg-white rounded-3xl shadow-xl p-8 h-fit">
 
 
 
 
 
-<h2 className="text-3xl font-serif text-[#6b4d1f] mb-8">
+{/* SUMMARY */}
+
+
+
+
+
+<div
+
+className="
+bg-white
+rounded-3xl
+p-8
+shadow-xl
+h-fit
+sticky
+top-24
+border
+border-[#A6875A]/20
+"
+
+>
+
+
+
+<h2
+
+className="
+text-3xl
+font-serif
+text-[#19160F]
+mb-8
+"
+
+>
 
 Order Summary
 
@@ -415,8 +802,15 @@ Order Summary
 
 
 
-<div className="flex justify-between text-lg mb-4">
 
+
+<div className="space-y-5">
+
+
+
+
+
+<div className="flex justify-between">
 
 <span>
 
@@ -425,9 +819,33 @@ Items
 </span>
 
 
-<span>
+<strong>
 
 {totalItems}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+<div className="flex justify-between">
+
+
+<span>
+
+Subtotal
+
+</span>
+
+
+<span>
+
+৳ {subtotal.toLocaleString()}
 
 </span>
 
@@ -440,7 +858,91 @@ Items
 
 
 
-<div className="border-t pt-5 flex justify-between text-2xl font-bold">
+
+<div className="flex justify-between">
+
+
+<span className="flex items-center gap-2">
+
+<Truck size={17}/>
+
+Shipping
+
+</span>
+
+
+
+<span>
+
+{
+
+shipping===0
+
+?
+
+"FREE"
+
+:
+
+`৳ ${shipping}`
+
+}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div className="flex justify-between">
+
+
+<span className="flex items-center gap-2">
+
+<Tag size={17}/>
+
+Discount
+
+</span>
+
+
+
+<span>
+
+৳ {discount}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+
+className="
+border-t
+pt-5
+flex
+justify-between
+text-2xl
+font-bold
+"
+
+>
 
 
 <span>
@@ -450,13 +952,21 @@ Total
 </span>
 
 
-<span className="text-[#9b7a3d]">
+
+<span className="text-[#A6875A]">
 
 ৳ {total.toLocaleString()}
 
 </span>
 
 
+</div>
+
+
+
+
+
+
 
 </div>
 
@@ -467,16 +977,48 @@ Total
 
 
 
+
+
 <Link
 
-href="/checkout"
 
-className="block text-center mt-8 bg-[#9b7a3d] text-white py-4 rounded-xl font-semibold hover:bg-[#7a602d]"
+href={
+cart.length
+?
+"/checkout"
+:
+"/shop"
+}
+
+
+className="
+mt-8
+block
+text-center
+py-4
+rounded-xl
+bg-gradient-to-r
+from-[#D4AF37]
+to-[#A6875A]
+text-white
+font-semibold
+hover:scale-105
+transition
+"
 
 >
+
+
+<ShoppingBag
+
+className="inline mr-2"
+
+/>
+
 
 Proceed To Checkout
 
+
 </Link>
 
 
@@ -487,13 +1029,29 @@ Proceed To Checkout
 
 <Link
 
-href="/"
 
-className="block text-center mt-4 border border-[#9b7a3d] text-[#9b7a3d] py-4 rounded-xl"
+href="/shop"
+
+
+className="
+mt-4
+block
+text-center
+py-4
+rounded-xl
+border
+border-[#A6875A]
+text-[#A6875A]
+hover:bg-[#A6875A]
+hover:text-white
+transition
+"
 
 >
 
+
 Continue Shopping
+
 
 </Link>
 
@@ -501,7 +1059,11 @@ Continue Shopping
 
 
 
+
+
 </div>
+
+
 
 
 
@@ -523,14 +1085,10 @@ Continue Shopping
 
 
 
-
-
 </main>
 
 
-
 );
-
 
 
 }

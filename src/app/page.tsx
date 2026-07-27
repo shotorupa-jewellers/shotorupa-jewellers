@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import LuxuryHero from "@/components/LuxuryHero";
 import TrendingProducts from "@/components/TrendingProducts";
 import LuxuryFooter from "@/components/LuxuryFooter";
 
@@ -14,100 +13,317 @@ return (
 
 <>
 
-
 <main
 className="
 bg-[#F6F3EC]
 text-[#19160F]
 pt-24
-overflow-hidden
 "
 >
 
 
-{/* HERO */}
-
-<LuxuryHero />
+{/* ================= HERO ================= */}
 
 
+<section
+className="
+relative
+min-h-[88vh]
+flex
+items-center
+overflow-hidden
+border-b
+border-black/10
+"
+>
 
-{/* GOLD DIVIDER */}
+
+{/* Diamond Facet */}
+
+<svg
+className="
+absolute
+right-[-160px]
+top-[-60px]
+w-[640px]
+h-[640px]
+opacity-30
+animate-spin-slow
+"
+viewBox="0 0 100 100"
+>
+
+
+<path
+
+d="
+M50 5 
+L80 25 
+L92 55 
+L72 90 
+L28 90 
+L8 55 
+L20 25 Z
+
+M50 5 L50 35
+M80 25 L50 35
+M92 55 L50 35
+M92 55 L67 60
+M72 90 L67 60
+M28 90 L33 60
+M8 55 L33 60
+M8 55 L50 35
+M20 25 L50 35
+M33 60 L67 60
+"
+
+fill="none"
+
+stroke="#A6875A"
+
+strokeWidth="0.6"
+
+/>
+
+</svg>
+
+
+
+
+
+{/* HERO CONTENT */}
+
 
 <div
 className="
-gold-line
-max-w-[700px]
+relative
+z-10
+w-full
+pl-4
+md:pl-10
+lg:pl-20
+text-left
+"
+>
+
+
+
+<span
+className="
+text-xs
+tracking-[0.25em]
+uppercase
+text-[#A6875A]
+"
+>
+
+Fine Jewelry, Since 2009
+
+</span>
+
+
+<h1
+className="
+mt-6
+font-serif
+font-normal
+text-[clamp(42px,5vw,72px)]
+leading-[0.98]
+tracking-[-0.02em]
+text-left
+m-0
+"
+>
+
+Light,
+
+<br/>
+
+<span
+className="
+italic
+text-[#A6875A]
+"
+>
+
+held.
+
+</span>
+
+
+</h1>
+
+
+
+
+
+
+
+<p
+className="
+mt-8
+max-w-[420px]
+text-[17px]
+leading-relaxed
+text-[#3a352c]
+"
+>
+
+Each piece is cut from a single idea:
+that light itself can be worn.
+Rare stones, honest metals,
+no ornament without purpose.
+
+</p>
+
+
+
+
+
+
+
+<Link
+
+href="/shop"
+
+className="
+inline-block
+mt-8
+px-8
+py-4
+border
+border-[#A6875A]
+text-xs
+tracking-[0.2em]
+uppercase
+hover:bg-[#A6875A]
+hover:text-white
+transition
+"
+
+>
+
+Explore the Collection
+
+</Link>
+
+
+
+
+</div>
+
+
+</section>
+{/* ================= DIVIDER ================= */}
+
+
+<div
+className="
+flex
+items-center
+gap-4
+max-w-[600px]
 mx-auto
 mt-24
+px-8
 "
+>
+
+
+<div className="h-px bg-black/10 flex-1"/>
+
+
+<svg
+className="w-5 h-5"
+viewBox="0 0 100 100"
+>
+
+
+<path
+
+d="
+M50 5
+L80 25
+L92 55
+L72 90
+L28 90
+L8 55
+L20 25 Z
+"
+
+fill="none"
+
+stroke="#A6875A"
+
 />
 
 
+</svg>
 
 
 
-{/* FEATURED PRODUCTS */}
+<div className="h-px bg-black/10 flex-1"/>
+
+
+</div>
+
+
+
+
+
+
+
+{/* ================= PRODUCTS ================= */}
+
+
 
 <section
 className="
 max-w-[1240px]
 mx-auto
 px-8
-py-28
+py-24
 "
 >
+
 
 
 <div
 className="
 text-center
-mb-16
+mb-14
 "
 >
 
 
-<p
+<span
 className="
-uppercase
-tracking-[0.3em]
 text-xs
+uppercase
+tracking-[0.2em]
 text-[#A6875A]
 "
 >
 
-Featured Collection
+Featured
 
-</p>
+</span>
 
 
 
 <h2
 className="
-font-luxury
-text-5xl
-mt-5
+mt-3
+font-serif
+font-normal
+tracking-[-0.01em]
+text-4xl
 "
 >
 
 The Signature Edit
 
 </h2>
-
-
-
-<p
-className="
-mt-5
-text-[#6b6255]
-max-w-xl
-mx-auto
-"
->
-
-Exceptional jewellery crafted with pure gold,
-diamonds and timeless artistry.
-
-</p>
 
 
 </div>
@@ -125,9 +341,12 @@ diamonds and timeless artistry.
 
 
 
-{/* PHILOSOPHY */}
+{/* ================= PHILOSOPHY ================= */}
+
+
 
 <section
+
 className="
 max-w-[1240px]
 mx-auto
@@ -135,36 +354,18 @@ px-8
 pb-32
 grid
 md:grid-cols-2
-gap-20
+gap-16
 items-center
 "
+
 >
+
 
 
 <div
 className="
-relative
 aspect-[5/6]
 bg-[#241C16]
-overflow-hidden
-"
->
-
-
-<div
-className="
-absolute
-inset-8
-border
-border-[#CBB088]
-"
-/>
-
-
-<div
-className="
-absolute
-inset-0
 flex
 items-center
 justify-center
@@ -172,8 +373,9 @@ justify-center
 >
 
 
+
 <svg
-className="w-2/3 opacity-80"
+className="w-2/3"
 viewBox="0 0 100 100"
 >
 
@@ -203,7 +405,6 @@ stroke="#CBB088"
 </div>
 
 
-</div>
 
 
 
@@ -211,32 +412,38 @@ stroke="#CBB088"
 
 <div
 className="
-reveal
+text-left
 "
 >
 
 
-<p
+<span
 className="
-uppercase
-tracking-[0.3em]
 text-xs
+tracking-[0.2em]
+uppercase
 text-[#A6875A]
 "
 >
 
 Our Philosophy
 
-</p>
+</span>
+
+
+
+
 
 
 
 <h2
 className="
-font-luxury
+mt-5
+font-serif
+font-normal
+tracking-[-0.01em]
 text-5xl
 leading-tight
-mt-6
 "
 >
 
@@ -250,60 +457,75 @@ of one idea
 
 
 
-<p
-className="
-mt-8
-leading-relaxed
-text-[#51483c]
-"
->
 
-Shotorupa Jewellers was founded on the belief
-that jewellery should capture light, emotion and memories.
-
-</p>
 
 
 
 <p
 className="
-mt-5
+mt-6
+text-[#3a352c]
 leading-relaxed
-text-[#51483c]
 "
 >
 
-Every piece is designed with precision,
-purity and a commitment to timeless beauty.
+Shotorupa was founded on the belief
+that fine jewelry should hold light
+rather than compete with it.
+Every stone is hand-selected with care.
 
 </p>
+
+
+
+
+
+
+
+<p
+className="
+mt-4
+text-[#3a352c]
+leading-relaxed
+"
+>
+
+We make few pieces, slowly.
+What we make, we stand behind for life.
+
+</p>
+
+
+
+
 
 
 
 <Link
 
-href="/our-story"
+href="/about"
 
 className="
 inline-block
-mt-10
-px-10
+mt-8
+px-8
 py-4
 border
-border-[#A6875A]
-uppercase
-tracking-[0.2em]
+border-black
 text-xs
-hover:bg-[#A6875A]
+uppercase
+tracking-widest
+hover:bg-black
 hover:text-white
 transition
 "
 
 >
 
-Discover Our Story
+Read Our Story
 
 </Link>
+
 
 
 </div>
@@ -312,107 +534,58 @@ Discover Our Story
 
 </section>
 
-
-
-
-
-
-
-
-{/* NEWSLETTER */}
-
-<section
-
-className="
-bg-[#241C16]
-py-24
-text-center
-text-[#F6F3EC]
-"
-
->
-
-
-<p
-className="
-uppercase
-tracking-[0.3em]
-text-xs
-text-[#CBB088]
-"
->
-
-Stay Connected
-
-</p>
-
-
-
-<h2
-className="
-font-luxury
-text-5xl
-mt-5
-"
->
-
-Receive our latest collections
-
-</h2>
-
-
-
-<p
-className="
-mt-5
-text-[#ddd3c5]
-"
->
-
-Exclusive jewellery updates and offers.
-
-</p>
-
-
+{/* ================= ADMIN ACCESS ================= */}
 
 <div
 className="
-mt-10
-flex
-justify-center
+fixed
+bottom-6
+right-6
+z-40
 "
 >
-
 
 <Link
 
-href="/contact"
+href="/admin"
 
 className="
-px-10
-py-4
+px-5
+py-3
+
+bg-[#19160F]
+
+text-[#A6875A]
+
 border
-border-[#CBB088]
-uppercase
-tracking-widest
+border-[#A6875A]
+
+rounded-full
+
 text-xs
-hover:bg-[#CBB088]
+
+tracking-widest
+
+uppercase
+
+shadow-xl
+
+hover:bg-[#A6875A]
+
 hover:text-black
-transition
+
+transition-all
+
+duration-300
 "
 
 >
 
-Contact Us
+Admin
 
 </Link>
 
-
 </div>
-
-
-</section>
-
 
 
 </main>
@@ -424,9 +597,9 @@ Contact Us
 <LuxuryFooter />
 
 
+
 </>
 
 );
-
 
 }

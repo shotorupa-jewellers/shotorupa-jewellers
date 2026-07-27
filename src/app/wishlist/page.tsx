@@ -3,6 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import {
+  Heart,
+  ShoppingBag,
+  Trash2
+} from "lucide-react";
+
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
@@ -28,56 +34,57 @@ const {
 
 
 
+
 return(
 
 
-<main className="min-h-screen bg-[#f8f4ee] py-12">
+<main className="
+min-h-screen
+bg-[#F6F3EC]
+py-24
+">
 
 
-<section className="max-w-6xl mx-auto px-6">
+
+<section className="
+max-w-6xl
+mx-auto
+px-6
+">
 
 
 
-<h1 className="text-4xl font-serif text-[#6b4d1f] mb-10">
+
+
+<div className="
+flex
+items-center
+gap-3
+mb-14
+">
+
+
+<Heart
+
+size={22}
+
+className="
+text-[#A6875A]
+"
+
+/>
+
+
+<h1 className="
+text-2xl
+font-serif
+tracking-wide
+text-[#19160F]
+">
 
 My Wishlist
 
 </h1>
-
-
-
-
-
-
-{
-
-wishlist.length === 0 ?
-
-
-
-<div className="bg-white rounded-xl shadow p-10 text-center">
-
-
-<h2 className="text-2xl text-gray-600">
-
-Your Wishlist is Empty
-
-</h2>
-
-
-
-
-<Link
-
-href="/"
-
-className="inline-block mt-6 bg-[#9b7a3d] text-white px-8 py-3 rounded-lg"
-
->
-
-Continue Shopping
-
-</Link>
 
 
 </div>
@@ -86,17 +93,109 @@ Continue Shopping
 
 
 
-:
 
-
-
-<div className="grid md:grid-cols-3 gap-8">
 
 
 
 {
+wishlist.length===0 ?
 
+
+<div className="
+bg-white
+rounded-2xl
+p-6
+mt-10
+text-center
+border
+border-[#A6875A]/20
+max-w-md
+mx-auto
+">
+
+
+
+<Heart
+
+size={30}
+
+className="
+mx-auto
+text-[#A6875A]
+mb-3
+"
+
+/>
+
+
+
+
+
+<h2 className="
+text-lg
+font-serif
+text-gray-600
+">
+
+Your Wishlist is Empty
+
+</h2>
+
+
+
+
+
+<Link
+
+href="/shop"
+
+className="
+inline-block
+mt-4
+bg-[#A6875A]
+text-white
+px-6
+py-2
+text-sm
+rounded-full
+hover:bg-[#8c6d45]
+transition
+"
+
+>
+
+Explore Jewellery
+
+</Link>
+
+
+
+</div>
+
+
+
+
+
+
+
+:
+
+
+<div className="
+grid
+sm:grid-cols-2
+lg:grid-cols-3
+gap-8
+">
+
+
+
+
+
+
+{
 wishlist.map((product)=>(
+
 
 
 <div
@@ -104,17 +203,25 @@ wishlist.map((product)=>(
 key={product.id}
 
 className="
-bg-white 
-rounded-xl 
-shadow 
-overflow-hidden 
-hover:scale-105 
+bg-white
+rounded-2xl
+overflow-hidden
+border
+border-[#A6875A]/20
+group
 transition
+hover:-translate-y-1
 "
 
 >
 
 
+
+<div className="
+relative
+h-64
+overflow-hidden
+">
 
 
 <Image
@@ -123,27 +230,39 @@ src={product.image}
 
 alt={product.name}
 
-width={400}
+fill
 
-height={300}
-
-className="w-full h-64 object-cover"
+className="
+object-cover
+group-hover:scale-105
+transition
+duration-500
+"
 
 />
 
 
+</div>
 
 
 
 
 
-<div className="p-5">
 
 
 
 
+<div className="
+p-5
+">
 
-<h2 className="text-xl font-bold text-[#6b4d1f]">
+
+
+<h2 className="
+font-serif
+text-lg
+text-[#19160F]
+">
 
 {product.name}
 
@@ -153,8 +272,11 @@ className="w-full h-64 object-cover"
 
 
 
-
-<p className="text-gray-500 mt-2">
+<p className="
+text-sm
+text-gray-500
+mt-2
+">
 
 {product.purity}
 
@@ -163,9 +285,10 @@ className="w-full h-64 object-cover"
 
 
 
-
-
-<p className="text-gray-500">
+<p className="
+text-sm
+text-gray-500
+">
 
 Weight: {product.weight}
 
@@ -175,15 +298,16 @@ Weight: {product.weight}
 
 
 
-
-
-<p className="text-2xl font-bold text-[#9b7a3d] mt-3">
+<p className="
+text-xl
+font-semibold
+text-[#A6875A]
+mt-3
+">
 
 ৳ {product.price.toLocaleString()}
 
 </p>
-
-
 
 
 
@@ -211,23 +335,30 @@ id:String(product.id)
 
 
 className="
-mt-5
+mt-4
 w-full
-bg-[#9b7a3d]
+bg-[#19160F]
 text-white
-py-3
-rounded-lg
+py-2.5
+rounded-full
+flex
+items-center
+justify-center
+gap-2
+text-sm
+hover:bg-[#A6875A]
+transition
 "
 
 >
 
 
+<ShoppingBag size={16}/>
+
 Add To Cart
 
 
 </button>
-
-
 
 
 
@@ -243,23 +374,31 @@ onClick={()=>removeFromWishlist(product.id)}
 
 
 className="
-mt-3
+mt-2
 w-full
 border
-border-red-500
+border-red-300
 text-red-500
-py-3
-rounded-lg
+py-2.5
+rounded-full
+flex
+items-center
+justify-center
+gap-2
+text-sm
+hover:bg-red-50
+transition
 "
 
 >
 
 
+<Trash2 size={16}/>
+
 Remove
 
 
 </button>
-
 
 
 
@@ -277,8 +416,9 @@ Remove
 
 ))
 
-
 }
+
+
 
 
 
@@ -291,6 +431,7 @@ Remove
 
 
 </section>
+
 
 
 </main>

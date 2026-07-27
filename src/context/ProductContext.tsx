@@ -1,5 +1,6 @@
 "use client";
 
+
 import {
   createContext,
   useContext,
@@ -27,19 +28,27 @@ import { db } from "@/lib/firebase";
 
 export type Product = {
 
+
   id:string;
+
 
   name:string;
 
+
   price:number;
+
 
   category:string;
 
+
   weight:string;
+
 
   purity:string;
 
+
   image:string;
+
 
 };
 
@@ -51,9 +60,12 @@ export type Product = {
 
 export type DeletedProduct = Product & {
 
+
   deletedAt:string;
 
+
 };
+
 
 
 
@@ -93,9 +105,7 @@ updateProduct:(product:Product)=>void;
 
 
 
-const ProductContext =
-
-createContext<ProductContextType | undefined>(undefined);
+const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 
 
@@ -119,20 +129,27 @@ children:ReactNode;
 
 
 
-const [products,setProducts]=useState<Product[]>([]);
-
-
-const [deletedProducts,setDeletedProducts]=useState<DeletedProduct[]>([]);
+const [products,setProducts] = useState<Product[]>([]);
 
 
 
-
+const [deletedProducts,setDeletedProducts] = useState<DeletedProduct[]>([]);
 
 
 
 
 
-// Firebase থেকে Product Load
+
+
+
+
+
+
+
+// =============================
+// LOAD PRODUCTS FROM FIREBASE
+// =============================
+
 
 useEffect(()=>{
 
@@ -140,24 +157,53 @@ useEffect(()=>{
 
 const unsubscribe = onSnapshot(
 
+
 collection(db,"products"),
+
+
 
 (snapshot)=>{
 
 
-const data = snapshot.docs.map((item)=>(
+
+const data = snapshot.docs.map((item)=>{
 
 
-{
+
+const p = item.data();
+
+
+
+return {
+
 
 id:item.id,
 
-...item.data()
 
-}
+name:p.name || "",
 
 
-)) as Product[];
+price:Number(p.price) || 0,
+
+
+category:p.category || "Gold",
+
+
+weight:p.weight || "",
+
+
+purity:p.purity || "",
+
+
+image:p.image || "/images/default.jpg"
+
+
+
+};
+
+
+});
+
 
 
 
@@ -167,6 +213,7 @@ setProducts(data);
 
 
 }
+
 
 
 
@@ -190,12 +237,16 @@ return ()=>unsubscribe();
 
 
 
+// =============================
+// ADD PRODUCT
+// =============================
 
-// Add Product Firebase
 
 async function addProduct(
 
+
 product:Omit<Product,"id">
+
 
 ){
 
@@ -203,9 +254,34 @@ product:Omit<Product,"id">
 
 await addDoc(
 
+
 collection(db,"products"),
 
-product
+
+{
+
+
+name:product.name,
+
+
+price:Number(product.price),
+
+
+category:product.category,
+
+
+weight:product.weight,
+
+
+purity:product.purity,
+
+
+image:product.image
+
+
+}
+
+
 
 );
 
@@ -224,17 +300,58 @@ product
 
 
 
-// Delete Product
+// =============================
+// DELETE PRODUCT
+// =============================
+
 
 async function deleteProduct(
 
+
 id:string
+
 
 ){
 
 
 
+const product = products.find(
+
+p=>p.id===id
+
+);
+
+
+
+
+if(product){
+
+
+setDeletedProducts(prev=>[
+
+...prev,
+
+{
+
+...product,
+
+deletedAt:new Date().toISOString()
+
+}
+
+]);
+
+
+}
+
+
+
+
+
+
+
 await deleteDoc(
+
 
 doc(
 
@@ -246,6 +363,7 @@ id
 
 )
 
+
 );
 
 
@@ -262,11 +380,16 @@ id
 
 
 
-// Update Product
+// =============================
+// UPDATE PRODUCT
+// =============================
+
 
 async function updateProduct(
 
+
 product:Product
+
 
 ){
 
@@ -274,11 +397,15 @@ product:Product
 
 const productRef = doc(
 
+
 db,
+
 
 "products",
 
+
 product.id
+
 
 );
 
@@ -286,9 +413,13 @@ product.id
 
 
 
+
+
 await updateDoc(
 
+
 productRef,
+
 
 {
 
@@ -296,7 +427,7 @@ productRef,
 name:product.name,
 
 
-price:product.price,
+price:Number(product.price),
 
 
 category:product.category,
@@ -314,6 +445,8 @@ image:product.image
 
 }
 
+
+
 );
 
 
@@ -330,16 +463,66 @@ image:product.image
 
 
 
+// =============================
+// RESTORE PRODUCT
+// =============================
 
-// Restore (future use)
 
-function restoreProduct(id:string){
+function restoreProduct(
 
 
-console.log(
-"Restore product:",
-id
+id:string
+
+
+){
+
+
+
+const deleted = deletedProducts.find(
+
+p=>p.id===id
+
 );
+
+
+
+
+if(!deleted) return;
+
+
+
+
+
+addProduct({
+
+name:deleted.name,
+
+price:deleted.price,
+
+category:deleted.category,
+
+weight:deleted.weight,
+
+purity:deleted.purity,
+
+image:deleted.image
+
+});
+
+
+
+
+
+setDeletedProducts(prev=>
+
+prev.filter(
+
+p=>p.id!==id
+
+)
+
+);
+
 
 
 }
@@ -362,7 +545,9 @@ return(
 <ProductContext.Provider
 
 
+
 value={{
+
 
 
 products,
@@ -387,10 +572,12 @@ updateProduct
 }}
 
 
+
 >
 
 
 {children}
+
 
 
 </ProductContext.Provider>
@@ -430,6 +617,8 @@ throw new Error(
 
 
 }
+
+
 
 
 

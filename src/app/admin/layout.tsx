@@ -6,17 +6,17 @@ import {
 
 
 import Sidebar from "@/components/admin/Sidebar";
-import Header from "@/components/admin/Header";
+import AdminHeader from "@/components/admin/Header";
 
 
 
 export default function AdminLayout({
 
-children,
+children
 
 }:{
 
-children:React.ReactNode
+children:React.ReactNode;
 
 }){
 
@@ -28,15 +28,18 @@ const [open,setOpen]=useState(false);
 return(
 
 
-<div className="
+<div
+
+className="
 min-h-screen
-bg-[#f8f4ee]
-flex
-">
+bg-[#F6F3EC]
+"
 
 
+>
 
 
+{/* ADMIN SIDEBAR */}
 
 <Sidebar
 
@@ -50,16 +53,23 @@ setOpen={setOpen}
 
 
 
-<div className="
-flex-1
-md:ml-72
-">
+{/* CONTENT AREA */}
 
 
+<div
+
+className="
+lg:ml-72
+min-h-screen
+"
 
 
+>
 
-<Header
+
+{/* ADMIN HEADER */}
+
+<AdminHeader
 
 setOpen={setOpen}
 
@@ -69,12 +79,18 @@ setOpen={setOpen}
 
 
 
-<main className="
-p-6
-min-h-screen
-bg-[#f8f4ee]
-">
+{/* ADMIN PAGE */}
 
+<main
+
+className="
+p-4
+lg:p-8
+min-h-screen
+bg-[#F6F3EC]
+"
+
+>
 
 {children}
 
@@ -83,9 +99,7 @@ bg-[#f8f4ee]
 
 
 
-
 </div>
-
 
 
 
@@ -93,5 +107,6 @@ bg-[#f8f4ee]
 
 
 );
+
 
 }

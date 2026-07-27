@@ -1,46 +1,130 @@
 import type { Metadata } from "next";
+
+import {
+  Fraunces,
+  Inter
+} from "next/font/google";
+
 import "./globals.css";
+
 
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { ProductProvider } from "@/context/ProductContext";
 import { OfferProvider } from "@/context/OfferContext";
 
+
 import Header from "@/components/Header";
 import LuxuryCursor from "@/components/LuxuryCursor";
 
 
 
-export const metadata: Metadata = {
 
-  title: "SHOTORUPA JEWELLERS",
 
-  description:
-    "Premium Gold & Diamond Jewellery",
+
+const fraunces = Fraunces({
+
+  subsets:["latin"],
+
+  variable:"--font-fraunces",
+
+  weight:[
+    "400",
+    "500"
+  ],
+
+  display:"swap",
+
+});
+
+
+
+
+
+
+
+const inter = Inter({
+
+  subsets:["latin"],
+
+  variable:"--font-inter",
+
+  weight:[
+    "300",
+    "400",
+    "500"
+  ],
+
+  display:"swap",
+
+});
+
+
+
+
+
+
+
+
+export const metadata:Metadata={
+
+
+title:"SHOTORUPA JEWELLERS",
+
+
+description:
+"Premium Gold & Diamond Jewellery",
+
 
 };
 
 
 
 
+
+
+
+
+
 export default function RootLayout({
 
-  children,
+children,
 
-}: Readonly<{
+}:Readonly<{
 
-  children: React.ReactNode;
+children:React.ReactNode;
 
 }>) {
 
 
 
-return (
+return(
+
 
 <html lang="en">
 
 
-<body>
+
+<body
+
+
+className={`
+
+${inter.variable}
+
+${fraunces.variable}
+
+bg-[#F6F3EC]
+
+text-[#19160F]
+
+antialiased
+
+`}
+
+
+
+>
 
 
 <CartProvider>
@@ -56,21 +140,36 @@ return (
 
 
 
-{/* GLOBAL WEBSITE HEADER */}
+
+
+{/* WEBSITE HEADER */}
+
 
 <Header />
 
 
 
-{/* ALL PAGES */}
+
+
+
+
+{/* PAGE CONTENT */}
+
 
 {children}
 
 
 
-{/* CUSTOM CURSOR */}
+
+
+
+
+{/* LUXURY CURSOR */}
+
 
 <LuxuryCursor />
+
+
 
 
 
@@ -87,10 +186,13 @@ return (
 
 
 
+
 </body>
 
 
+
 </html>
+
 
 );
 

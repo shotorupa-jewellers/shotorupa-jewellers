@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 
-:root {
+:root{
 
 --ivory:#F6F3EC;
 --ivory-soft:#EFEAE0;
@@ -15,14 +15,46 @@
 
 --white:#ffffff;
 
+--line:rgba(166,135,90,.18);
+
+
+--font-fraunces:'Fraunces',serif;
+
+--font-inter:'Inter',sans-serif;
+
+}
+
+
+:root{
+
+--ivory:#F6F3EC;
+--ivory-soft:#EFEAE0;
+
+--ink:#19160F;
+
+--gold:#A6875A;
+--gold-light:#D6C09A;
+
+--espresso:#241C16;
+
+--white:#ffffff;
+
+--line:rgba(166,135,90,.18);
+
+
+--font-fraunces:'Fraunces',serif;
+
+--font-inter:'Inter',sans-serif;
+
 }
 
 
 
 
-/* =========================
+
+/* =====================
    TAILWIND THEME
-========================= */
+===================== */
 
 
 @theme inline {
@@ -31,9 +63,9 @@
 
 --color-foreground:var(--ink);
 
---font-sans:var(--font-geist-sans);
+--font-sans:var(--font-inter);
 
---font-mono:var(--font-geist-mono);
+--font-serif:var(--font-fraunces);
 
 }
 
@@ -41,10 +73,9 @@
 
 
 
-
-/* =========================
-   GLOBAL
-========================= */
+/* =====================
+ GLOBAL
+===================== */
 
 
 *{
@@ -71,11 +102,9 @@ background:var(--ivory);
 
 color:var(--ink);
 
-font-family:
+font-family:var(--font-inter);
 
-Arial,
-Helvetica,
-sans-serif;
+font-weight:300;
 
 -webkit-font-smoothing:antialiased;
 
@@ -83,23 +112,48 @@ sans-serif;
 
 
 
+h1,
+h2,
+h3,
+.display{
 
-
-
-/* =========================
-   LUXURY FONT
-========================= */
-
-
-.font-luxury{
-
-font-family:
-
-var(--font-fraunces),
-Georgia,
-serif;
+font-family:var(--font-fraunces);
 
 font-weight:400;
+
+letter-spacing:-0.01em;
+
+margin:0;
+
+}
+
+
+
+img{
+
+max-width:100%;
+
+display:block;
+
+}
+
+
+
+a{
+
+text-decoration:none;
+
+color:inherit;
+
+}
+
+
+
+button{
+
+cursor:pointer;
+
+font-family:inherit;
 
 }
 
@@ -108,9 +162,41 @@ font-weight:400;
 
 
 
-/* =========================
-   NAVBAR GLASS
-========================= */
+/* =====================
+ LUXURY FONT
+===================== */
+
+
+.font-luxury{
+
+font-family:var(--font-fraunces);
+
+font-weight:400;
+
+letter-spacing:-.02em;
+
+}
+
+
+
+.luxury-title{
+
+font-family:var(--font-fraunces);
+
+font-weight:400;
+
+letter-spacing:-.03em;
+
+}
+
+
+
+
+
+
+/* =====================
+ NAVBAR
+===================== */
 
 
 .nav-glass{
@@ -119,6 +205,7 @@ background:
 
 rgba(246,243,236,.75);
 
+
 backdrop-filter:
 
 blur(18px);
@@ -126,11 +213,9 @@ blur(18px);
 
 border-bottom:
 
-1px solid rgba(166,135,90,.15);
+1px solid var(--line);
 
 }
-
-
 
 
 
@@ -148,13 +233,13 @@ content:"";
 
 position:absolute;
 
-left:0;
-
 bottom:-8px;
 
-width:0;
+left:0;
 
 height:1px;
+
+width:0;
 
 background:var(--gold);
 
@@ -174,12 +259,9 @@ width:100%;
 
 
 
-
-
-
-/* =========================
-   HERO IMAGE ZOOM
-========================= */
+/* =====================
+ HERO
+===================== */
 
 
 .hero-image{
@@ -208,17 +290,8 @@ transform:scale(1.08);
 
 }
 
-
 }
 
-
-
-
-
-
-/* =========================
-   HERO OVERLAY
-========================= */
 
 
 .hero-overlay{
@@ -242,6 +315,48 @@ transparent
 
 );
 
+}
+
+
+
+
+
+.hero h1{
+
+font-size:clamp(48px,8vw,92px);
+
+line-height:.98;
+
+}
+/* =====================
+ HERO FLOAT
+===================== */
+
+
+.hero-float{
+
+animation:
+
+heroFloat 8s ease-in-out infinite;
+
+}
+
+
+
+@keyframes heroFloat{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+
+50%{
+
+transform:translateY(-15px);
+
+}
 
 }
 
@@ -250,20 +365,16 @@ transparent
 
 
 
-
-
-/* =========================
-   BUTTON
-========================= */
+/* =====================
+ BUTTON
+===================== */
 
 
 .luxury-btn{
 
-
 position:relative;
 
 overflow:hidden;
-
 
 padding:
 
@@ -281,14 +392,13 @@ color:white;
 font-size:12px;
 
 
-letter-spacing:.2em;
+letter-spacing:.25em;
 
 
 text-transform:uppercase;
 
 
 transition:.5s;
-
 
 }
 
@@ -302,8 +412,6 @@ background:var(--gold);
 
 
 
-
-
 .luxury-btn::before{
 
 content:"";
@@ -314,9 +422,9 @@ top:0;
 
 left:-100%;
 
-width:100%;
-
 height:100%;
+
+width:100%;
 
 
 background:
@@ -327,7 +435,7 @@ linear-gradient(
 
 transparent,
 
-rgba(255,255,255,.4),
+rgba(255,255,255,.5),
 
 transparent
 
@@ -352,35 +460,28 @@ left:100%;
 
 
 
-
-
-/* =========================
-   REVEAL ANIMATION
-========================= */
+/* =====================
+ ANIMATION
+===================== */
 
 
 @keyframes revealUp{
 
 
-0%{
+from{
 
 opacity:0;
 
-transform:
-
-translateY(60px);
+transform:translateY(60px);
 
 }
 
 
-
-100%{
+to{
 
 opacity:1;
 
-transform:
-
-translateY(0);
+transform:translateY(0);
 
 }
 
@@ -400,7 +501,6 @@ revealUp 1.2s ease forwards;
 
 
 
-
 .hero-reveal{
 
 animation:
@@ -415,7 +515,7 @@ revealUp 1s ease forwards;
 
 animation:
 
-revealUp 1.3s ease forwards;
+revealUp 1.4s ease forwards;
 
 }
 
@@ -425,17 +525,7 @@ revealUp 1.3s ease forwards;
 
 animation:
 
-revealUp 1.6s ease forwards;
-
-}
-
-
-
-.hero-reveal-delay3{
-
-animation:
-
-revealUp 1.9s ease forwards;
+revealUp 1.7s ease forwards;
 
 }
 
@@ -444,210 +534,9 @@ revealUp 1.9s ease forwards;
 
 
 
-
-
-/* =========================
-   DIAMOND ROTATION
-========================= */
-
-
-@keyframes spinSlow{
-
-
-from{
-
-transform:rotate(0deg);
-
-}
-
-
-to{
-
-transform:rotate(360deg);
-
-}
-
-
-}
-
-
-
-.animate-spin-slow{
-
-animation:
-
-spinSlow 45s linear infinite;
-
-}
-
-
-
-
-
-
-
-/* =========================
-   FLOATING
-========================= */
-
-
-@keyframes floating{
-
-
-0%{
-
-transform:translateY(0);
-
-}
-
-
-50%{
-
-transform:translateY(-15px);
-
-}
-
-
-100%{
-
-transform:translateY(0);
-
-}
-
-
-}
-
-
-
-.float-animation{
-
-animation:
-
-floating 6s ease-in-out infinite;
-
-}
-
-
-
-
-
-
-
-
-/* =========================
-   PRODUCT IMAGE
-========================= */
-
-
-.image-zoom{
-
-overflow:hidden;
-
-}
-
-
-
-.image-zoom img{
-
-
-transition:
-
-transform .8s ease;
-
-
-}
-
-
-
-.image-zoom:hover img{
-
-
-transform:
-
-scale(1.08);
-
-
-}
-
-
-
-
-
-.product-image{
-
-overflow:hidden;
-
-}
-
-
-
-.product-image img{
-
-
-transition:
-
-transform 1s cubic-bezier(.2,.8,.2,1);
-
-
-}
-
-
-
-.product-image:hover img{
-
-
-transform:
-
-scale(1.12);
-
-
-}
-
-
-
-
-
-
-
-
-/* =========================
-   LUXURY CARD
-========================= */
-
-
-.luxury-card{
-
-
-transition:
-
-all .5s ease;
-
-
-}
-
-
-
-.luxury-card:hover{
-
-
-transform:
-
-translateY(-12px);
-
-
-}
-
-
-
-
-
-
-
-
-
-/* =========================
-   GOLD TEXT
-========================= */
+/* =====================
+ GOLD TEXT
+===================== */
 
 
 .gold-text{
@@ -672,9 +561,8 @@ linear-gradient(
 background-size:200%;
 
 
--webkit-background-clip:text;
 
-background-clip:text;
+-webkit-background-clip:text;
 
 color:transparent;
 
@@ -684,8 +572,8 @@ animation:
 
 goldMove 4s linear infinite;
 
-
 }
+
 
 
 
@@ -700,7 +588,6 @@ background-position:0%;
 }
 
 
-
 to{
 
 background-position:200%;
@@ -712,15 +599,6 @@ background-position:200%;
 
 
 
-
-
-
-
-
-
-/* =========================
-   GOLD LINE
-========================= */
 
 
 .gold-line{
@@ -742,7 +620,6 @@ transparent
 
 );
 
-
 }
 
 
@@ -751,11 +628,82 @@ transparent
 
 
 
+/* =====================
+ PRODUCT CARD
+===================== */
 
 
-/* =========================
-   GOLD BORDER
-========================= */
+.product-card{
+
+transition:.5s ease;
+
+}
+
+
+
+.product-card:hover{
+
+transform:translateY(-12px);
+
+}
+
+
+
+
+
+.product-image{
+
+overflow:hidden;
+
+aspect-ratio:4/5;
+
+
+border:
+
+1px solid var(--line);
+
+
+
+background:
+
+linear-gradient(
+
+160deg,
+
+var(--ivory-soft),
+
+white
+
+);
+
+}
+
+
+
+.product-image img{
+
+transition:
+
+transform .8s ease;
+
+}
+
+
+
+.product-image:hover img{
+
+transform:scale(1.1);
+
+}
+
+
+
+
+
+
+/* =====================
+ GOLD BORDER
+===================== */
 
 
 .gold-border{
@@ -766,9 +714,7 @@ position:relative;
 
 
 
-
 .gold-border::before{
-
 
 content:"";
 
@@ -776,8 +722,8 @@ position:absolute;
 
 inset:0;
 
-
 border:1px solid transparent;
+
 
 
 background:
@@ -786,25 +732,101 @@ linear-gradient(
 
 135deg,
 
-#A6875A,
+var(--gold),
 
 transparent,
 
-#D6C09A
+var(--gold-light)
 
 )
 
 border-box;
 
 
+
 mask:
 
-linear-gradient(#fff 0 0) padding-box,
+linear-gradient(#fff 0 0)
+
+padding-box,
+
 linear-gradient(#fff 0 0);
+
 
 
 mask-composite:exclude;
 
+}
+
+
+
+
+
+
+/* =====================
+ FLOAT
+===================== */
+
+
+.float-animation{
+
+animation:
+
+floating 6s ease-in-out infinite;
+
+}
+
+
+
+@keyframes floating{
+
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+
+50%{
+
+transform:translateY(-15px);
+
+}
+
+
+}
+/* =====================
+ DIAMOND ROTATE
+===================== */
+
+
+.animate-spin-slow{
+
+animation:
+
+spinSlow 45s linear infinite;
+
+}
+
+
+
+@keyframes spinSlow{
+
+
+from{
+
+transform:rotate(0);
+
+}
+
+
+to{
+
+transform:rotate(360deg);
+
+}
+
 
 }
 
@@ -814,32 +836,9 @@ mask-composite:exclude;
 
 
 
-
-
-/* =========================
-   MOUSE PARALLAX
-========================= */
-
-
-.parallax-image{
-
-will-change:transform;
-
-transition:
-
-transform .3s ease;
-
-}
-
-
-
-
-
-
-
-/* =========================
-   SECTION
-========================= */
+/* =====================
+ SECTION
+===================== */
 
 
 section{
@@ -854,20 +853,17 @@ scroll-margin-top:100px;
 
 
 
-
-/* =========================
-   FOOTER
-========================= */
+/* =====================
+ FOOTER
+===================== */
 
 
 .footer-glow{
-
 
 box-shadow:
 
 0 -20px 60px rgba(166,135,90,.12);
 
-
 }
 
 
@@ -876,135 +872,12 @@ box-shadow:
 
 
 
+/* =====================
+ CURSOR DESKTOP ONLY
+===================== */
 
-/* =========================
-   SELECTION
-========================= */
 
-
-::selection{
-
-
-background:
-
-var(--gold);
-
-
-color:white;
-
-
-}
-
-
-
-
-
-
-
-
-/* =========================
-   SCROLLBAR
-========================= */
-
-
-::-webkit-scrollbar{
-
-width:8px;
-
-}
-
-
-
-::-webkit-scrollbar-track{
-
-background:
-
-var(--ivory-soft);
-
-}
-
-
-
-::-webkit-scrollbar-thumb{
-
-
-background:
-
-var(--gold);
-
-
-border-radius:20px;
-
-
-}
-
-
-
-
-
-
-
-
-/* =========================
-   MOBILE
-========================= */
-
-
-@media(max-width:768px){
-
-
-.hero-content{
-
-padding-left:25px;
-
-padding-right:25px;
-
-}
-
-
-
-.hero-content h1{
-
-font-size:64px;
-
-}
-
-
-
-.inset-8{
-
-inset:1rem;
-
-}
-
-
-}
-@keyframes heroFloat{
-
-0%{
-transform:translateY(0);
-}
-
-50%{
-transform:translateY(-15px);
-}
-
-100%{
-transform:translateY(0);
-}
-
-}
-
-
-.hero-float{
-
-animation:
-heroFloat 8s ease-in-out infinite;
-
-}
-/* =========================
-   LUXURY CUSTOM CURSOR
-========================= */
+@media(min-width:901px) and (hover:hover){
 
 
 html,
@@ -1015,13 +888,15 @@ cursor:none;
 }
 
 
-
 a,
 button,
 input,
 textarea{
 
 cursor:none;
+
+}
+
 
 }
 
@@ -1037,19 +912,36 @@ width:50px;
 
 height:50px;
 
+
 border-radius:50%;
 
-border:1px solid #D6B77A;
+
+
+border:
+
+1px solid #D6B77A;
+
+
 
 background:
 
-rgba(214,183,122,0.15);
+rgba(214,183,122,.15);
 
-backdrop-filter:blur(8px);
+
+
+backdrop-filter:
+
+blur(8px);
+
+
 
 pointer-events:none;
 
+
+
 z-index:99999;
+
+
 
 
 box-shadow:
@@ -1063,20 +955,85 @@ box-shadow:
 
 
 
-/* =========================
-   LUXURY MOUSE CURSOR
-========================= */
 
 
-html,
-body{
-cursor:none;
+
+/* =====================
+ SCROLLBAR
+===================== */
+
+
+::-webkit-scrollbar{
+
+width:8px;
+
 }
 
 
-a,
-button,
-input,
-textarea{
-cursor:none;
+
+::-webkit-scrollbar-track{
+
+background:var(--ivory-soft);
+
 }
+
+
+
+::-webkit-scrollbar-thumb{
+
+background:var(--gold);
+
+border-radius:20px;
+
+}
+
+
+
+
+
+::selection{
+
+background:var(--gold);
+
+color:white;
+
+}
+
+
+
+
+
+
+
+/* =====================
+ MOBILE
+===================== */
+
+
+@media(max-width:768px){
+
+
+
+.hero-content{
+
+padding-left:25px;
+
+padding-right:25px;
+
+}
+
+
+
+
+.hero-content h1{
+
+font-size:64px;
+
+}
+
+
+
+
+}
+
+

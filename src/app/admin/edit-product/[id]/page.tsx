@@ -1,7 +1,10 @@
 "use client";
 
+import {
+  useEffect,
+  useState
+} from "react";
 
-import { useEffect, useState } from "react";
 
 import {
   useParams,
@@ -29,10 +32,23 @@ import {
 } from "@/lib/firebase";
 
 
+import {
+  ArrowLeft,
+  Save,
+  Upload,
+  Gem
+} from "lucide-react";
+
+
+import Link from "next/link";
+
+
+
 
 
 
 export default function EditProductPage(){
+
 
 
 const router = useRouter();
@@ -45,11 +61,15 @@ const id = params.id as string;
 
 
 
+const [loading,setLoading]=useState(false);
+
+
+
 const [name,setName]=useState("");
 
 const [price,setPrice]=useState("");
 
-const [category,setCategory]=useState("Gold");
+const [category,setCategory]=useState("");
 
 const [weight,setWeight]=useState("");
 
@@ -64,21 +84,16 @@ const [image,setImage]=useState("");
 const [newImage,setNewImage]=useState<File|null>(null);
 
 
-const [loading,setLoading]=useState(false);
 
 
 
 
-
-
-
-// Load Product
 
 
 useEffect(()=>{
 
 
-async function loadProduct(){
+async function load(){
 
 
 const snap = await getDoc(
@@ -102,14 +117,13 @@ setPrice(String(data.price || ""));
 
 setCategory(data.category || "Gold");
 
-setWeight(data.weight || "");
+setWeight(String(data.weight || ""));
 
 setPurity(data.purity || "");
 
 setMakingCharge(
 String(data.makingCharge || "")
 );
-
 
 setStock(
 String(data.stock || "")
@@ -129,7 +143,7 @@ setImage(data.image || "");
 
 if(id){
 
-loadProduct();
+load();
 
 }
 
@@ -148,14 +162,13 @@ loadProduct();
 function handleImage(e:any){
 
 
-const file=e.target.files[0];
+const file=e.target.files?.[0];
 
 
 if(file){
 
 setNewImage(file);
 
-
 }
 
 
@@ -169,7 +182,8 @@ setNewImage(file);
 
 
 
-async function handleUpdate(){
+async function updateProduct(){
+
 
 
 try{
@@ -184,14 +198,10 @@ let imageUrl=image;
 
 
 
-
-// New Image Upload
-
-
 if(newImage){
 
 
-const imageRef = ref(
+const storageRef = ref(
 
 storage,
 
@@ -203,7 +213,7 @@ storage,
 
 await uploadBytes(
 
-imageRef,
+storageRef,
 
 newImage
 
@@ -213,13 +223,12 @@ newImage
 
 imageUrl = await getDownloadURL(
 
-imageRef
+storageRef
 
 );
 
 
 }
-
 
 
 
@@ -236,24 +245,17 @@ doc(db,"products",id),
 
 name,
 
+category,
 
 price:Number(price),
 
-
-category,
-
-
-weight,
-
+weight:Number(weight),
 
 purity,
 
-
 makingCharge:Number(makingCharge),
 
-
 stock:Number(stock),
-
 
 image:imageUrl,
 
@@ -264,8 +266,8 @@ updatedAt:new Date()
 }
 
 
-);
 
+);
 
 
 
@@ -280,20 +282,15 @@ router.push("/admin/products");
 
 }
 
-
-
 catch(error){
 
 
 console.log(error);
 
-
 alert("Update Failed");
 
 
 }
-
-
 
 finally{
 
@@ -304,8 +301,9 @@ setLoading(false);
 }
 
 
-
 }
+
+
 
 
 
@@ -318,44 +316,223 @@ setLoading(false);
 return(
 
 
-<main className="
+
+<main
+
+className="
 min-h-screen
-bg-[#f8f4ee]
-py-12
-text-black
-">
+bg-[#F6F3EC]
+p-5
+lg:p-10
+"
+
+>
 
 
-<section className="
-max-w-xl
+<div
+
+className="
+max-w-5xl
 mx-auto
-px-6
-">
+"
+
+>
 
 
-<div className="
+
+
+
+
+
+
+{/* HEADER */}
+
+
+
+<div
+
+className="
+flex
+items-center
+gap-5
+mb-10
+"
+
+>
+
+
+
+<Link
+
+href="/admin/products"
+
+className="
+w-12
+h-12
+rounded-xl
 bg-white
-shadow-xl
-rounded-2xl
-p-8
-">
+border
+border-[#A6875A]/30
+flex
+items-center
+justify-center
+text-[#A6875A]
+"
+
+>
+
+<ArrowLeft/>
+
+</Link>
 
 
 
-<h1 className="
-text-3xl
-font-bold
+
+
+
+
+<div>
+
+
+<p
+
+className="
+text-xs
+tracking-[0.3em]
+uppercase
+text-[#A6875A]
+"
+
+>
+
+Product Management
+
+</p>
+
+
+<h1
+
+className="
+text-4xl
 font-serif
-text-[#6b4d1f]
-mb-8
-">
+text-[#19160F]
+mt-2
+"
+
+>
 
 Edit Jewellery Product
 
 </h1>
 
 
+</div>
 
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* FORM */}
+
+
+
+<div
+
+className="
+bg-white
+rounded-3xl
+shadow-xl
+border
+border-[#A6875A]/20
+p-6
+lg:p-10
+"
+
+>
+
+
+
+
+
+<div
+
+className="
+flex
+items-center
+gap-3
+mb-8
+"
+
+>
+
+
+<div
+
+className="
+w-12
+h-12
+rounded-full
+bg-[#A6875A]/10
+flex
+items-center
+justify-center
+"
+
+>
+
+
+<Gem
+
+className="
+text-[#A6875A]
+"
+
+/>
+
+
+</div>
+
+
+<h2
+
+className="
+text-2xl
+font-serif
+"
+
+>
+
+Product Details
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+
+className="
+grid
+md:grid-cols-2
+gap-5
+"
+
+>
 
 
 
@@ -369,19 +546,9 @@ onChange={(e)=>setName(e.target.value)}
 
 placeholder="Product Name"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
-/>
-
-
-
-
+ />
 
 
 
@@ -396,17 +563,9 @@ onChange={(e)=>setPrice(e.target.value)}
 
 placeholder="Price"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
 />
-
-
 
 
 
@@ -418,13 +577,7 @@ value={category}
 
 onChange={(e)=>setCategory(e.target.value)}
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
 >
 
@@ -453,8 +606,6 @@ mb-4
 
 
 
-
-
 <input
 
 value={weight}
@@ -463,17 +614,9 @@ onChange={(e)=>setWeight(e.target.value)}
 
 placeholder="Weight Gram"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
 />
-
-
 
 
 
@@ -488,17 +631,9 @@ onChange={(e)=>setPurity(e.target.value)}
 
 placeholder="Purity 22K / 24K"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
 />
-
-
 
 
 
@@ -515,16 +650,9 @@ onChange={(e)=>setMakingCharge(e.target.value)}
 
 placeholder="Making Charge"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
 />
-
 
 
 
@@ -542,18 +670,46 @@ onChange={(e)=>setStock(e.target.value)}
 
 placeholder="Stock Quantity"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+className="input"
 
 />
 
 
 
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* IMAGE */}
+
+
+
+<div
+
+className="
+mt-8
+"
+
+>
+
+
+<h3 className="
+font-semibold
+mb-3
+">
+
+Product Image
+
+</h3>
 
 
 
@@ -570,14 +726,17 @@ src={image}
 alt="product"
 
 className="
-w-40
-h-40
+w-44
+h-44
 object-cover
-rounded-xl
-mb-4
+rounded-2xl
+border
+border-[#A6875A]/30
+mb-5
 "
 
 />
+
 
 }
 
@@ -586,6 +745,29 @@ mb-4
 
 
 
+
+<label
+
+className="
+flex
+items-center
+gap-3
+border
+border-dashed
+border-[#A6875A]
+rounded-xl
+p-5
+cursor-pointer
+text-[#A6875A]
+"
+
+>
+
+
+<Upload/>
+
+
+Upload New Image
 
 
 <input
@@ -596,15 +778,17 @@ accept="image/*"
 
 onChange={handleImage}
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-5
-"
+className="hidden"
 
 />
+
+
+</label>
+
+
+
+</div>
+
 
 
 
@@ -615,20 +799,32 @@ mb-5
 
 <button
 
-onClick={handleUpdate}
+onClick={updateProduct}
 
 disabled={loading}
 
 className="
+mt-8
 w-full
-bg-[#9b7a3d]
-text-white
 py-4
 rounded-xl
-font-bold
+bg-gradient-to-r
+from-[#D4AF37]
+to-[#A6875A]
+text-white
+font-semibold
+flex
+justify-center
+items-center
+gap-3
+hover:scale-[1.02]
+transition
 "
 
 >
+
+
+<Save size={20}/>
 
 
 {
@@ -646,7 +842,12 @@ loading
 }
 
 
+
 </button>
+
+
+
+
 
 
 
@@ -655,7 +856,13 @@ loading
 </div>
 
 
-</section>
+
+
+
+
+
+</div>
+
 
 
 </main>

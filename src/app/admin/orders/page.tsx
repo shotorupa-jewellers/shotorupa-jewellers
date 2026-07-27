@@ -1,15 +1,19 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState
+} from "react";
 
 import Link from "next/link";
-
 
 import {
   Search,
   FileText,
-  Trash2
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Clock
 } from "lucide-react";
 
 
@@ -32,27 +36,24 @@ import {
 
 
 
-
-
 export default function OrdersPage(){
 
 
+const [orders,setOrders]=useState<any[]>([]);
 
-const [orders,setOrders] = useState<any[]>([]);
-
-const [search,setSearch] = useState("");
-
+const [search,setSearch]=useState("");
 
 
 
 
 
-// GET ORDERS FROM FIREBASE
+
+// LOAD ORDERS
 
 useEffect(()=>{
 
 
-const q = query(
+const q=query(
 
 collection(db,"orders"),
 
@@ -65,29 +66,24 @@ orderBy(
 
 
 
-
-const unsubscribe = onSnapshot(
+const unsubscribe=onSnapshot(
 
 q,
 
 (snapshot)=>{
 
 
-const data = snapshot.docs.map((item)=>(
+const data=snapshot.docs.map((item)=>(
 
 {
-
 id:item.id,
-
 ...item.data()
-
 }
 
 ));
 
 
 setOrders(data);
-
 
 
 }
@@ -111,16 +107,11 @@ return()=>unsubscribe();
 
 
 
-
-// CHANGE STATUS
-
+// STATUS UPDATE
 
 async function changeStatus(
-
 id:string,
-
 status:string
-
 ){
 
 
@@ -137,7 +128,8 @@ id
 
 {
 
-status:status
+status,
+orderStatus:status
 
 }
 
@@ -149,16 +141,12 @@ status:status
 
 catch(error){
 
-
 console.log(error);
 
-
 }
 
 
 }
-
-
 
 
 
@@ -170,22 +158,15 @@ console.log(error);
 
 // DELETE ORDER
 
-
-async function deleteOrder(
-
-id:string
-
-){
+async function deleteOrder(id:string){
 
 
-
-const ok = confirm(
+const ok=confirm(
 "Delete this order?"
 );
 
 
-
-if(!ok) return;
+if(!ok)return;
 
 
 
@@ -203,23 +184,16 @@ id
 );
 
 
-
 }
 
 catch(error){
 
-
 console.log(error);
 
-
 }
 
 
-
 }
-
-
-
 
 
 
@@ -231,32 +205,35 @@ console.log(error);
 
 // SEARCH
 
-
-const filteredOrders = orders.filter((order)=>{
-
-
-const text = search.toLowerCase();
+const filteredOrders=orders.filter((order)=>{
 
 
+const text=search.toLowerCase();
 
-return (
+
+
+return(
 
 order.id
-.toLowerCase()
-.includes(text)
-
-||
-
-order.customerName
 ?.toLowerCase()
 .includes(text)
 
+
 ||
 
-order.phone
+order.customer?.name
+?.toLowerCase()
+.includes(text)
+
+
+||
+
+order.customer?.phone
 ?.includes(search)
 
+
 );
+
 
 
 });
@@ -269,25 +246,20 @@ order.phone
 
 
 
-
-
-
 return(
-
 
 
 <main
 
 className="
 min-h-screen
-bg-[#f8f4ee]
+bg-[#F6F3EC]
 p-6
 lg:p-10
-text-black
+text-[#19160F]
 "
 
 >
-
 
 
 <section
@@ -300,14 +272,13 @@ mx-auto
 >
 
 
-
 <h1
 
 className="
 text-4xl
 font-serif
 font-bold
-text-[#6b4d1f]
+text-[#A6875A]
 mb-8
 "
 
@@ -322,9 +293,6 @@ mb-8
 
 
 
-
-
-
 {/* SEARCH */}
 
 
@@ -332,37 +300,37 @@ mb-8
 
 className="
 bg-white
-rounded-xl
+rounded-2xl
 shadow
 p-5
 mb-8
 flex
 items-center
 gap-3
+border
+border-[#A6875A]/20
 "
 
 >
 
 
 <Search
+
 className="
-text-gray-400
+text-[#A6875A]
 "
+
 />
 
 
 
 <input
 
-placeholder="
-Search Customer Name or Phone
-"
-
 value={search}
 
-onChange={(e)=>
-setSearch(e.target.value)
-}
+onChange={(e)=>setSearch(e.target.value)}
+
+placeholder="Search customer name or phone"
 
 className="
 w-full
@@ -372,18 +340,9 @@ outline-none
 />
 
 
+
 </div>
-
-
-
-
-
-
-
-
-
 {
-
 filteredOrders.length===0 ?
 
 
@@ -391,8 +350,9 @@ filteredOrders.length===0 ?
 
 className="
 bg-white
-p-8
-rounded-xl
+rounded-2xl
+p-10
+text-center
 shadow
 "
 
@@ -407,9 +367,6 @@ No Orders Found
 :
 
 
-
-
-
 <div
 
 className="
@@ -421,7 +378,6 @@ space-y-8
 
 {
 
-
 filteredOrders.map((order)=>(
 
 
@@ -432,8 +388,10 @@ key={order.id}
 
 className="
 bg-white
-rounded-2xl
-shadow
+rounded-3xl
+shadow-xl
+border
+border-[#A6875A]/20
 p-6
 "
 
@@ -447,8 +405,7 @@ p-6
 
 
 
-
-{/* HEADER */}
+{/* ORDER HEADER */}
 
 
 
@@ -481,7 +438,13 @@ font-bold
 
 Order ID:
 
-<span className="text-[#A6875A]">
+<span
+
+className="
+text-[#A6875A]
+"
+
+>
 
 {order.id}
 
@@ -492,7 +455,40 @@ Order ID:
 
 
 
+<p
+
+className="
+text-sm
+text-gray-500
+mt-1
+"
+
+>
+
+
+{
+
+order.createdAt?.toDate
+
+?
+
+order.createdAt
+.toDate()
+.toLocaleString()
+
+:
+
+""
+
+}
+
+
+</p>
+
+
 </div>
+
+
 
 
 
@@ -503,10 +499,10 @@ Order ID:
 
 className={`
 
-px-4
+px-5
 py-2
 rounded-full
-text-white
+font-semibold
 text-sm
 
 
@@ -515,7 +511,7 @@ order.status==="Delivered"
 
 ?
 
-"bg-green-600"
+"bg-green-100 text-green-700"
 
 :
 
@@ -523,11 +519,11 @@ order.status==="Cancelled"
 
 ?
 
-"bg-red-600"
+"bg-red-100 text-red-700"
 
 :
 
-"bg-yellow-600"
+"bg-yellow-100 text-yellow-700"
 
 }
 
@@ -543,6 +539,7 @@ order.status==="Cancelled"
 
 
 
+
 </div>
 
 
@@ -553,11 +550,7 @@ order.status==="Cancelled"
 
 
 
-
-
-
-
-{/* CUSTOMER INFO */}
+{/* CUSTOMER PAYMENT TOTAL */}
 
 
 
@@ -566,7 +559,7 @@ order.status==="Cancelled"
 className="
 grid
 md:grid-cols-3
-gap-8
+gap-5
 "
 
 >
@@ -575,7 +568,21 @@ gap-8
 
 
 
-<div>
+
+
+{/* CUSTOMER */}
+
+
+
+<div
+
+className="
+bg-[#F6F3EC]
+rounded-2xl
+p-5
+"
+
+>
 
 
 <h3
@@ -583,7 +590,8 @@ gap-8
 className="
 font-bold
 text-lg
-mb-3
+text-[#A6875A]
+mb-4
 "
 
 >
@@ -598,9 +606,24 @@ Customer
 
 Name:
 
-{order.customerName || "N/A"}
+<b>
+
+{" "}
+
+{
+
+order.customer?.name ||
+
+order.customerName ||
+
+"N/A"
+
+}
+
+</b>
 
 </p>
+
 
 
 
@@ -608,9 +631,25 @@ Name:
 
 Phone:
 
-{order.phone || "N/A"}
+<b>
+
+{" "}
+
+{
+
+order.customer?.phone ||
+
+order.phone ||
+
+"N/A"
+
+}
+
+</b>
 
 </p>
+
+
 
 
 
@@ -618,9 +657,25 @@ Phone:
 
 City:
 
-{order.city || "N/A"}
+<b>
+
+{" "}
+
+{
+
+order.customer?.city ||
+
+order.city ||
+
+"N/A"
+
+}
+
+</b>
 
 </p>
+
+
 
 
 
@@ -628,16 +683,28 @@ City:
 
 Address:
 
-{order.address || "N/A"}
+<b>
+
+{" "}
+
+{
+
+order.customer?.address ||
+
+order.address ||
+
+"N/A"
+
+}
+
+</b>
 
 </p>
 
 
 
+
 </div>
-
-
-
 
 
 
@@ -651,7 +718,15 @@ Address:
 
 
 
-<div>
+<div
+
+className="
+bg-[#F6F3EC]
+rounded-2xl
+p-5
+"
+
+>
 
 
 <h3
@@ -659,7 +734,8 @@ Address:
 className="
 font-bold
 text-lg
-mb-3
+text-[#A6875A]
+mb-4
 "
 
 >
@@ -670,13 +746,29 @@ Payment
 
 
 
+
+
 <p>
 
 Method:
 
-Cash On Delivery
+<b>
+
+{" "}
+
+{
+
+order.payment ||
+
+"Cash On Delivery"
+
+}
+
+</b>
 
 </p>
+
+
 
 
 
@@ -684,17 +776,34 @@ Cash On Delivery
 
 Payment Status:
 
-Pending
+<span
+
+className="
+font-bold
+text-yellow-600
+"
+
+>
+
+{" "}
+
+{
+
+order.paymentStatus ||
+
+"Pending"
+
+}
+
+</span>
+
 
 </p>
 
 
 
+
 </div>
-
-
-
-
 
 
 
@@ -708,7 +817,15 @@ Pending
 
 
 
-<div>
+<div
+
+className="
+bg-[#F6F3EC]
+rounded-2xl
+p-5
+"
+
+>
 
 
 <h3
@@ -716,7 +833,8 @@ Pending
 className="
 font-bold
 text-lg
-mb-3
+text-[#A6875A]
+mb-4
 "
 
 >
@@ -727,24 +845,26 @@ Total Amount
 
 
 
-<p
+
+<h2
 
 className="
 text-3xl
 font-bold
-text-[#9b7a3d]
+text-[#A6875A]
 "
 
 >
 
 ৳ {order.total?.toLocaleString()}
 
-
-</p>
+</h2>
 
 
 
 </div>
+
+
 
 
 
@@ -768,12 +888,21 @@ text-[#9b7a3d]
 
 
 
+<div
+
+className="
+mt-8
+"
+
+>
+
+
+
 <h3
 
 className="
-font-bold
 text-xl
-mt-8
+font-bold
 mb-4
 "
 
@@ -782,7 +911,6 @@ mb-4
 Products
 
 </h3>
-
 
 
 
@@ -798,8 +926,8 @@ space-y-3
 >
 
 
-{
 
+{
 
 order.products?.map((item:any)=>(
 
@@ -812,11 +940,13 @@ key={item.id}
 className="
 flex
 justify-between
+items-center
 border-b
 pb-3
 "
 
 >
+
 
 
 <div>
@@ -845,9 +975,7 @@ text-gray-500
 
 >
 
-Quantity:
-
-{item.quantity}
+Quantity: {item.quantity}
 
 </p>
 
@@ -858,18 +986,28 @@ Quantity:
 
 
 
+
+
 <p
 
 className="
 font-bold
+text-[#A6875A]
 "
 
 >
 
-৳ {(item.price * item.quantity)
-.toLocaleString()}
+৳ {
+
+(item.price * item.quantity)
+
+.toLocaleString()
+
+}
+
 
 </p>
+
 
 
 
@@ -885,22 +1023,13 @@ font-bold
 
 
 
+
 </div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-{/* BUTTONS */}
+</div>
+{/* ACTION BUTTONS */}
 
 
 
@@ -909,11 +1038,16 @@ font-bold
 className="
 mt-8
 flex
-gap-3
 flex-wrap
+gap-3
 "
 
 >
+
+
+
+
+
 
 
 
@@ -929,15 +1063,27 @@ className="
 bg-blue-600
 text-white
 px-5
-py-2
-rounded-lg
+py-3
+rounded-xl
+flex
+items-center
+gap-2
+hover:scale-105
+transition
 "
 
 >
 
+
+<Clock size={18}/>
+
+
 Processing
 
+
 </button>
+
+
 
 
 
@@ -956,15 +1102,26 @@ className="
 bg-green-600
 text-white
 px-5
-py-2
-rounded-lg
+py-3
+rounded-xl
+flex
+items-center
+gap-2
+hover:scale-105
+transition
 "
 
 >
 
+
+<CheckCircle size={18}/>
+
+
 Delivered
 
+
 </button>
+
 
 
 
@@ -984,13 +1141,23 @@ className="
 bg-red-600
 text-white
 px-5
-py-2
-rounded-lg
+py-3
+rounded-xl
+flex
+items-center
+gap-2
+hover:scale-105
+transition
 "
 
 >
 
+
+<XCircle size={18}/>
+
+
 Cancel
+
 
 </button>
 
@@ -1002,25 +1169,39 @@ Cancel
 
 
 
+
+
+
+{/* GOLDEN INVOICE */}
+
+
+
 <Link
 
 href={`/admin/invoice/${order.id}`}
 
 className="
-bg-black
+bg-gradient-to-r
+from-[#D4AF37]
+to-[#A6875A]
 text-white
 px-5
-py-2
-rounded-lg
+py-3
+rounded-xl
 flex
 items-center
 gap-2
+font-semibold
+shadow-lg
+hover:scale-105
+transition
 "
 
 >
 
 
 <FileText size={18}/>
+
 
 Invoice
 
@@ -1034,26 +1215,40 @@ Invoice
 
 
 
+
+
+
+
+{/* DELETE */}
+
+
+
 <button
+
 
 onClick={()=>deleteOrder(order.id)}
 
+
 className="
 border
-border-red-600
-text-red-600
+border-red-500
+text-red-500
 px-5
-py-2
-rounded-lg
+py-3
+rounded-xl
 flex
 items-center
 gap-2
+hover:bg-red-500
+hover:text-white
+transition
 "
 
 >
 
 
 <Trash2 size={18}/>
+
 
 Delete
 
@@ -1065,7 +1260,6 @@ Delete
 
 
 
-
 </div>
 
 
@@ -1075,14 +1269,10 @@ Delete
 
 
 
-
-
 </div>
-
 
 
 ))
-
 
 
 }
@@ -1090,7 +1280,6 @@ Delete
 
 
 </div>
-
 
 
 }

@@ -26,7 +26,8 @@ export default function Footer() {
 
         {/* BRAND */}
 
-        <div>
+        <div className="relative">
+
 
           <div className="
           font-serif
@@ -38,16 +39,75 @@ export default function Footer() {
           </div>
 
 
+
+          <div className="
+          font-serif
+          text-sm
+          tracking-[0.4em]
+          text-[#A6875A]
+          mb-5
+          ">
+            JEWELLERS
+          </div>
+
+
+
           <p className="
           text-sm
           text-[#9C8F7C]
           leading-relaxed
           max-w-[260px]
           ">
-            Fine jewelry, cast slowly,
-            worn for life.
-            Dhaka, Bangladesh.
+            Crafting timeless jewellery with pure gold,
+            diamonds and artistry. Every piece carries
+            a story of elegance, purity and everlasting beauty.
           </p>
+
+
+
+
+
+          {/* ADMIN ICON */}
+
+          <Link
+
+          href="/admin/login"
+
+          className="
+          absolute
+          top-0
+          right-0
+
+          w-12
+          h-12
+
+          rounded-full
+
+          bg-gradient-to-r
+          from-[#D4AF37]
+          to-[#A6875A]
+
+          text-white
+
+          flex
+          items-center
+          justify-center
+
+          shadow-xl
+
+          hover:scale-110
+
+          transition
+
+          "
+
+          >
+
+          ⚜️
+
+          </Link>
+
+
 
         </div>
 
@@ -56,9 +116,14 @@ export default function Footer() {
 
 
 
+
+
+
         {/* SHOP */}
 
+
         <div>
+
 
           <h4 className="
           text-xs
@@ -71,48 +136,69 @@ export default function Footer() {
           </h4>
 
 
+
           <ul className="
           space-y-3
           text-sm
           ">
 
+
             <li>
+
               <Link
               href="/shop?category=Rings"
               className="hover:text-[#A6875A]"
               >
+
                 Rings
+
               </Link>
+
             </li>
 
 
+
             <li>
+
               <Link
               href="/shop?category=Necklaces"
               className="hover:text-[#A6875A]"
               >
+
                 Necklaces
+
               </Link>
+
             </li>
 
 
+
             <li>
+
               <Link
               href="/shop?category=Earrings"
               className="hover:text-[#A6875A]"
               >
+
                 Earrings
+
               </Link>
+
             </li>
 
 
+
             <li>
+
               <Link
               href="/shop?category=Bracelets"
               className="hover:text-[#A6875A]"
               >
+
                 Bracelets
+
               </Link>
+
             </li>
 
 
@@ -127,8 +213,8 @@ export default function Footer() {
 
 
 
-
         {/* COMPANY */}
+
 
         <div>
 
@@ -152,32 +238,31 @@ export default function Footer() {
 
 
             <li>
+
               <Link
               href="/about"
               className="hover:text-[#A6875A]"
               >
+
                 About
+
               </Link>
+
             </li>
 
 
+
             <li>
+
               <Link
               href="/contact"
               className="hover:text-[#A6875A]"
               >
+
                 Contact
-              </Link>
-            </li>
 
-
-            <li>
-              <Link
-              href="/admin"
-              className="hover:text-[#A6875A]"
-              >
-                Admin
               </Link>
+
             </li>
 
 
@@ -185,14 +270,7 @@ export default function Footer() {
 
 
         </div>
-
-
-
-
-
-
-
-        {/* NEWSLETTER */}
+                {/* NEWSLETTER */}
 
         <div>
 
@@ -209,6 +287,7 @@ export default function Footer() {
 
 
 
+
           <div className="
           flex
           border-b
@@ -217,28 +296,40 @@ export default function Footer() {
           ">
 
 
+
             <input
+
             type="email"
+
             placeholder="Email address"
+
             className="
             bg-transparent
             outline-none
             flex-1
             text-sm
             "
+
             />
 
 
+
+
             <button
+
             className="
             text-xs
             uppercase
             tracking-widest
             text-[#A6875A]
             "
+
             >
+
               Join
+
             </button>
+
 
 
           </div>
@@ -249,7 +340,11 @@ export default function Footer() {
 
 
 
+
       </div>
+
+
+
 
 
 
@@ -258,38 +353,98 @@ export default function Footer() {
 
       {/* BOTTOM */}
 
+
+
       <div className="
+
       max-w-[1240px]
+
       mx-auto
+
       mt-12
+
       pt-6
+
       border-t
+
       border-black/10
+
+
       flex
+
       flex-col
+
       md:flex-row
+
+
+      items-center
+
       justify-between
-      gap-3
+
+
+      gap-5
+
+
       text-xs
+
+
       text-[#9C8F7C]
+
       ">
 
 
-        <span>
-          © 2026 Shotorupa Jewellers
-        </span>
+
+
 
 
         <span>
-          Dhaka · Chattogram · Sylhet
+
+          © 2026 Shotorupa Jewellers. All Rights Reserved.
+
         </span>
+
+
+
+
+
+
+
+        <div className="
+
+        flex
+
+        items-center
+
+        gap-6
+
+        ">
+
+
+
+
+          <span>
+
+            BD · Magura · Sadar
+
+          </span>
+
+
+
+
+
+        </div>
+
+
+
 
 
       </div>
 
 
 
+
     </footer>
+
 
   );
 

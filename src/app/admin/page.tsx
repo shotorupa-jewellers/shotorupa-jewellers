@@ -25,16 +25,20 @@ onSnapshot
 } from "firebase/firestore";
 
 
+
 import {
 
 Package,
-ShoppingCart,
-Users,
+ShoppingBag,
+UsersRound,
 Gem,
 Plus,
 TrendingUp,
 Crown,
-ArrowUpRight
+ArrowUpRight,
+Diamond,
+Boxes,
+BadgeDollarSign
 
 } from "lucide-react";
 
@@ -44,10 +48,7 @@ ArrowUpRight
 
 
 
-
 export default function AdminPage(){
-
-
 
 
 
@@ -68,6 +69,7 @@ const [customers,setCustomers]=useState<any[]>([]);
 
 const [goldStock,setGoldStock]=useState(0);
 
+const [cityGold,setCityGold]=useState(0);
 
 
 
@@ -75,44 +77,39 @@ const [goldStock,setGoldStock]=useState(0);
 
 
 
-
-// ORDERS
+/* ORDERS */
 
 
 useEffect(()=>{
 
 
-const unsubscribe = onSnapshot(
+const unsub = onSnapshot(
 
 collection(db,"orders"),
 
 (snapshot)=>{
 
 
-const data=snapshot.docs.map(doc=>(
+setOrders(
 
-{
+snapshot.docs.map(doc=>({
+
 id:doc.id,
+
 ...doc.data()
 
-}
+}))
 
-));
-
-
-setOrders(data);
-
+);
 
 
 }
-
 
 
 );
 
 
-
-return()=>unsubscribe();
+return()=>unsub();
 
 
 },[]);
@@ -125,14 +122,10 @@ return()=>unsubscribe();
 
 
 
-
-
-// CUSTOMERS + GOLD STOCK
-
+/* CUSTOMERS + STOCK */
 
 
 useEffect(()=>{
-
 
 
 const customerUnsub = onSnapshot(
@@ -142,23 +135,55 @@ collection(db,"customers"),
 (snapshot)=>{
 
 
-const data=snapshot.docs.map(doc=>(
+setCustomers(
 
-{
+snapshot.docs.map(doc=>({
+
 id:doc.id,
+
 ...doc.data()
 
-}
+}))
 
-));
-
-
-setCustomers(data);
-
+);
 
 
 }
 
+);
+
+
+
+
+
+
+
+const goldUnsub = onSnapshot(
+
+collection(db,"goldStock"),
+
+(snapshot)=>{
+
+
+let total=0;
+
+
+snapshot.docs.forEach(item=>{
+
+
+const data=item.data();
+
+
+total += Number(data.weight || 0);
+
+
+});
+
+
+setGoldStock(total);
+
+
+}
 
 
 );
@@ -170,9 +195,9 @@ setCustomers(data);
 
 
 
-const stockUnsub = onSnapshot(
+const cityUnsub = onSnapshot(
 
-collection(db,"goldStock"),
+collection(db,"cityGoldStock"),
 
 (snapshot)=>{
 
@@ -180,8 +205,7 @@ collection(db,"goldStock"),
 let total=0;
 
 
-
-snapshot.docs.forEach((item)=>{
+snapshot.docs.forEach(item=>{
 
 
 const data=item.data();
@@ -190,13 +214,10 @@ const data=item.data();
 total += Number(data.weight || 0);
 
 
-
 });
 
 
-
-setGoldStock(total);
-
+setCityGold(total);
 
 
 }
@@ -214,7 +235,9 @@ return()=>{
 
 customerUnsub();
 
-stockUnsub();
+goldUnsub();
+
+cityUnsub();
 
 
 };
@@ -232,14 +255,11 @@ stockUnsub();
 
 
 
-
-
-
 const totalSales = orders.reduce(
 
-(sum,order)=>
+(sum,item)=>
 
-sum + Number(order.total || 0),
+sum + Number(item.total || 0),
 
 0
 
@@ -253,15 +273,13 @@ sum + Number(order.total || 0),
 
 
 
-
-
-const dashboardCards=[
+const cards=[
 
 
 {
 title:"Total Products",
 value:products.length,
-icon:Package
+icon:Diamond
 },
 
 
@@ -269,7 +287,7 @@ icon:Package
 {
 title:"Total Orders",
 value:orders.length,
-icon:ShoppingCart
+icon:ShoppingBag
 },
 
 
@@ -277,7 +295,7 @@ icon:ShoppingCart
 {
 title:"Customers",
 value:customers.length,
-icon:Users
+icon:UsersRound
 },
 
 
@@ -291,11 +309,18 @@ icon:Gem
 
 
 {
-title:"Total Sales",
-value:`৳ ${totalSales.toLocaleString()}`,
-icon:TrendingUp
-}
+title:"City Gold",
+value:`${cityGold} gm`,
+icon:Boxes
+},
 
+
+
+{
+title:"Sales",
+value:`৳ ${totalSales.toLocaleString()}`,
+icon:BadgeDollarSign
+}
 
 
 ];
@@ -307,84 +332,41 @@ icon:TrendingUp
 
 
 
-
-
-
-
-
 return(
-
 
 
 <main
 
-
 className="
-
 min-h-screen
-
-bg-gradient-to-br
-
-from-black
-
-via-[#100c06]
-
-to-black
-
-
-text-white
-
-
-p-5
-
-lg:p-8
-
-
+bg-[#F6F3EC]
+text-[#19160F]
 "
 
-
 >
-
-
-<section
-
-className="
-
-max-w-7xl
-
-mx-auto
-
-"
-
-
->
-
-
-
-
-
-
-
-
-
-{/* HEADER */}
-
 
 
 <div
 
 className="
-
-flex
-
-justify-between
-
-items-center
-
-mb-10
-
+max-w-7xl
+mx-auto
+space-y-10
 "
 
+>
+
+
+{/* TITLE */}
+
+
+<div
+
+className="
+flex
+justify-between
+items-center
+"
 
 >
 
@@ -394,58 +376,31 @@ mb-10
 
 <h1
 
-
 className="
-
-text-3xl
-
-lg:text-5xl
-
-
 font-serif
-
-
-tracking-wide
-
-
-text-yellow-400
-
-
+text-4xl
+text-[#A6875A]
 "
 
 >
 
-
-SHOTORUPA
-
-
-DASHBOARD
-
-
+SHOTORUPA DASHBOARD
 
 </h1>
-
 
 
 <p
 
 className="
-
-text-gray-400
-
-mt-3
-
+text-gray-500
+mt-2
 "
-
 
 >
 
-
 Luxury Jewellery Management System
 
-
 </p>
-
 
 
 </div>
@@ -454,40 +409,19 @@ Luxury Jewellery Management System
 
 
 
-
-
-
 <div
 
-
 className="
-
 hidden
-
 md:flex
-
-
 items-center
-
-gap-3
-
-
-bg-yellow-500/10
-
-
-border
-
-border-yellow-500/30
-
-
+gap-2
 px-5
-
 py-3
-
-
 rounded-full
-
-
+bg-white
+border
+border-[#A6875A]/30
 "
 
 >
@@ -495,85 +429,53 @@ rounded-full
 
 <Crown
 
+size={20}
+
 className="
-
-text-yellow-400
-
+text-[#A6875A]
 "
 
 />
 
 
-<span
-
-className="
-
-text-yellow-400
-
-"
-
->
-
 Premium Admin
 
-</span>
+
+</div>
 
 
 </div>
 
 
 
-</div>
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-{/* DASHBOARD CARDS */}
+{/* CARDS */}
 
 
 
 <div
 
 className="
-
 grid
-
 grid-cols-1
-
 sm:grid-cols-2
-
-xl:grid-cols-5
-
+xl:grid-cols-6
 gap-5
-
-
-mb-10
-
-
 "
-
 
 >
 
 
 {
 
-
-dashboardCards.map((card,index)=>{
+cards.map((card,index)=>{
 
 
 const Icon=card.icon;
-
 
 
 return(
@@ -581,58 +483,27 @@ return(
 
 <div
 
-
 key={index}
 
-
 className="
-
-group
-
-
-bg-white/5
-
-
-backdrop-blur-xl
-
-
-border
-
-border-yellow-600/30
-
-
+bg-white
 rounded-3xl
-
-
 p-6
-
-
-hover:border-yellow-400
-
-
-hover:-translate-y-1
-
-
+border
+border-[#D4AF37]/30
+shadow-sm
+hover:shadow-xl
 transition
-
-
 "
 
-
 >
-
 
 
 <div
 
 className="
-
 flex
-
 justify-between
-
-items-start
-
 "
 
 >
@@ -644,40 +515,28 @@ items-start
 <p
 
 className="
-
-text-gray-400
-
 text-sm
-
+text-gray-500
 "
 
 >
 
 {card.title}
 
-
 </p>
-
 
 
 <h2
 
 className="
-
 text-3xl
-
 font-bold
-
-text-yellow-400
-
 mt-3
-
 "
 
 >
 
 {card.value}
-
 
 </h2>
 
@@ -686,37 +545,16 @@ mt-3
 
 
 
-
-
-
 <div
 
 className="
-
 w-14
-
 h-14
-
-
 rounded-2xl
-
-
-bg-yellow-500/10
-
-
+bg-[#D4AF37]/10
 flex
-
 items-center
-
 justify-center
-
-
-group-hover:bg-yellow-500
-
-
-transition
-
-
 "
 
 >
@@ -727,23 +565,16 @@ transition
 size={28}
 
 className="
-
-text-yellow-400
-
-group-hover:text-black
-
+text-[#D4AF37]
 "
 
 />
 
 
-
 </div>
 
 
-
 </div>
-
 
 
 
@@ -752,22 +583,13 @@ group-hover:text-black
 <div
 
 className="
-
 flex
-
 items-center
-
 gap-2
-
 mt-5
-
-
 text-xs
-
 text-gray-400
-
 "
-
 
 >
 
@@ -775,8 +597,6 @@ text-gray-400
 <ArrowUpRight
 
 size={14}
-
-className="text-green-400"
 
 />
 
@@ -787,14 +607,10 @@ Live Updated
 </div>
 
 
-
-
-
 </div>
 
 
 )
-
 
 
 })
@@ -805,32 +621,18 @@ Live Updated
 
 
 </div>
-// QUICK MANAGEMENT
+{/* ================= QUICK MANAGEMENT ================= */}
 
 
 <div
 
 className="
-
-bg-white/5
-
-backdrop-blur-xl
-
-
-border
-
-border-yellow-600/30
-
-
+bg-white
 rounded-3xl
-
-
-p-6
-
-
-mb-10
-
-
+p-8
+border
+border-[#D4AF37]/30
+shadow-sm
 "
 
 >
@@ -839,17 +641,11 @@ mb-10
 <h2
 
 className="
-
-text-2xl
-
 font-serif
-
-text-yellow-400
-
-
+text-2xl
 mb-6
-
-
+text-[#D4AF37]
+tracking-wide
 "
 
 >
@@ -865,14 +661,11 @@ mb-6
 <div
 
 className="
-
 grid
-
-md:grid-cols-4
-
+grid-cols-1
+sm:grid-cols-2
+lg:grid-cols-5
 gap-5
-
-
 "
 
 >
@@ -881,39 +674,33 @@ gap-5
 
 
 
+{/* ADD PRODUCT */}
+
+
 <Link
 
 href="/admin/add-product"
 
 className="
-
 bg-gradient-to-r
+from-[#D4AF37]
+to-[#A6875A]
 
-from-yellow-400
-
-to-yellow-600
-
-
-text-black
-
-
-font-semibold
-
+text-white
 
 rounded-xl
 
-
 p-5
-
 
 text-center
 
+font-semibold
+
+shadow-lg
 
 hover:scale-105
 
-
 transition
-
 
 "
 
@@ -922,7 +709,12 @@ transition
 
 <Plus
 
-className="inline mr-2"
+size={32}
+
+className="
+mx-auto
+mb-3
+"
 
 />
 
@@ -938,40 +730,50 @@ Add Product
 
 
 
+{/* PRODUCTS */}
+
+
 <Link
 
 href="/admin/products"
 
 className="
-
-bg-white/10
-
-
 border
+border-[#D4AF37]/40
 
-border-yellow-600/30
-
+text-[#A6875A]
 
 rounded-xl
 
-
 p-5
-
 
 text-center
 
+font-semibold
 
-hover:bg-yellow-500/20
-
+hover:bg-[#D4AF37]/10
 
 transition
-
 
 "
 
 >
 
-💍 Products
+
+<Diamond
+
+size={32}
+
+className="
+mx-auto
+mb-3
+text-[#D4AF37]
+"
+
+/>
+
+
+Products
 
 
 </Link>
@@ -980,6 +782,10 @@ transition
 
 
 
+
+
+
+{/* ORDERS */}
 
 
 <Link
@@ -987,35 +793,42 @@ transition
 href="/admin/orders"
 
 className="
-
-bg-white/10
-
-
 border
+border-[#D4AF37]/40
 
-border-yellow-600/30
-
+text-[#A6875A]
 
 rounded-xl
 
-
 p-5
-
 
 text-center
 
+font-semibold
 
-hover:bg-yellow-500/20
-
+hover:bg-[#D4AF37]/10
 
 transition
-
 
 "
 
 >
 
-🛒 Orders
+
+<ShoppingBag
+
+size={32}
+
+className="
+mx-auto
+mb-3
+text-[#D4AF37]
+"
+
+/>
+
+
+Orders
 
 
 </Link>
@@ -1024,6 +837,10 @@ transition
 
 
 
+
+
+
+{/* CUSTOMERS */}
 
 
 <Link
@@ -1031,35 +848,97 @@ transition
 href="/admin/customers"
 
 className="
-
-bg-white/10
-
-
 border
+border-[#D4AF37]/40
 
-border-yellow-600/30
-
+text-[#A6875A]
 
 rounded-xl
 
-
 p-5
-
 
 text-center
 
+font-semibold
 
-hover:bg-yellow-500/20
-
+hover:bg-[#D4AF37]/10
 
 transition
-
 
 "
 
 >
 
-👥 Customers
+
+<UsersRound
+
+size={32}
+
+className="
+mx-auto
+mb-3
+text-[#D4AF37]
+"
+
+/>
+
+
+Customers
+
+
+</Link>
+
+
+
+
+
+
+
+
+{/* CITY GOLD */}
+
+
+<Link
+
+href="/admin/jewellery/city-gold"
+
+className="
+border
+border-[#D4AF37]/40
+
+text-[#A6875A]
+
+rounded-xl
+
+p-5
+
+text-center
+
+font-semibold
+
+hover:bg-[#D4AF37]/10
+
+transition
+
+"
+
+>
+
+
+<Gem
+
+size={32}
+
+className="
+mx-auto
+mb-3
+text-[#D4AF37]
+"
+
+/>
+
+
+City Gold
 
 
 </Link>
@@ -1071,7 +950,6 @@ transition
 </div>
 
 
-
 </div>
 
 
@@ -1082,59 +960,30 @@ transition
 
 
 
-
-
-
-
-{/* ORDERS SECTION */}
+{/* ================= RECENT ORDERS ================= */}
 
 
 
 <div
 
-
 className="
-
-bg-white/5
-
-
-backdrop-blur-xl
-
-
-border
-
-border-yellow-600/30
-
-
+bg-white
 rounded-3xl
-
-
-p-6
-
-
-mb-10
-
-
+p-8
+border
+border-[#A6875A]/20
 "
 
 >
 
 
-
 <div
 
 className="
-
 flex
-
 justify-between
-
 items-center
-
-
 mb-6
-
-
 "
 
 >
@@ -1143,18 +992,14 @@ mb-6
 <h2
 
 className="
-
-text-2xl
-
 font-serif
-
-text-yellow-400
-
+text-2xl
+text-[#A6875A]
 "
 
 >
 
-📦 Customer Orders
+📦 Recent Orders
 
 </h2>
 
@@ -1165,15 +1010,9 @@ text-yellow-400
 href="/admin/orders"
 
 className="
-
 text-sm
-
-text-yellow-400
-
-
+text-[#D4AF37]
 hover:underline
-
-
 "
 
 >
@@ -1191,9 +1030,7 @@ View All
 
 
 
-
 {
-
 
 orders.length===0 ?
 
@@ -1202,9 +1039,7 @@ orders.length===0 ?
 <p
 
 className="
-
-text-gray-400
-
+text-gray-500
 "
 
 >
@@ -1216,16 +1051,13 @@ No Orders Found
 
 
 
-
 :
 
 
 <div
 
 className="
-
 space-y-4
-
 "
 
 >
@@ -1233,68 +1065,28 @@ space-y-4
 
 {
 
-
 orders.slice(0,5).map((order)=>(
 
 
-<div
 
+<div
 
 key={order.id}
 
-
 className="
-
-
-bg-black/40
-
-
-border
-
-border-yellow-600/20
-
-
+bg-[#F6F3EC]
 rounded-2xl
-
-
 p-5
-
-
-hover:border-yellow-400
-
-
-transition
-
-
-"
-
-
->
-
-
-<div
-
-className="
-
 flex
-
-flex-col
-
-md:flex-row
-
-
 justify-between
-
-
-gap-4
-
-
+items-center
+border
+border-[#D4AF37]/20
+hover:shadow-md
+transition
 "
 
 >
-
-
-
 
 
 <div>
@@ -1303,13 +1095,8 @@ gap-4
 <h3
 
 className="
-
 font-bold
-
 text-lg
-
-text-yellow-400
-
 "
 
 >
@@ -1320,7 +1107,6 @@ order.orderId || order.id
 
 }
 
-
 </h3>
 
 
@@ -1328,11 +1114,8 @@ order.orderId || order.id
 <p
 
 className="
-
-text-gray-300
-
-mt-2
-
+text-gray-500
+mt-1
 "
 
 >
@@ -1347,20 +1130,15 @@ order.customer?.name || "Guest"
 
 }
 
-
 </p>
-
 
 
 
 <p
 
 className="
-
-text-gray-400
-
 text-sm
-
+text-gray-400
 "
 
 >
@@ -1375,9 +1153,7 @@ order.customer?.phone || "N/A"
 
 }
 
-
 </p>
-
 
 
 </div>
@@ -1388,38 +1164,28 @@ order.customer?.phone || "N/A"
 
 
 
-
-
 <div
 
 className="
-
-md:text-right
-
+text-right
 "
 
 >
 
 
-<p
+<h3
 
 className="
-
-text-xl
-
 font-bold
-
+text-xl
+text-[#A6875A]
 "
 
 >
 
-৳ {
+৳ {order.total || 0}
 
-order.total?.toLocaleString()
-
-}
-
-</p>
+</h3>
 
 
 
@@ -1427,25 +1193,14 @@ order.total?.toLocaleString()
 <span
 
 className="
-
 inline-block
-
 mt-2
-
 px-4
-
 py-1
-
 rounded-full
-
+bg-[#D4AF37]/20
+text-[#A6875A]
 text-xs
-
-
-bg-yellow-500/20
-
-text-yellow-400
-
-
 "
 
 >
@@ -1455,7 +1210,6 @@ text-yellow-400
 order.orderStatus || "Pending"
 
 }
-
 
 </span>
 
@@ -1467,13 +1221,8 @@ order.orderStatus || "Pending"
 
 
 
-
-
 </div>
 
-
-
-</div>
 
 
 ))
@@ -1486,35 +1235,24 @@ order.orderStatus || "Pending"
 </div>
 
 
+
 }
 
 
 
 </div>
-// PRODUCT LIST
+{/* ================= PRODUCT COLLECTION ================= */}
+
 
 
 <div
 
 className="
-
-bg-white/5
-
-
-backdrop-blur-xl
-
-
-border
-
-border-yellow-600/30
-
-
+bg-white
 rounded-3xl
-
-
-p-6
-
-
+p-8
+border
+border-[#A6875A]/20
 "
 
 >
@@ -1524,34 +1262,21 @@ p-6
 <div
 
 className="
-
 flex
-
 justify-between
-
 items-center
-
-
 mb-6
-
-
 "
 
 >
-
 
 
 <h2
 
 className="
-
-text-2xl
-
 font-serif
-
-text-yellow-400
-
-
+text-2xl
+text-[#A6875A]
 "
 
 >
@@ -1562,42 +1287,19 @@ text-yellow-400
 
 
 
-
-
 <Link
 
 href="/admin/add-product"
 
-
 className="
-
-bg-gradient-to-r
-
-from-yellow-400
-
-to-yellow-600
-
-
-text-black
-
-
+bg-[#D4AF37]
+text-white
 px-5
-
 py-3
-
-
 rounded-xl
-
-
 font-semibold
-
-
-hover:scale-105
-
-
+hover:bg-[#A6875A]
 transition
-
-
 "
 
 >
@@ -1605,7 +1307,6 @@ transition
 + Add Product
 
 </Link>
-
 
 
 </div>
@@ -1620,7 +1321,6 @@ transition
 
 {
 
-
 products.length===0 ?
 
 
@@ -1628,9 +1328,7 @@ products.length===0 ?
 <p
 
 className="
-
-text-gray-400
-
+text-gray-500
 "
 
 >
@@ -1642,21 +1340,17 @@ No Product Found
 
 
 
-
-
 :
+
 
 
 <div
 
 className="
-
-space-y-5
-
+space-y-4
 "
 
 >
-
 
 
 {
@@ -1665,79 +1359,49 @@ space-y-5
 products.map((product:any)=>(
 
 
-<div
 
+<div
 
 key={product.id}
 
-
 className="
-
-
-bg-black/40
-
-
-border
-
-border-yellow-600/20
-
-
+bg-[#F6F3EC]
 rounded-2xl
-
-
 p-5
 
-
 flex
-
 flex-col
-
-lg:flex-row
-
+md:flex-row
 
 justify-between
+items-center
 
+border
+border-[#D4AF37]/20
 
-gap-5
-
-
-hover:border-yellow-400
-
+hover:shadow-md
 
 transition
 
-
 "
-
 
 >
 
 
 
 
-
-
-
-
-{/* PRODUCT INFO */}
 
 
 
 <div
 
 className="
-
 flex
-
 items-center
-
 gap-5
-
-
 "
 
 >
-
 
 
 
@@ -1745,39 +1409,23 @@ gap-5
 
 {
 
-
 product.image &&
 
 
 <img
 
-
 src={product.image}
-
 
 alt={product.name}
 
-
 className="
-
-w-24
-
-h-24
-
-
-rounded-2xl
-
-
+w-20
+h-20
+rounded-xl
 object-cover
-
-
 border
-
-border-yellow-600/30
-
-
+border-[#D4AF37]/30
 "
-
 
 />
 
@@ -1788,24 +1436,14 @@ border-yellow-600/30
 
 
 
-
-
-
-
-
 <div>
 
 
 <h3
 
 className="
-
-text-xl
-
 font-bold
-
-text-white
-
+text-lg
 "
 
 >
@@ -1820,22 +1458,14 @@ text-white
 <p
 
 className="
-
-text-yellow-400
-
+text-[#A6875A]
 font-semibold
-
-mt-2
-
+mt-1
 "
 
 >
 
-৳ {
-
-product.price?.toLocaleString()
-
-}
+৳ {product.price}
 
 </p>
 
@@ -1845,44 +1475,28 @@ product.price?.toLocaleString()
 <p
 
 className="
-
-text-gray-400
-
 text-sm
-
-mt-2
-
+text-gray-500
+mt-1
 "
 
 >
 
-{
-
-product.category
-
-}
+{product.category}
 
 {" | "}
 
-{
+{product.weight}
 
-product.weight
-
-}
-
-{" | "}
-
-{
-
-product.purity
-
-}
-
+{" gm"}
 
 </p>
 
 
 
+</div>
+
+
 
 </div>
 
@@ -1891,77 +1505,47 @@ product.purity
 
 
 
-</div>
-
-
-
-
-
-
-
-
-
-{/* ACTIONS */}
 
 
 
 <div
 
 className="
-
 flex
-
 gap-3
-
-items-center
-
+mt-4
+md:mt-0
 "
 
 >
-
-
 
 
 <Link
 
-
 href={`/admin/edit-product/${product.id}`}
 
-
 className="
-
 px-5
-
 py-2
-
 
 rounded-xl
 
-
 border
+border-[#D4AF37]
 
-border-yellow-500
+text-[#A6875A]
 
+hover:bg-[#D4AF37]
 
-text-yellow-400
-
-
-hover:bg-yellow-500
-
-
-hover:text-black
-
+hover:text-white
 
 transition
-
 
 "
 
 >
 
-
 Edit
-
 
 </Link>
 
@@ -1971,58 +1555,39 @@ Edit
 
 
 
-<button
 
+<button
 
 onClick={()=>deleteProduct(product.id)}
 
-
 className="
-
 px-5
-
 py-2
-
 
 rounded-xl
 
-
 border
+border-red-400
 
-border-red-500
-
-
-text-red-400
-
+text-red-500
 
 hover:bg-red-500
 
-
 hover:text-white
 
-
 transition
-
 
 "
 
 >
 
-
 Delete
-
 
 </button>
 
 
 
-
-
-
 </div>
-
-
-
 
 
 
@@ -2036,7 +1601,6 @@ Delete
 ))
 
 
-
 }
 
 
@@ -2049,7 +1613,6 @@ Delete
 
 
 
-
 </div>
 
 
@@ -2059,13 +1622,14 @@ Delete
 
 
 
-</section>
+
+</div>
 
 
 </main>
 
 
-
 );
+
 
 }

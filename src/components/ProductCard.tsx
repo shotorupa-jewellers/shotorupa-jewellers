@@ -3,12 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-  Heart,
-  ShoppingBag
-} from "lucide-react";
+import { Heart } from "lucide-react";
 
-import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 
@@ -35,27 +31,58 @@ type Product = {
 
 
 
+
 export default function ProductCard({
 
 product
 
 }:{
 
-product:Product;
+product?:Product;
 
-}) {
-
-
-
-const {addToCart}=useCart();
-
-const {addToWishlist}=useWishlist();
+}){
 
 
 
+const {
+addToWishlist,
+wishlist
+
+}=useWishlist();
 
 
-function handleWishlist(){
+
+
+
+if(!product){
+
+return null;
+
+}
+
+
+
+
+
+const isWishlisted = wishlist?.some(
+
+(item:any)=>
+
+item.id === String(product.id)
+
+);
+
+
+
+
+
+
+
+const handleWishlist = ()=>{
+
+
+if(!product) return;
+
 
 
 addToWishlist({
@@ -64,40 +91,48 @@ id:String(product.id),
 
 name:product.name,
 
+
 price:Number(
+
 product.price.replace(/[^\d]/g,"")
+
 ),
+
 
 image:product.img,
 
+
 category:product.cat,
+
 
 weight:product.metal,
 
+
 purity:product.stone
+
 
 });
 
 
-}
+};
 
 
 
 
 
-return (
+
+
+
+
+return(
+
 
 <div
 
 className="
 group
-bg-white
-rounded-2xl
-overflow-hidden
-shadow-sm
-hover:shadow-xl
-transition-all
-duration-500
+relative
+cursor-pointer
 "
 
 >
@@ -113,26 +148,35 @@ duration-500
 
 className="
 relative
-aspect-square
+aspect-[4/5]
 overflow-hidden
+border
+border-[#e8dfd2]
+bg-gradient-to-br
+from-[#f6f3ec]
+via-white
+to-[#eee5d8]
 "
 
 >
 
 
+
 <Image
 
-src={product.img}
+src={product.img || "/images/ring.jpg"}
 
 alt={product.name}
 
 fill
 
+sizes="(max-width:768px) 100vw, 300px"
+
 className="
 object-cover
-group-hover:scale-110
-transition-transform
+transition-all
 duration-700
+group-hover:scale-110
 "
 
 />
@@ -141,36 +185,147 @@ duration-700
 
 
 
+
+
+<div
+
+className="
+absolute
+inset-0
+border
+border-[#A6875A]
+opacity-0
+group-hover:opacity-100
+transition
+duration-500
+"
+
+/>
+
+
+
+
+
+
+
+
 {/* WISHLIST BUTTON */}
+
 
 
 <button
 
+
 onClick={handleWishlist}
+
 
 className="
 absolute
 top-4
 right-4
-w-10
-h-10
+z-10
+w-9
+h-9
 rounded-full
-bg-white
+bg-[#f6f3ec]/90
 flex
 items-center
 justify-center
 shadow
-hover:text-[#A6875A]
+hover:bg-white
 transition
 "
 
 >
 
 
-<Heart size={18}/>
+
+<Heart
+
+size={16}
+
+strokeWidth={1.5}
+
+className={
+
+isWishlisted
+
+?
+
+"fill-[#A6875A] stroke-[#A6875A]"
+
+:
+
+"stroke-[#19160F]"
+
+}
+
+/>
+
 
 
 </button>
+
+
+
+
+
+
+
+
+
+{/* HOVER DETAILS */}
+
+
+
+<div
+
+className="
+absolute
+inset-0
+bg-black/30
+opacity-0
+group-hover:opacity-100
+transition
+duration-500
+flex
+items-center
+justify-center
+"
+
+>
+
+
+
+<Link
+
+href={`/products/${product.id}`}
+
+className="
+border
+border-white
+text-white
+px-8
+py-3
+text-[10px]
+uppercase
+tracking-[0.35em]
+hover:bg-white
+hover:text-black
+transition
+"
+
+>
+
+VIEW DETAILS
+
+</Link>
+
+
+
+</div>
+
+
 
 
 
@@ -182,16 +337,47 @@ transition
 
 
 
+
+
 {/* DETAILS */}
+
 
 
 <div
 
 className="
-p-6
+pt-5
+px-1
+flex
+justify-between
+items-start
 "
 
 >
+
+
+
+<div>
+
+
+
+<p
+
+className="
+text-[10px]
+uppercase
+tracking-[0.35em]
+text-[#A6875A]
+mb-2
+"
+
+>
+
+THE SIGNATURE EDIT
+
+</p>
+
+
 
 
 
@@ -213,41 +399,34 @@ text-[#19160F]
 
 
 
+
+
 <p
 
 className="
 mt-2
-text-xs
+text-[11px]
 uppercase
 tracking-widest
-text-gray-500
+text-[#91806B]
 "
 
 >
 
 {product.metal}
 
-</p>
-
-
-
-
-
-<p
-
-className="
-mt-1
-text-xs
-uppercase
-tracking-widest
-text-[#A6875A]
-"
-
->
+&nbsp; · &nbsp;
 
 {product.stone}
 
+
 </p>
+
+
+
+</div>
+
+
 
 
 
@@ -256,10 +435,9 @@ text-[#A6875A]
 <p
 
 className="
-mt-4
-text-lg
-font-bold
+text-sm
 text-[#A6875A]
+whitespace-nowrap
 "
 
 >
@@ -272,62 +450,9 @@ text-[#A6875A]
 
 
 
+</div>
 
 
-{/* CART BUTTON */}
-
-
-<button
-
-onClick={()=>addToCart({
-
-id:String(product.id),
-
-name:product.name,
-
-price:Number(
-product.price.replace(/[^\d]/g,"")
-),
-
-image:product.img,
-
-category:product.cat,
-
-weight:product.metal,
-
-purity:product.stone
-
-})}
-
-
-className="
-mt-6
-w-full
-py-3
-bg-[#241C16]
-text-white
-flex
-items-center
-justify-center
-gap-2
-text-xs
-uppercase
-tracking-[0.2em]
-hover:bg-[#A6875A]
-transition
-duration-300
-"
-
->
-
-
-<ShoppingBag size={16}/>
-
-
-Add To Cart
-
-
-</button>
 
 
 
@@ -343,16 +468,16 @@ className="
 block
 mt-5
 text-center
-text-xs
+text-[10px]
 uppercase
-tracking-widest
+tracking-[0.3em]
 text-[#A6875A]
 hover:underline
 "
 
 >
 
-View Details
+EXPLORE JEWELLERY
 
 </Link>
 
@@ -363,11 +488,7 @@ View Details
 </div>
 
 
-
-
-
-</div>
-
 );
+
 
 }
