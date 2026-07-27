@@ -1,19 +1,46 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+  useEffect,
+  useRef,
+  useState
+} from "react";
+
+import {
+  useRouter
+} from "next/navigation";
 
 
-export default function Header(){
+import {
+  Search,
+  Bell,
+  User,
+  LogOut,
+  ChevronDown,
+  Menu
+} from "lucide-react";
 
 
-const [open,setOpen]=useState(false);
-
-const router = useRouter();
-
-const menuRef = useRef<HTMLDivElement>(null);
 
 
+export default function Header({
+
+setOpen
+
+}:any){
+
+
+const [open,setOpenMenu]=useState(false);
+
+
+const router=useRouter();
+
+
+const menuRef=useRef<HTMLDivElement>(null);
+
+
+
+const today = new Date();
 
 
 
@@ -23,43 +50,31 @@ useEffect(()=>{
 function closeMenu(e:any){
 
 if(
-
 menuRef.current &&
-
 !menuRef.current.contains(e.target)
-
 ){
 
-setOpen(false);
+setOpenMenu(false);
 
 }
-
 
 }
 
 
 document.addEventListener(
-
 "mousedown",
-
 closeMenu
-
 );
-
 
 
 return()=>{
 
 document.removeEventListener(
-
 "mousedown",
-
 closeMenu
-
 );
 
 }
-
 
 
 },[]);
@@ -69,15 +84,11 @@ closeMenu
 
 
 
-
 function logout(){
-
 
 localStorage.removeItem("admin");
 
-
 router.push("/admin/login");
-
 
 }
 
@@ -85,21 +96,36 @@ router.push("/admin/login");
 
 
 
-
-
-return (
+return(
 
 
 <header
 
 className="
 h-20
-bg-white
-shadow-sm
+sticky
+top-0
+z-40
+
+bg-gradient-to-r
+from-black
+via-[#17110a]
+to-black
+
+border-b
+border-yellow-700/40
+
+shadow-[0_5px_30px_rgba(212,175,55,.15)]
+
 flex
 items-center
 justify-between
-px-8
+
+px-4
+lg:px-8
+
+backdrop-blur-xl
+
 "
 
 
@@ -108,106 +134,35 @@ px-8
 
 
 
-{/* Left */}
 
 
-<div>
-
-
-<h1
-
-className="
-text-2xl
-font-serif
-font-bold
-text-[#6b4d1f]
-"
-
->
-
-Admin Dashboard
-
-</h1>
-
-
-
-<p
-
-className="
-text-sm
-text-gray-500
-"
-
->
-
-Manage Shotorupa Jewellers
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* Right */}
+{/* LEFT */}
 
 
 <div
-
 className="
 flex
 items-center
-gap-6
+gap-4
 "
-
 >
 
-
-
-{/* Notification */}
 
 
 <button
 
+onClick={()=>setOpen(true)}
+
 className="
-relative
-text-2xl
+lg:hidden
+text-yellow-400
+hover:scale-110
+transition
 "
 
 >
 
-🔔
-
-
-<span
-
-className="
-absolute
--top-1
--right-2
-bg-red-500
-text-white
-text-xs
-rounded-full
-w-5
-h-5
-flex
-items-center
-justify-center
-"
-
->
-
-3
-
-</span>
-
-
+<Menu size={28}/>
 
 </button>
 
@@ -217,23 +172,11 @@ justify-center
 
 
 
+{/* LOGO */}
 
-
-{/* Profile */}
 
 
 <div
-
-className="relative"
-
-ref={menuRef}
-
->
-
-
-<button
-
-onClick={()=>setOpen(!open)}
 
 className="
 flex
@@ -247,15 +190,411 @@ gap-3
 <div
 
 className="
-w-11
-h-11
+w-12
+h-12
+
 rounded-full
-bg-[#d4af37]
+
+border
+border-yellow-500
+
+bg-yellow-500/10
+
 flex
 items-center
 justify-center
+
+shadow-[0_0_25px_rgba(212,175,55,.5)]
+
+"
+
+>
+
+
+<span
+
+className="
+text-yellow-400
+font-serif
+text-xl
 font-bold
+"
+
+>
+
+S
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+<h1
+
+className="
+text-lg
+lg:text-xl
+font-serif
+font-bold
+
+text-yellow-400
+
+tracking-wide
+
+"
+
+>
+
+Shotorupa Admin
+
+</h1>
+
+
+<p
+
+className="
+hidden
+sm:block
+
+text-xs
+text-gray-400
+
+"
+
+>
+
+Luxury Jewellery Management
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* SEARCH */}
+
+
+
+<div
+
+className="
+hidden
+lg:flex
+
+relative
+
+w-[350px]
+
+"
+
+>
+
+
+<input
+
+
+placeholder="
+Search products, orders...
+"
+
+
+className="
+
+w-full
+
+rounded-full
+
+bg-white/10
+
+border
+
+border-yellow-600/40
+
+text-white
+
+placeholder:text-gray-400
+
+py-2.5
+
+pl-12
+
+pr-5
+
+outline-none
+
+focus:border-yellow-400
+
+"
+
+
+/>
+
+
+
+<Search
+
+size={20}
+
+className="
+absolute
+left-4
+top-3
+
+text-yellow-400
+
+"
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* RIGHT */}
+
+
+<div
+
+className="
+flex
+items-center
+gap-5
+
+"
+
+>
+
+
+
+
+
+{/* DATE */}
+
+
+<div
+
+className="
+hidden
+xl:block
+text-right
+"
+
+>
+
+
+<p
+
+className="
+text-sm
+text-white
+font-semibold
+"
+
+>
+
+
+{
+today.toLocaleDateString(
+"en-US",
+{
+weekday:"long"
+}
+)
+
+}
+
+
+</p>
+
+
+<p
+
+className="
+text-xs
+text-gray-400
+"
+
+>
+
+
+{
+today.toLocaleDateString(
+"en-US",
+{
+month:"long",
+day:"numeric",
+year:"numeric"
+}
+)
+
+}
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* Notification */}
+
+
+<button
+
+className="
+relative
+
+text-yellow-400
+
+hover:scale-110
+
+transition
+
+"
+
+>
+
+
+<Bell size={24}/>
+
+
+<span
+
+className="
+
+absolute
+
+-top-1
+
+-right-2
+
+bg-red-500
+
+text-white
+
+text-[10px]
+
+w-5
+
+h-5
+
+rounded-full
+
+flex
+items-center
+justify-center
+
+"
+
+>
+
+3
+
+</span>
+
+
+</button>
+
+
+
+
+
+
+
+
+
+{/* PROFILE */}
+
+
+<div
+
+ref={menuRef}
+
+className="
+relative
+"
+
+>
+
+
+
+<button
+
+onClick={()=>setOpenMenu(!open)}
+
+className="
+flex
+items-center
+gap-3
+"
+
+>
+
+
+<div
+
+className="
+
+w-11
+h-11
+
+rounded-full
+
+bg-gradient-to-br
+
+from-yellow-300
+
+to-yellow-600
+
+
+flex
+items-center
+justify-center
+
+
+font-bold
+
 text-black
+
+shadow-lg
+
 "
 
 >
@@ -263,6 +602,9 @@ text-black
 A
 
 </div>
+
+
+
 
 
 
@@ -277,23 +619,47 @@ text-left
 >
 
 
-<p className="font-semibold">
+<p
+
+className="
+text-white
+font-semibold
+"
+
+>
 
 Admin
 
 </p>
 
 
-<p className="text-xs text-gray-500">
+<p
+
+className="
+text-xs
+text-gray-400
+"
+
+>
 
 Owner
 
 </p>
 
 
-
 </div>
 
+
+
+<ChevronDown
+
+size={18}
+
+className="
+text-yellow-400
+"
+
+/>
 
 
 </button>
@@ -307,23 +673,33 @@ Owner
 
 
 {
-
 open &&
 
 
 <div
 
 className="
+
 absolute
+
 right-0
-mt-3
-w-48
-bg-white
-shadow-xl
-rounded-xl
-p-3
-z-50
+
+mt-4
+
+w-52
+
+bg-black
+
 border
+
+border-yellow-600/40
+
+rounded-xl
+
+shadow-[0_0_30px_rgba(212,175,55,.2)]
+
+p-2
+
 "
 
 >
@@ -334,21 +710,37 @@ border
 onClick={()=>router.push("/admin/profile")}
 
 className="
+
+flex
+
+items-center
+
+gap-3
+
 w-full
-text-left
-px-3
-py-2
-hover:bg-gray-100
+
+px-4
+
+py-3
+
+text-white
+
+hover:bg-yellow-500/20
+
 rounded-lg
+
+transition
+
 "
 
 >
 
-👤 Profile
+<User size={18}/>
+
+Profile
+
 
 </button>
-
-
 
 
 
@@ -356,38 +748,50 @@ rounded-lg
 
 <button
 
-
 onClick={logout}
 
-
 className="
+
+flex
+
+items-center
+
+gap-3
+
 w-full
-text-left
-px-3
-py-2
-hover:bg-red-50
+
+px-4
+
+py-3
+
+text-red-400
+
+hover:bg-red-500/10
+
 rounded-lg
-text-red-600
+
+transition
+
 "
 
 >
 
-🚪 Logout
+
+<LogOut size={18}/>
+
+Logout
+
 
 </button>
 
 
-
-
 </div>
-
 
 
 }
 
 
 
-
 </div>
 
 
@@ -395,14 +799,10 @@ text-red-600
 
 
 </div>
-
-
-
 
 
 
 </header>
-
 
 
 );

@@ -1,66 +1,86 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 
-import { useProducts } from "@/context/ProductContext";
+import {
+useState
+} from "react";
+
+
+import {
+useRouter
+} from "next/navigation";
+
+
+import {
+db
+} from "@/lib/firebase";
+
+
+import {
+collection,
+addDoc,
+serverTimestamp
+} from "firebase/firestore";
+
+
+import {
+Save,
+ArrowLeft,
+Upload
+} from "lucide-react";
+
+
+import Link from "next/link";
+
+
+
 
 
 export default function AddProduct(){
 
 
+
 const router = useRouter();
 
-const { addProduct } = useProducts();
 
 
-
-const [name,setName]=useState("");
-
-const [price,setPrice]=useState("");
-
-const [category,setCategory]=useState("Gold");
-
-const [weight,setWeight]=useState("");
-
-const [purity,setPurity]=useState("");
-
-const [image,setImage]=useState("");
 
 const [loading,setLoading]=useState(false);
 
 
 
+const [product,setProduct]=useState({
+
+
+name:"",
+category:"",
+price:"",
+weight:"",
+purity:"",
+stock:"",
+image:"",
+description:""
+
+
+});
 
 
 
 
 
-function handleImage(e:any){
 
 
-const file = e.target.files[0];
+
+function handleChange(e:any){
 
 
-if(file){
+setProduct({
 
+...product,
 
-const reader = new FileReader();
+[e.target.name]:e.target.value
 
-
-reader.onload = ()=>{
-
-
-setImage(reader.result as string);
-
-
-};
-
-
-reader.readAsDataURL(file);
-
-
-}
+});
 
 
 }
@@ -77,19 +97,6 @@ async function saveProduct(){
 
 
 
-if(!name || !price || !image){
-
-
-alert("Please fill all required fields");
-
-
-return;
-
-
-}
-
-
-
 try{
 
 
@@ -97,39 +104,36 @@ setLoading(true);
 
 
 
+await addDoc(
 
-await addProduct({
+collection(db,"products"),
 
-
-name:name,
-
-
-price:Number(price),
+{
 
 
-category:category,
+...product,
 
 
-weight:weight,
+price:Number(product.price),
+
+weight:Number(product.weight),
+
+stock:Number(product.stock),
 
 
-purity:purity,
+createdAt:serverTimestamp()
 
 
-image:image
+}
 
 
-});
-
-
-
+);
 
 
 
-alert("Product Added Successfully");
 
 
-router.push("/admin");
+router.push("/admin/products");
 
 
 
@@ -141,9 +145,6 @@ catch(error){
 console.log(error);
 
 
-alert("Product Add Failed");
-
-
 }
 
 finally{
@@ -153,6 +154,7 @@ setLoading(false);
 
 
 }
+
 
 
 }
@@ -168,39 +170,122 @@ setLoading(false);
 return(
 
 
-<main className="
+
+<main
+
+
+className="
+
 min-h-screen
-bg-[#f8f4ee]
-py-12
-text-black
-">
+
+bg-gradient-to-br
+
+from-black
+
+via-[#100c06]
+
+to-black
 
 
-<section className="
-max-w-xl
+text-white
+
+
+p-5
+
+lg:p-8
+
+
+"
+
+
+>
+
+
+
+<div
+
+className="
+
+max-w-4xl
+
 mx-auto
-px-6
-">
 
+"
 
-
-<div className="
-bg-white
-shadow-xl
-rounded-2xl
-p-8
-">
+>
 
 
 
 
 
-<h1 className="
-text-3xl
-font-bold
-text-[#6b4d1f]
-mb-8
-">
+
+
+{/* HEADER */}
+
+
+
+<div
+
+className="
+
+flex
+
+items-center
+
+gap-4
+
+mb-10
+
+"
+
+>
+
+
+<Link
+
+href="/admin/products"
+
+
+className="
+
+p-3
+
+rounded-xl
+
+bg-yellow-500/10
+
+text-yellow-400
+
+"
+
+>
+
+
+<ArrowLeft/>
+
+
+</Link>
+
+
+
+
+
+<div>
+
+
+<h1
+
+className="
+
+text-4xl
+
+font-serif
+
+text-yellow-400
+
+"
+
+>
 
 Add New Jewellery
 
@@ -208,60 +293,109 @@ Add New Jewellery
 
 
 
+<p
+
+className="
+
+text-gray-400
+
+mt-2
+
+"
+
+>
+
+Create premium product
+
+</p>
+
+
+</div>
+
+
+</div>
 
 
 
+
+
+
+
+
+
+{/* FORM */}
+
+
+
+<div
+
+
+className="
+
+bg-white/5
+
+
+backdrop-blur-xl
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-3xl
+
+
+p-6
+
+lg:p-10
+
+
+space-y-6
+
+
+"
+
+>
+
+
+
+
+
+
+
+<div
+
+className="
+
+grid
+
+md:grid-cols-2
+
+gap-5
+
+"
+
+>
 
 
 
 <input
+
+
+name="name"
+
+
+onChange={handleChange}
+
 
 placeholder="Product Name"
 
-value={name}
 
-onChange={(e)=>setName(e.target.value)}
+className="inputStyle"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
 
 />
-
-
-
-
-
-
-
-
-
-<input
-
-type="number"
-
-placeholder="Price ৳"
-
-value={price}
-
-onChange={(e)=>setPrice(e.target.value)}
-
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
-
-/>
-
-
-
 
 
 
@@ -270,28 +404,52 @@ mb-4
 
 <select
 
-value={category}
 
-onChange={(e)=>setCategory(e.target.value)}
+name="category"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+
+onChange={handleChange}
+
+
+className="inputStyle"
+
 
 >
 
 
-<option>Gold</option>
+<option className="text-black">
 
-<option>Diamond</option>
+Select Category
 
-<option>Platinum</option>
+</option>
 
-<option>Silver</option>
+
+<option className="text-black">
+
+Gold
+
+</option>
+
+
+<option className="text-black">
+
+Diamond
+
+</option>
+
+
+<option className="text-black">
+
+Wedding
+
+</option>
+
+
+<option className="text-black">
+
+City Gold
+
+</option>
 
 
 </select>
@@ -301,24 +459,48 @@ mb-4
 
 
 
+<input
+
+
+name="price"
+
+
+type="number"
+
+
+onChange={handleChange}
+
+
+placeholder="Price"
+
+
+className="inputStyle"
+
+
+/>
+
+
+
 
 
 
 <input
 
-placeholder="Weight (Gram)"
 
-value={weight}
+name="weight"
 
-onChange={(e)=>setWeight(e.target.value)}
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+type="number"
+
+
+onChange={handleChange}
+
+
+placeholder="Weight (gm)"
+
+
+className="inputStyle"
+
 
 />
 
@@ -328,22 +510,20 @@ mb-4
 
 
 
-
 <input
+
+
+name="purity"
+
+
+onChange={handleChange}
+
 
 placeholder="Purity (22K/24K)"
 
-value={purity}
 
-onChange={(e)=>setPurity(e.target.value)}
+className="inputStyle"
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
 
 />
 
@@ -352,19 +532,29 @@ mb-4
 
 
 
+<input
+
+
+name="stock"
+
+
+type="number"
+
+
+onChange={handleChange}
+
+
+placeholder="Stock Quantity"
+
+
+className="inputStyle"
+
+
+/>
 
 
 
-
-<label className="
-font-semibold
-block
-mb-2
-">
-
-Product Image
-
-</label>
+</div>
 
 
 
@@ -376,19 +566,44 @@ Product Image
 
 <input
 
-type="file"
 
-accept="image/*"
+name="image"
 
-onChange={handleImage}
 
-className="
-w-full
-border
-p-3
-rounded-lg
-mb-4
-"
+onChange={handleChange}
+
+
+placeholder="Image URL"
+
+
+className="inputStyle"
+
+
+/>
+
+
+
+
+
+
+
+<textarea
+
+
+name="description"
+
+
+onChange={handleChange}
+
+
+placeholder="Product Description"
+
+
+rows={5}
+
+
+className="inputStyle"
+
 
 />
 
@@ -400,53 +615,63 @@ mb-4
 
 
 
-
-{
-
-image &&
-
-<img
-
-src={image}
-
-alt="preview"
-
-className="
-w-48
-h-48
-object-cover
-rounded-xl
-mb-5
-"
-
-/>
-
-}
-
-
-
-
-
-
+{/* SAVE */}
 
 
 
 <button
 
+
 onClick={saveProduct}
+
 
 disabled={loading}
 
+
 className="
+
 w-full
-bg-[#9b7a3d]
-text-white
+
 py-4
+
+
 rounded-xl
+
+
+bg-gradient-to-r
+
+from-yellow-400
+
+to-yellow-600
+
+
+text-black
+
+
 font-bold
+
+
+flex
+
+justify-center
+
+items-center
+
+gap-3
+
+
+hover:scale-[1.02]
+
+
+transition
+
+
 "
 
 >
+
+
+<Save size={20}/>
 
 
 {
@@ -476,15 +701,18 @@ loading
 
 
 
-</section>
 
+
+
+
+
+</div>
 
 
 </main>
 
 
-);
-
+)
 
 
 }

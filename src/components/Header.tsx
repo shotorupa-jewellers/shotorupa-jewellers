@@ -1,306 +1,215 @@
 "use client";
 
 import Link from "next/link";
+import { Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
 
-import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/context/WishlistContext";
 
+export default function Header() {
 
-export default function Header(){
+  const [open, setOpen] = useState(false);
 
 
-const [menu,setMenu] = useState(false);
+  return (
+    <header className="
+    fixed
+    top-0
+    left-0
+    right-0
+    z-50
+    bg-[#F6F3EC]/90
+    backdrop-blur-md
+    border-b
+    border-black/10
+    ">
 
 
-const { cart } = useCart();
+      <div className="
+      max-w-[1240px]
+      mx-auto
+      px-8
+      py-5
+      flex
+      items-center
+      justify-between
+      ">
 
-const { wishlist } = useWishlist();
 
+        {/* LOGO */}
 
+        <Link
+          href="/"
+          className="
+          font-serif
+          text-xl
+          tracking-[0.15em]
+          "
+        >
+          SHOTORUPA
+        </Link>
 
 
 
-const navLinks = [
+        {/* DESKTOP MENU */}
 
-{
-name:"BRIDAL COLLECTIONS",
-link:"/collections/bridal"
-},
+        <nav className="
+        hidden
+        md:flex
+        gap-10
+        "
+        >
 
-{
-name:"NECKLACES",
-link:"/collections/necklaces"
-},
+          <Link
+          href="/"
+          className="text-xs uppercase tracking-widest hover:text-[#A6875A]"
+          >
+            Home
+          </Link>
 
-{
-name:"EARRINGS",
-link:"/collections/earrings"
-},
 
-{
-name:"MAANG TIKKAS",
-link:"/collections/maang-tikkas"
-},
+          <Link
+          href="/shop"
+          className="text-xs uppercase tracking-widest hover:text-[#A6875A]"
+          >
+            Shop
+          </Link>
 
-{
-name:"OUR STORY",
-link:"/story"
-},
 
-{
-name:"CONSULTATION",
-link:"/consultation"
-}
+          <Link
+          href="/about"
+          className="text-xs uppercase tracking-widest hover:text-[#A6875A]"
+          >
+            About
+          </Link>
 
-];
 
+          <Link
+          href="/contact"
+          className="text-xs uppercase tracking-widest hover:text-[#A6875A]"
+          >
+            Contact
+          </Link>
 
 
+        </nav>
 
 
 
 
-return(
 
+        {/* ICONS */}
 
-<header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="
+        flex
+        items-center
+        gap-5
+        ">
 
 
+          <span className="
+          hidden
+          sm:block
+          text-[11px]
+          tracking-widest
+          ">
+            EN / BDT
+          </span>
 
-<div className="max-w-7xl mx-auto px-6 py-4">
 
 
+          <Link
+          href="/wishlist"
+          className="hover:text-[#A6875A]"
+          >
+            <Heart size={19} strokeWidth={1.4}/>
+          </Link>
 
-<div className="flex items-center justify-between">
 
 
+          <Link
+          href="/cart"
+          className="hover:text-[#A6875A]"
+          >
+            <ShoppingBag size={19} strokeWidth={1.4}/>
+          </Link>
 
 
 
-{/* Logo */}
 
-<Link
-href="/"
-className="text-3xl font-serif font-bold text-[#9b7a3d]"
->
+          {/* MOBILE MENU BUTTON */}
 
-SHOTORUPA
+          <button
+          onClick={()=>setOpen(!open)}
+          className="
+          md:hidden
+          "
+          >
 
-<span className="text-[#6b4d1f]">
+            {
+              open
+              ?
+              <X size={24}/>
+              :
+              <Menu size={24}/>
+            }
 
- JEWELLERS
+          </button>
 
-</span>
 
-</Link>
+        </div>
 
 
+      </div>
 
 
 
 
-{/* Right Menu */}
 
+      {/* MOBILE MENU */}
 
-<div className="hidden md:flex items-center gap-5 text-[#6b4d1f]">
+      {
+        open && (
 
+          <div className="
+          md:hidden
+          bg-[#F6F3EC]
+          border-t
+          border-black/10
+          px-8
+          py-6
+          flex
+          flex-col
+          gap-5
+          "
+          >
 
-<Link href="/search">
-Search Jewellery
-</Link>
+            <Link href="/" onClick={()=>setOpen(false)}>
+              Home
+            </Link>
 
 
-<Link href="/account">
-Account
-</Link>
+            <Link href="/shop" onClick={()=>setOpen(false)}>
+              Shop
+            </Link>
 
 
-<Link href="/orders">
-My Orders
-</Link>
+            <Link href="/about" onClick={()=>setOpen(false)}>
+              About
+            </Link>
 
 
-<Link href="/wishlist">
+            <Link href="/contact" onClick={()=>setOpen(false)}>
+              Contact
+            </Link>
 
-Wishlist ❤️
 
-({wishlist.length})
+          </div>
 
-</Link>
+        )
+      }
 
 
-<Link href="/cart">
 
-Cart 🛒
-
-({cart.length})
-
-</Link>
-
-
-</div>
-
-
-
-
-
-
-
-{/* Mobile Button */}
-
-<button
-
-onClick={()=>setMenu(!menu)}
-
-className="md:hidden text-3xl text-[#9b7a3d]"
-
->
-
-☰
-
-</button>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-{/* Desktop Navigation */}
-
-
-<nav className="hidden md:flex justify-center gap-8 mt-5 text-[#6b4d1f] font-semibold">
-
-
-{
-
-navLinks.map((item)=>(
-
-
-<Link
-
-key={item.link}
-
-href={item.link}
-
-className="hover:text-[#9b7a3d] transition"
-
->
-
-{item.name}
-
-</Link>
-
-
-))
-
-}
-
-
-</nav>
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-{/* Mobile Menu */}
-
-
-{
-
-menu &&
-
-<div className="md:hidden bg-white border-t px-6 py-5 space-y-4">
-
-
-{
-
-navLinks.map((item)=>(
-
-
-<Link
-
-key={item.link}
-
-href={item.link}
-
-onClick={()=>setMenu(false)}
-
-className="block text-[#6b4d1f] font-semibold"
-
->
-
-{item.name}
-
-</Link>
-
-
-))
-
-}
-
-
-
-
-<Link
-
-href="/cart"
-
-className="block font-semibold"
-
->
-
-Cart 🛒 ({cart.length})
-
-</Link>
-
-
-
-<Link
-
-href="/wishlist"
-
-className="block font-semibold"
-
->
-
-Wishlist ❤️ ({wishlist.length})
-
-</Link>
-
-
-
-</div>
-
-
-}
-
-
-
-</header>
-
-
-
-);
-
-
+    </header>
+  );
 }

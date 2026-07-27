@@ -1,8 +1,22 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
 
-import { db } from "@/lib/firebase";
+import Link from "next/link";
+
+
+import {
+  Search,
+  FileText,
+  Trash2
+} from "lucide-react";
+
+
+import {
+  db
+} from "@/lib/firebase";
+
 
 import {
   collection,
@@ -10,15 +24,23 @@ import {
   query,
   orderBy,
   doc,
-  updateDoc
+  updateDoc,
+  deleteDoc
 } from "firebase/firestore";
+
+
+
 
 
 
 export default function OrdersPage(){
 
 
-const [orders,setOrders] = useState<any[]>([]);
+
+const [orders,setOrders]=useState<any[]>([]);
+
+const [search,setSearch]=useState("");
+
 
 
 
@@ -28,11 +50,15 @@ const [orders,setOrders] = useState<any[]>([]);
 useEffect(()=>{
 
 
-const q = query(
+
+const q=query(
 
 collection(db,"orders"),
 
-orderBy("createdAt","desc")
+orderBy(
+"createdAt",
+"desc"
+)
 
 );
 
@@ -40,27 +66,25 @@ orderBy("createdAt","desc")
 
 
 
-const unsubscribe = onSnapshot(
+const unsubscribe=onSnapshot(
 
 q,
 
 (snapshot)=>{
 
 
-const data = snapshot.docs.map((doc)=>(
-
+const data=snapshot.docs.map(item=>(
 
 {
 
-id:doc.id,
+id:item.id,
 
-...doc.data()
-
+...item.data()
 
 }
 
-
 ));
+
 
 
 setOrders(data);
@@ -70,14 +94,11 @@ setOrders(data);
 }
 
 
-
 );
 
 
 
-
-
-return ()=>unsubscribe();
+return()=>unsubscribe();
 
 
 
@@ -93,7 +114,9 @@ return ()=>unsubscribe();
 
 
 
-// Update Order Status
+
+// Update Status
+
 
 async function changeStatus(
 
@@ -105,27 +128,17 @@ status:string
 
 
 
-const orderRef = doc(
-
-db,
-
-"orders",
-
-id
-
-);
-
-
-
 await updateDoc(
 
-orderRef,
+doc(
+db,
+"orders",
+id
+),
 
 {
 
-
 orderStatus:status
-
 
 }
 
@@ -138,6 +151,84 @@ orderStatus:status
 
 
 
+
+
+
+
+
+
+
+// Delete Order
+
+
+async function deleteOrder(
+
+id:string
+
+){
+
+
+
+const confirmDelete=confirm(
+
+"Delete this order?"
+
+);
+
+
+
+if(!confirmDelete)return;
+
+
+
+await deleteDoc(
+
+doc(
+db,
+"orders",
+id
+)
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+const filteredOrders=orders.filter((order)=>{
+
+
+const text=
+
+search.toLowerCase();
+
+
+
+return (
+
+order.orderId
+?.toLowerCase()
+.includes(text)
+
+||
+
+order.customer?.name
+?.toLowerCase()
+.includes(text)
+
+);
+
+
+
+});
 
 
 
@@ -150,15 +241,14 @@ orderStatus:status
 return(
 
 
+
 <main className="
 min-h-screen
 bg-[#f8f4ee]
-p-8
+p-6
+lg:p-8
 text-black
 ">
-
-
-
 
 
 
@@ -175,6 +265,7 @@ mx-auto
 <h1 className="
 text-4xl
 font-serif
+font-bold
 text-[#6b4d1f]
 mb-8
 ">
@@ -191,24 +282,48 @@ mb-8
 
 
 
-{
-
-orders.length===0 ?
+{/* Search */}
 
 
 
 <div className="
 bg-white
-p-8
 rounded-xl
 shadow
+p-5
+mb-8
+flex
+items-center
+gap-3
 ">
 
 
+<Search
+
+className="
+text-gray-400
+"
+
+/>
 
 
-No Orders Found
 
+<input
+
+placeholder="Search Order ID or Customer Name"
+
+value={search}
+
+onChange={(e)=>
+setSearch(e.target.value)
+}
+
+className="
+w-full
+outline-none
+"
+
+/>
 
 
 
@@ -219,7 +334,30 @@ No Orders Found
 
 
 
+
+
+
+{
+
+filteredOrders.length===0 ?
+
+
+<div className="
+bg-white
+p-8
+rounded-xl
+shadow
+">
+
+No Orders Found
+
+</div>
+
+
+
 :
+
+
 
 
 
@@ -231,14 +369,9 @@ space-y-8
 
 
 
-
-
 {
 
-orders.map((order)=>(
-
-
-
+filteredOrders.map((order)=>(
 
 
 
@@ -248,7 +381,7 @@ key={order.id}
 
 className="
 bg-white
-rounded-xl
+rounded-2xl
 shadow
 p-6
 "
@@ -261,17 +394,18 @@ p-6
 
 
 
+{/* Header */}
+
 
 
 <div className="
 flex
 justify-between
 items-center
-mb-5
+mb-6
+flex-wrap
+gap-3
 ">
-
-
-
 
 
 
@@ -282,7 +416,7 @@ font-bold
 
 Order ID:
 
-{order.orderId}
+{order.orderId || order.id}
 
 </h2>
 
@@ -291,18 +425,42 @@ Order ID:
 
 
 
-<span className="
-bg-yellow-600
-text-white
+<span
+
+className={`
 px-4
 py-2
 rounded-full
-">
+text-white
 
-{order.orderStatus}
+${
+order.orderStatus==="Delivered"
+
+?
+
+"bg-green-600"
+
+:
+
+order.orderStatus==="Cancelled"
+
+?
+
+"bg-red-600"
+
+:
+
+"bg-yellow-600"
+
+}
+
+`}
+
+>
+
+{order.orderStatus || "Pending"}
 
 </span>
-
 
 
 
@@ -317,6 +475,7 @@ rounded-full
 
 
 
+{/* Customer Payment Total */}
 
 
 
@@ -349,7 +508,9 @@ Customer
 
 <p>
 
-Name: {order.customer?.name}
+Name:
+
+{order.customer?.name || "N/A"}
 
 </p>
 
@@ -357,20 +518,21 @@ Name: {order.customer?.name}
 
 <p>
 
-Email: {order.customer?.email}
+Email:
+
+{order.customer?.email || "N/A"}
 
 </p>
-
 
 
 
 <p>
 
-Phone: {order.customer?.phone}
+Phone:
+
+{order.customer?.phone || "N/A"}
 
 </p>
-
-
 
 
 
@@ -378,7 +540,7 @@ Phone: {order.customer?.phone}
 
 Address:
 
-{order.customer?.address}
+{order.customer?.address || "N/A"}
 
 </p>
 
@@ -409,16 +571,13 @@ Payment
 
 
 
-
 <p>
 
 Method:
 
-{order.payment}
+{order.payment || "N/A"}
 
 </p>
-
-
 
 
 
@@ -429,8 +588,6 @@ Payment Status:
 {order.paymentStatus || "Pending"}
 
 </p>
-
-
 
 
 </div>
@@ -458,12 +615,10 @@ Total Amount
 
 
 
-
-
 <p className="
-text-2xl
-text-[#9b7a3d]
+text-3xl
 font-bold
+text-[#9b7a3d]
 ">
 
 ৳ {order.total?.toLocaleString()}
@@ -471,9 +626,6 @@ font-bold
 </p>
 
 
-
-
-
 </div>
 
 
@@ -492,15 +644,15 @@ font-bold
 
 
 
-
+{/* Products */}
 
 
 
 <h3 className="
 font-bold
 text-xl
-mt-6
-mb-3
+mt-8
+mb-4
 ">
 
 Products
@@ -514,11 +666,9 @@ Products
 
 
 
-
 {
 
 order.products?.map((item:any)=>(
-
 
 
 
@@ -536,20 +686,27 @@ py-3
 >
 
 
-
 <div>
 
 
-<p className="font-semibold">
+<p className="
+font-semibold
+">
 
 {item.name}
 
 </p>
 
 
-<p className="text-sm text-gray-500">
 
-Quantity: {item.quantity}
+<p className="
+text-sm
+text-gray-500
+">
+
+Quantity:
+
+{item.quantity}
 
 </p>
 
@@ -561,28 +718,23 @@ Quantity: {item.quantity}
 
 
 
-<div>
-
+<p className="
+font-semibold
+">
 
 ৳ {(item.price * item.quantity)
 .toLocaleString()}
 
-
-
-</div>
-
-
+</p>
 
 
 
 
 </div>
-
 
 
 
 ))
-
 
 
 }
@@ -599,6 +751,10 @@ Quantity: {item.quantity}
 
 
 
+{/* Action Buttons */}
+
+
+
 <div className="
 mt-6
 flex
@@ -610,14 +766,15 @@ flex-wrap
 
 
 
-
-
 <button
 
-onClick={()=>changeStatus(
+onClick={()=>
+changeStatus(
 order.id,
 "Processing"
-)}
+)
+
+}
 
 className="
 bg-blue-600
@@ -643,10 +800,13 @@ Processing
 
 <button
 
-onClick={()=>changeStatus(
+onClick={()=>
+changeStatus(
 order.id,
 "Delivered"
-)}
+)
+
+}
 
 className="
 bg-green-600
@@ -669,13 +829,15 @@ Delivered
 
 
 
-
 <button
 
-onClick={()=>changeStatus(
+onClick={()=>
+changeStatus(
 order.id,
 "Cancelled"
-)}
+)
+
+}
 
 className="
 bg-red-600
@@ -696,6 +858,74 @@ Cancel
 
 
 
+
+
+
+<Link
+
+href={`/admin/invoice/${order.id}`}
+
+className="
+bg-black
+text-white
+px-5
+py-2
+rounded-lg
+flex
+items-center
+gap-2
+"
+
+>
+
+
+<FileText size={18}/>
+
+Invoice
+
+
+</Link>
+
+
+
+
+
+
+
+
+
+<button
+
+onClick={()=>
+deleteOrder(order.id)
+}
+
+className="
+border
+border-red-600
+text-red-600
+px-5
+py-2
+rounded-lg
+flex
+items-center
+gap-2
+"
+
+>
+
+
+<Trash2 size={18}/>
+
+Delete
+
+
+</button>
+
+
+
+
+
 </div>
 
 
@@ -707,10 +937,6 @@ Cancel
 
 
 </div>
-
-
-
-
 
 
 
@@ -724,12 +950,7 @@ Cancel
 
 
 
-
-
 </div>
-
-
-
 
 
 
@@ -738,17 +959,17 @@ Cancel
 
 
 
+
 </section>
-
-
-
 
 
 
 </main>
 
 
+
 );
+
 
 
 }

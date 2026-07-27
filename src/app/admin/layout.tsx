@@ -1,55 +1,97 @@
+"use client";
+
+import {
+  useState
+} from "react";
+
+
 import Sidebar from "@/components/admin/Sidebar";
 import Header from "@/components/admin/Header";
 
-import AdminGuard from "@/components/admin/AdminGuard";
 
 
 export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+
+children,
+
+}:{
+
+children:React.ReactNode
+
+}){
 
 
-  return (
-
-    <AdminGuard>
-
-
-      <div className="min-h-screen flex bg-[#f5f5f5]">
-
-
-        {/* Sidebar */}
-        <Sidebar />
+const [open,setOpen]=useState(false);
 
 
 
-        {/* Right Side */}
-        <div className="flex-1 flex flex-col">
+return(
 
 
-          <Header />
-
-
-
-          <main className="p-8">
-
-            {children}
-
-          </main>
+<div className="
+min-h-screen
+bg-[#f8f4ee]
+flex
+">
 
 
 
-        </div>
+
+
+<Sidebar
+
+open={open}
+
+setOpen={setOpen}
+
+/>
 
 
 
-      </div>
 
 
-    </AdminGuard>
+<div className="
+flex-1
+md:ml-72
+">
 
-  );
 
+
+
+
+<Header
+
+setOpen={setOpen}
+
+/>
+
+
+
+
+
+<main className="
+p-6
+min-h-screen
+bg-[#f8f4ee]
+">
+
+
+{children}
+
+
+</main>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+);
 
 }

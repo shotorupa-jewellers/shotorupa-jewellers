@@ -1,58 +1,125 @@
-"use client";
-
 import Link from "next/link";
 
 
-export default function Footer(){
+export default function Footer() {
 
+  return (
 
-return(
+    <footer className="
+    border-t
+    border-black/10
+    bg-[#F6F3EC]
+    px-8
+    py-16
+    ">
 
 
-<footer className="bg-[#1b1408] text-white mt-16">
+      <div className="
+      max-w-[1240px]
+      mx-auto
+      grid
+      md:grid-cols-4
+      gap-10
+      ">
 
 
 
-<div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+        {/* BRAND */}
 
+        <div>
 
+          <div className="
+          font-serif
+          text-xl
+          tracking-[0.15em]
+          mb-5
+          ">
+            SHOTORUPA
+          </div>
 
 
+          <p className="
+          text-sm
+          text-[#9C8F7C]
+          leading-relaxed
+          max-w-[260px]
+          ">
+            Fine jewelry, cast slowly,
+            worn for life.
+            Dhaka, Bangladesh.
+          </p>
 
+        </div>
 
-{/* Brand */}
 
 
-<div>
 
 
-<h2 className="text-3xl font-serif text-[#d4af37]">
 
-SHOTORUPA
+        {/* SHOP */}
 
-</h2>
+        <div>
 
+          <h4 className="
+          text-xs
+          uppercase
+          tracking-widest
+          text-[#9C8F7C]
+          mb-5
+          ">
+            Shop
+          </h4>
 
-<h3 className="text-xl font-serif">
 
-JEWELLERS
+          <ul className="
+          space-y-3
+          text-sm
+          ">
 
-</h3>
+            <li>
+              <Link
+              href="/shop?category=Rings"
+              className="hover:text-[#A6875A]"
+              >
+                Rings
+              </Link>
+            </li>
 
 
+            <li>
+              <Link
+              href="/shop?category=Necklaces"
+              className="hover:text-[#A6875A]"
+              >
+                Necklaces
+              </Link>
+            </li>
 
-<p className="text-gray-300 mt-4 leading-relaxed">
 
-Premium Gold & Diamond Jewellery.
+            <li>
+              <Link
+              href="/shop?category=Earrings"
+              className="hover:text-[#A6875A]"
+              >
+                Earrings
+              </Link>
+            </li>
 
-Elegant designs crafted for your special moments.
 
-</p>
+            <li>
+              <Link
+              href="/shop?category=Bracelets"
+              className="hover:text-[#A6875A]"
+              >
+                Bracelets
+              </Link>
+            </li>
 
 
-</div>
+          </ul>
 
 
+        </div>
 
 
 
@@ -60,257 +127,170 @@ Elegant designs crafted for your special moments.
 
 
 
-{/* Quick Links */}
 
+        {/* COMPANY */}
 
-<div>
+        <div>
 
 
-<h3 className="text-xl font-bold text-[#d4af37] mb-4">
+          <h4 className="
+          text-xs
+          uppercase
+          tracking-widest
+          text-[#9C8F7C]
+          mb-5
+          ">
+            Company
+          </h4>
 
-Quick Links
 
-</h3>
 
+          <ul className="
+          space-y-3
+          text-sm
+          ">
 
 
-<div className="space-y-3">
+            <li>
+              <Link
+              href="/about"
+              className="hover:text-[#A6875A]"
+              >
+                About
+              </Link>
+            </li>
 
 
+            <li>
+              <Link
+              href="/contact"
+              className="hover:text-[#A6875A]"
+              >
+                Contact
+              </Link>
+            </li>
 
-<Link
 
-href="/"
+            <li>
+              <Link
+              href="/admin"
+              className="hover:text-[#A6875A]"
+              >
+                Admin
+              </Link>
+            </li>
 
-className="block hover:text-[#d4af37]"
 
->
+          </ul>
 
-Home
 
-</Link>
+        </div>
 
 
 
 
-<Link
 
-href="/products"
 
-className="block hover:text-[#d4af37]"
 
->
+        {/* NEWSLETTER */}
 
-Products
+        <div>
 
-</Link>
 
+          <h4 className="
+          text-xs
+          uppercase
+          tracking-widest
+          text-[#9C8F7C]
+          mb-5
+          ">
+            Stay in Light
+          </h4>
 
 
 
-<Link
+          <div className="
+          flex
+          border-b
+          border-black
+          pb-2
+          ">
 
-href="/cart"
 
-className="block hover:text-[#d4af37]"
+            <input
+            type="email"
+            placeholder="Email address"
+            className="
+            bg-transparent
+            outline-none
+            flex-1
+            text-sm
+            "
+            />
 
->
 
-Cart
+            <button
+            className="
+            text-xs
+            uppercase
+            tracking-widest
+            text-[#A6875A]
+            "
+            >
+              Join
+            </button>
 
-</Link>
 
+          </div>
 
 
 
-<Link
+        </div>
 
-href="/account"
 
-className="block hover:text-[#d4af37]"
 
->
+      </div>
 
-My Account
 
-</Link>
 
 
 
-</div>
 
+      {/* BOTTOM */}
 
-</div>
+      <div className="
+      max-w-[1240px]
+      mx-auto
+      mt-12
+      pt-6
+      border-t
+      border-black/10
+      flex
+      flex-col
+      md:flex-row
+      justify-between
+      gap-3
+      text-xs
+      text-[#9C8F7C]
+      ">
 
 
+        <span>
+          © 2026 Shotorupa Jewellers
+        </span>
 
 
+        <span>
+          Dhaka · Chattogram · Sylhet
+        </span>
 
 
+      </div>
 
 
 
-{/* Customer Service */}
+    </footer>
 
-
-<div>
-
-
-<h3 className="text-xl font-bold text-[#d4af37] mb-4">
-
-Customer Service
-
-</h3>
-
-
-
-<div className="space-y-3">
-
-
-
-<Link
-
-href="/orders"
-
-className="block hover:text-[#d4af37]"
-
->
-
-My Orders
-
-</Link>
-
-
-
-
-<Link
-
-href="/wishlist"
-
-className="block hover:text-[#d4af37]"
-
->
-
-Wishlist
-
-</Link>
-
-
-
-
-<p>
-
-Delivery Information
-
-</p>
-
-
-
-<p>
-
-Return Policy
-
-</p>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-{/* Contact */}
-
-
-<div>
-
-
-<h3 className="text-xl font-bold text-[#d4af37] mb-4">
-
-Contact
-
-</h3>
-
-
-
-
-<p className="text-gray-300">
-
-📍 Magura, Bangladesh
-
-</p>
-
-
-
-
-<p className="mt-3">
-
-📞 01828784693
-
-</p>
-
-
-
-
-<a
-
-href="https://wa.me/8801828784693"
-
-target="_blank"
-
-className="block mt-3 text-green-400 hover:text-green-300"
-
->
-
-💬 WhatsApp
-
-</a>
-
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div className="border-t border-gray-700 text-center py-5 text-gray-400">
-
-
-© {new Date().getFullYear()} Shotorupa Jewellers. All Rights Reserved.
-
-
-</div>
-
-
-
-
-
-
-</footer>
-
-
-);
-
+  );
 
 }

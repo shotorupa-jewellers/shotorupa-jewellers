@@ -13,13 +13,24 @@ import {
 } from "firebase/firestore";
 
 
+import {
+  Package,
+  ShoppingCart,
+  Users,
+  Gem,
+  Plus,
+  TrendingUp
+} from "lucide-react";
+
+
+
+
 
 export default function AdminPage(){
 
 
 
 const {
-
 products=[],
 deleteProduct
 
@@ -28,14 +39,19 @@ deleteProduct
 
 
 
+const [orders,setOrders]=useState<any[]>([]);
 
-const [orders,setOrders] = useState<any[]>([]);
+const [customers,setCustomers]=useState<any[]>([]);
+
+const [goldStock,setGoldStock]=useState(0);
 
 
 
 
 
 
+
+// Orders
 
 useEffect(()=>{
 
@@ -47,17 +63,13 @@ collection(db,"orders"),
 (snapshot)=>{
 
 
-const data = snapshot.docs.map(doc=>(
-
+const data=snapshot.docs.map(doc=>(
 
 {
-
 id:doc.id,
-
 ...doc.data()
 
 }
-
 
 ));
 
@@ -73,11 +85,172 @@ setOrders(data);
 
 
 
-return ()=>unsubscribe();
+return()=>unsubscribe();
 
 
 
 },[]);
+
+
+
+
+
+
+
+
+// Customers + Gold Stock
+
+
+useEffect(()=>{
+
+
+
+const customerUnsub = onSnapshot(
+
+collection(db,"customers"),
+
+(snapshot)=>{
+
+
+const data=snapshot.docs.map(doc=>(
+
+{
+id:doc.id,
+...doc.data()
+
+}
+
+));
+
+
+setCustomers(data);
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+const stockUnsub = onSnapshot(
+
+collection(db,"goldStock"),
+
+(snapshot)=>{
+
+
+let total=0;
+
+
+
+snapshot.docs.forEach((item)=>{
+
+
+const data=item.data();
+
+
+total += Number(data.weight || 0);
+
+
+
+});
+
+
+
+setGoldStock(total);
+
+
+
+}
+
+
+);
+
+
+
+
+
+return()=>{
+
+customerUnsub();
+
+stockUnsub();
+
+}
+
+
+
+},[]);
+
+
+
+
+
+
+
+
+
+const totalSales = orders.reduce(
+
+(sum,order)=>
+
+sum + Number(order.total || 0),
+
+0
+
+);
+
+
+
+
+
+
+
+const dashboardCards=[
+
+
+{
+title:"Total Products",
+value:products.length,
+icon:Package
+},
+
+
+{
+title:"Total Orders",
+value:orders.length,
+icon:ShoppingCart
+},
+
+
+{
+title:"Customers",
+value:customers.length,
+icon:Users
+},
+
+
+{
+title:"Gold Stock",
+value:`${goldStock} gm`,
+icon:Gem
+},
+
+
+{
+title:"Total Sales",
+value:`৳ ${totalSales.toLocaleString()}`,
+icon:TrendingUp
+}
+
+
+
+];
 
 
 
@@ -94,17 +267,17 @@ return(
 <main className="
 min-h-screen
 bg-[#f8f4ee]
-py-12
 text-black
 ">
-
 
 
 <section className="
 max-w-7xl
 mx-auto
-px-6
 ">
+
+
+
 
 
 
@@ -113,11 +286,12 @@ px-6
 <h1 className="
 text-4xl
 font-serif
+font-bold
 text-[#6b4d1f]
 mb-10
 ">
 
-SHOTORUPA ADMIN DASHBOARD
+SHOTORUPA DASHBOARD
 
 </h1>
 
@@ -132,77 +306,107 @@ SHOTORUPA ADMIN DASHBOARD
 {/* Dashboard Cards */}
 
 
+
 <div className="
 grid
-md:grid-cols-3
-gap-6
+md:grid-cols-2
+xl:grid-cols-5
+gap-5
 mb-10
 ">
 
 
 
+{
+
+dashboardCards.map((card,index)=>{
 
 
-<div className="
+const Icon=card.icon;
+
+
+return(
+
+
+<div
+
+key={index}
+
+className="
 bg-white
+rounded-2xl
 shadow
-rounded-xl
+border
+border-[#ead9b0]
 p-6
+flex
+justify-between
+items-center
+"
+
+
+>
+
+
+<div>
+
+
+<p className="
+text-gray-500
+text-sm
 ">
 
+{card.title}
 
-<h2 className="text-xl font-bold">
+</p>
 
-Products
+
+
+<h2 className="
+text-3xl
+font-bold
+text-[#9b7a3d]
+mt-3
+">
+
+{card.value}
 
 </h2>
 
 
 
-<p className="
-text-4xl
-text-[#9b7a3d]
-mt-3
-">
-
-{products.length}
-
-</p>
-
-
 </div>
-
-
 
 
 
 
 
 <div className="
-bg-white
-shadow
-rounded-xl
-p-6
-">
-
-
-<h2 className="text-xl font-bold">
-
-Orders
-
-</h2>
-
-
-
-<p className="
-text-4xl
+bg-[#f3e5c5]
 text-[#9b7a3d]
-mt-3
+p-4
+rounded-full
 ">
 
-{orders.length}
+<Icon size={28}/>
 
-</p>
+</div>
+
+
+
+
+</div>
+
+
+
+)
+
+
+})
+
+
+}
+
 
 
 </div>
@@ -210,67 +414,22 @@ mt-3
 
 
 
+
+
+
+
+
+{/* Quick Menu */}
 
 
 
 <div className="
 bg-white
-shadow
 rounded-xl
-p-6
-">
-
-
-<h2 className="text-xl font-bold">
-
-Customers
-
-</h2>
-
-
-
-<p className="
-text-4xl
-text-[#9b7a3d]
-mt-3
-">
-
-0
-
-</p>
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/* Admin Menu */}
-
-
-<div className="
-bg-white
 shadow
-rounded-xl
 p-6
 mb-10
 ">
-
 
 
 <h2 className="
@@ -286,11 +445,9 @@ mb-6
 
 
 
-
-
 <div className="
 grid
-md:grid-cols-3
+md:grid-cols-4
 gap-4
 ">
 
@@ -298,7 +455,7 @@ gap-4
 
 <Link
 
-href="/admin"
+href="/admin/add-product"
 
 className="
 bg-[#9b7a3d]
@@ -310,7 +467,9 @@ text-center
 
 >
 
-Dashboard
+<Plus className="inline mr-2"/>
+
+Add Product
 
 </Link>
 
@@ -321,7 +480,7 @@ Dashboard
 
 <Link
 
-href="/admin/add-product"
+href="/admin/products"
 
 className="
 bg-black
@@ -333,7 +492,7 @@ text-center
 
 >
 
-Add Product
+Products
 
 </Link>
 
@@ -360,6 +519,7 @@ text-center
 Orders
 
 </Link>
+
 
 
 
@@ -387,39 +547,10 @@ Customers
 
 
 
-
-
-
-
-
-<Link
-
-href="/admin/settings"
-
-className="
-bg-[#9b7a3d]
-text-white
-p-4
-rounded-lg
-text-center
-"
-
->
-
-Settings
-
-</Link>
-
-
-
 </div>
 
 
 </div>
-
-
-
-
 
 
 
@@ -433,6 +564,7 @@ Settings
 
 
 
+
 <div className="
 bg-white
 shadow
@@ -440,7 +572,6 @@ rounded-xl
 p-6
 mb-10
 ">
-
 
 
 <h2 className="
@@ -457,17 +588,13 @@ mb-6
 
 
 
-
-
 {
 
 orders.length===0 ?
 
 
 <p>
-
 No Orders Found
-
 </p>
 
 
@@ -476,7 +603,6 @@ No Orders Found
 
 
 orders.slice(0,5).map((order)=>(
-
 
 
 <div
@@ -493,9 +619,10 @@ py-4
 
 <h3 className="font-bold">
 
-{order.orderId}
+{order.orderId || order.id}
 
 </h3>
+
 
 
 
@@ -517,7 +644,6 @@ Phone: {order.customer?.phone}
 
 
 
-
 <p>
 
 Total: ৳ {order.total?.toLocaleString()}
@@ -531,9 +657,10 @@ Total: ৳ {order.total?.toLocaleString()}
 text-[#9b7a3d]
 ">
 
-Status: {order.status}
+Status: {order.orderStatus || "Pending"}
 
 </p>
+
 
 
 
@@ -543,10 +670,8 @@ Status: {order.status}
 ))
 
 
+
 }
-
-
-
 
 
 
@@ -573,9 +698,8 @@ View All Orders
 
 
 
-
-
 </div>
+
 
 
 
@@ -592,14 +716,13 @@ View All Orders
 
 
 
+
 <div className="
 bg-white
 shadow
 rounded-xl
 p-6
 ">
-
-
 
 
 
@@ -617,10 +740,9 @@ text-2xl
 font-bold
 ">
 
-Product List
+💎 Product List
 
 </h2>
-
 
 
 
@@ -646,7 +768,6 @@ rounded-lg
 
 
 
-
 </div>
 
 
@@ -662,11 +783,13 @@ rounded-lg
 products.length===0 ?
 
 
+
 <p>
 
 No Product Found
 
 </p>
+
 
 
 
@@ -684,8 +807,12 @@ key={product.id}
 
 className="
 flex
+flex-col
+md:flex-row
 justify-between
-items-center
+items-start
+md:items-center
+gap-5
 border-b
 py-5
 "
@@ -695,11 +822,10 @@ py-5
 
 
 
-
 <div className="
 flex
-gap-5
 items-center
+gap-5
 ">
 
 
@@ -722,9 +848,11 @@ w-24
 h-24
 rounded-xl
 object-cover
+border
 "
 
 />
+
 
 
 }
@@ -750,17 +878,23 @@ text-lg
 
 
 
-<p>
 
-৳ {product.price.toLocaleString()}
+<p className="
+text-[#9b7a3d]
+font-semibold
+">
+
+৳ {product.price?.toLocaleString()}
 
 </p>
 
 
 
 
+
 <p className="
-text-gray-600
+text-gray-500
+text-sm
 ">
 
 {product.category}
@@ -772,7 +906,6 @@ text-gray-600
 {" | "}
 
 {product.purity}
-
 
 </p>
 
@@ -800,15 +933,19 @@ gap-3
 
 
 
+
+
 <Link
 
 href={`/admin/edit-product/${product.id}`}
 
 className="
 border
+border-[#9b7a3d]
+text-[#9b7a3d]
 px-4
 py-2
-rounded
+rounded-lg
 "
 
 >
@@ -816,6 +953,7 @@ rounded
 Edit
 
 </Link>
+
 
 
 
@@ -832,7 +970,7 @@ border-red-500
 text-red-600
 px-4
 py-2
-rounded
+rounded-lg
 "
 
 >
@@ -852,6 +990,7 @@ Delete
 
 
 
+
 </div>
 
 
@@ -860,11 +999,8 @@ Delete
 ))
 
 
+
 }
-
-
-
-
 
 
 
@@ -880,12 +1016,11 @@ Delete
 </section>
 
 
-
 </main>
 
 
-);
 
+);
 
 
 }

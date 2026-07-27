@@ -2,45 +2,939 @@
 
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+  --ivory:#F6F3EC;
+  --ivory-soft:#EFEAE0;
+
+  --ink:#19160F;
+
+  --gold:#A6875A;
+  --gold-light:#D6C09A;
+
+  --espresso:#241C16;
+
+  --white:#ffffff;
+
 }
+
+
+
+/* =========================
+   TAILWIND THEME
+========================= */
 
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
+--color-background:var(--ivory);
 
-/* Dark mode disable for website design */
+--color-foreground:var(--ink);
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+--font-sans:var(--font-geist-sans);
+
+--font-mono:var(--font-geist-mono);
+
 }
 
 
 
-@keyframes slide {
+
+/* =========================
+   GLOBAL
+========================= */
+
+
+*{
+
+box-sizing:border-box;
+
+}
+
+
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+
+
+body{
+
+margin:0;
+
+background:var(--ivory);
+
+color:var(--ink);
+
+font-family:
+Arial,
+Helvetica,
+sans-serif;
+
+-webkit-font-smoothing:antialiased;
+
+}
+
+
+
+
+
+/* =========================
+   LUXURY FONT
+========================= */
+
+
+.font-luxury{
+
+font-family:
+var(--font-fraunces),
+Georgia,
+serif;
+
+font-weight:400;
+
+}
+
+
+
+
+
+/* =========================
+   NAVBAR GLASS
+========================= */
+
+
+.nav-glass{
+
+background:
+
+rgba(246,243,236,.75);
+
+backdrop-filter:
+
+blur(18px);
+
+
+border-bottom:
+
+1px solid rgba(166,135,90,.15);
+
+}
+
+
+
+
+
+.nav-link{
+
+position:relative;
+
+}
+
+
+
+.nav-link::after{
+
+content:"";
+
+position:absolute;
+
+bottom:-8px;
+
+left:0;
+
+width:0;
+
+height:1px;
+
+background:var(--gold);
+
+transition:.4s;
+
+}
+
+
+
+.nav-link:hover::after{
+
+width:100%;
+
+}
+
+
+
+
+
+/* =========================
+   HERO
+========================= */
+
+
+.luxury-hero{
+
+min-height:90vh;
+
+position:relative;
+
+display:flex;
+
+align-items:center;
+
+overflow:hidden;
+
+background-size:cover;
+
+background-position:center;
+
+}
+
+
+
+
+
+.hero-image{
+
+animation:
+
+heroZoom 20s ease-in-out infinite alternate;
+
+}
+
+
+
+
+
+@keyframes heroZoom{
+
+
+from{
+
+transform:scale(1);
+
+}
+
+
+to{
+
+transform:scale(1.08);
+
+}
+
+
+}
+
+
+
+
+.hero-overlay{
+
+position:absolute;
+
+inset:0;
+
+
+background:
+
+linear-gradient(
+
+90deg,
+
+rgba(25,22,15,.72),
+
+rgba(25,22,15,.25)
+
+);
+
+
+}
+
+
+
+
+
+
+.hero-content{
+
+position:relative;
+
+z-index:2;
+
+max-width:650px;
+
+padding-left:8%;
+
+color:white;
+
+}
+
+
+
+
+
+.hero-small{
+
+font-size:12px;
+
+letter-spacing:.35em;
+
+color:var(--gold-light);
+
+text-transform:uppercase;
+
+}
+
+
+
+
+
+.hero-content h1{
+
+font-family:
+
+var(--font-fraunces),
+Georgia,
+serif;
+
+
+font-size:
+
+clamp(60px,8vw,110px);
+
+
+font-weight:400;
+
+line-height:.95;
+
+margin:25px 0;
+
+}
+
+
+
+
+
+.hero-content h1 em{
+
+font-style:italic;
+
+color:var(--gold-light);
+
+}
+
+
+
+
+
+.hero-content p{
+
+font-size:18px;
+
+line-height:1.8;
+
+max-width:450px;
+
+color:#eee;
+
+}
+
+
+
+
+
+
+/* =========================
+   BUTTON
+========================= */
+
+
+.luxury-btn{
+
+display:inline-block;
+
+padding:
+
+16px 42px;
+
+
+border:
+
+1px solid var(--gold-light);
+
+
+color:white;
+
+
+font-size:12px;
+
+
+letter-spacing:.2em;
+
+
+text-transform:uppercase;
+
+
+transition:.5s;
+
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+
+
+
+.luxury-btn:hover{
+
+background:var(--gold);
+
+color:white;
+
+}
+
+
+
+
+
+.luxury-btn::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+left:-100%;
+
+width:100%;
+
+height:100%;
+
+
+background:
+
+linear-gradient(
+
+120deg,
+
+transparent,
+
+rgba(255,255,255,.35),
+
+transparent
+
+);
+
+
+transition:.8s;
+
+}
+
+
+
+
+.luxury-btn:hover::before{
+
+left:100%;
+
+}
+
+
+
+
+
+
+/* =========================
+   REVEAL ANIMATION
+========================= */
+
+
+@keyframes revealUp{
+
 
 0%{
+
+opacity:0;
+
+transform:translateY(60px);
+
+}
+
+
+
+100%{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+
+}
+
+
+
+.reveal{
+
+animation:
+
+revealUp 1.2s ease forwards;
+
+}
+
+
+
+
+
+.section-reveal{
+
+opacity:0;
+
+animation:
+
+revealUp 1s ease forwards;
+
+animation-delay:.2s;
+
+}
+
+
+
+
+
+/* =========================
+   DIAMOND ROTATION
+========================= */
+
+
+@keyframes spinSlow{
+
+
+from{
+
+transform:rotate(0deg);
+
+}
+
+
+to{
+
+transform:rotate(360deg);
+
+}
+
+
+}
+
+
+
+
+.animate-spin-slow{
+
+animation:
+
+spinSlow 45s linear infinite;
+
+}
+
+
+
+
+
+/* =========================
+   PRODUCT SLIDER
+========================= */
+
+
+@keyframes slide{
+
+
+0%{
+
 transform:translateX(0);
+
 }
 
 
 100%{
+
 transform:translateX(-50%);
-}
 
 }
+
+
+}
+
+
 
 
 .animate-slide{
 
-animation: slide 15s linear infinite;
+animation:
+
+slide 18s linear infinite;
+
+}
+
+
+
+
+
+/* =========================
+   IMAGE EFFECT
+========================= */
+
+
+.image-zoom{
+
+overflow:hidden;
+
+}
+
+
+
+.image-zoom img{
+
+transition:
+
+transform .8s ease;
+
+}
+
+
+
+.image-zoom:hover img{
+
+transform:
+
+scale(1.08);
+
+}
+
+
+
+
+
+.product-image{
+
+overflow:hidden;
+
+}
+
+
+
+.product-image img{
+
+transition:
+
+transform 1s cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+
+.product-image:hover img{
+
+transform:
+
+scale(1.12);
+
+}
+
+
+
+
+
+/* =========================
+   LUXURY CARD
+========================= */
+
+
+.luxury-card{
+
+transition:
+
+all .5s ease;
+
+}
+
+
+
+.luxury-card:hover{
+
+transform:
+
+translateY(-12px);
+
+}
+
+
+
+
+
+/* =========================
+   GOLD LINE
+========================= */
+
+
+.gold-line{
+
+height:1px;
+
+
+background:
+
+linear-gradient(
+
+90deg,
+
+transparent,
+
+var(--gold),
+
+transparent
+
+);
+
+}
+
+
+
+
+
+/* =========================
+   GOLD TEXT
+========================= */
+
+
+.gold-text{
+
+background:
+
+linear-gradient(
+
+90deg,
+
+#A6875A,
+
+#E8D7B0,
+
+#A6875A
+
+);
+
+
+background-size:200%;
+
+
+-webkit-background-clip:text;
+
+color:transparent;
+
+
+animation:
+
+goldMove 4s infinite linear;
+
+}
+
+
+
+
+
+@keyframes goldMove{
+
+
+from{
+
+background-position:0%;
+
+}
+
+
+to{
+
+background-position:200%;
+
+}
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   GOLD BORDER
+========================= */
+
+
+.gold-border{
+
+position:relative;
+
+}
+
+
+
+
+
+.gold-border::before{
+
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+
+border:1px solid transparent;
+
+
+background:
+
+linear-gradient(
+
+135deg,
+
+#A6875A,
+
+transparent,
+
+#D6C09A
+
+)
+
+border-box;
+
+
+mask:
+
+linear-gradient(#fff 0 0) padding-box,
+linear-gradient(#fff 0 0);
+
+
+
+mask-composite:exclude;
+
+
+}
+
+
+
+
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+.footer-glow{
+
+box-shadow:
+
+0 -20px 60px rgba(166,135,90,.12);
+
+}
+
+
+
+
+
+/* =========================
+   SELECTION
+========================= */
+
+
+::selection{
+
+background:
+
+var(--gold);
+
+color:white;
+
+}
+
+
+
+
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+
+::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+
+
+
+::-webkit-scrollbar-track{
+
+background:
+
+var(--ivory-soft);
+
+}
+
+
+
+
+::-webkit-scrollbar-thumb{
+
+
+background:
+
+var(--gold);
+
+
+border-radius:20px;
+
+
+}
+
+
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+@media(max-width:768px){
+
+
+.hero-content{
+
+padding-left:25px;
+
+padding-right:25px;
+
+}
+
+
+
+.hero-content h1{
+
+font-size:64px;
+
+}
+
 
 }

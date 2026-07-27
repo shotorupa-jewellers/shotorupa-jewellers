@@ -1,335 +1,123 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import Navbar from "@/components/Navbar";
+import LuxuryHero from "@/components/LuxuryHero";
 
 import TrendingProducts from "@/components/TrendingProducts";
 import GoldCollection from "@/components/GoldCollection";
 import DiamondCollection from "@/components/DiamondCollection";
 import NewArrivals from "@/components/NewArrivals";
 import OfferBanner from "@/components/OfferBanner";
-import AccountButton from "@/components/AccountButton";
-
-import { products } from "@/data/products";
-
-import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/context/WishlistContext";
+import LuxuryFooter from "@/components/LuxuryFooter";
 
 
 export default function Home(){
 
 
-const [search,setSearch] = useState("");
-
-
-const {cart}=useCart();
-
-const {wishlist}=useWishlist();
-
-
-
-const searchProducts = products.filter((product)=>
-
-product.name
-.toLowerCase()
-.includes(search.toLowerCase())
-
-);
-
-
-
 return(
 
-<main className="min-h-screen bg-[#f8f4ee]">
+<>
 
 
-{/* MENU BAR */}
+{/* PREMIUM NAVBAR */}
 
-<div className="bg-[#9b7a3d] text-white">
+<Navbar />
 
-<div className="max-w-7xl mx-auto px-6 py-4 flex justify-center gap-8 text-sm font-semibold">
 
 
-<Link href="/bridal-collections">
-BRIDAL COLLECTIONS
-</Link>
-
-
-<Link href="/necklaces">
-NECKLACES
-</Link>
-
-
-<Link href="/earrings">
-EARRINGS
-</Link>
-
-
-<Link href="/maang-tikkas">
-MAANG TIKKAS
-</Link>
-
-
-<Link href="/our-story">
-OUR STORY
-</Link>
-
-
-<Link href="/consultation">
-CONSULTATION
-</Link>
-
-
-</div>
-
-</div>
-
-
-
-{/* HEADER */}
-
-<header className="bg-white shadow">
-
-
-<div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-
-
-<Link href="/">
-
-<div>
-
-<h1 className="text-4xl font-serif font-bold text-[#9b7a3d]">
-SHOTORUPA
-</h1>
-
-<p className="text-xs tracking-[5px] text-gray-500 text-center">
-JEWELLERS
-</p>
-
-</div>
-
-</Link>
-
-
-
-
-<input
-
-type="text"
-
-placeholder="Search Jewellery"
-
-value={search}
-
-onChange={(e)=>setSearch(e.target.value)}
-
-className="hidden md:block border rounded-full px-6 py-3 w-96 text-black"
-
-/>
-
-
-
-
-
-<div className="flex gap-6 items-center text-black">
-
-
-<AccountButton />
-
-
-<Link href="/orders">
-My Orders
-</Link>
-
-
-<Link href="/wishlist">
-
-Wishlist ❤️
-
-<span className="bg-[#9b7a3d] text-white px-2 rounded-full">
-
-{wishlist.length}
-
-</span>
-
-</Link>
-
-
-
-<Link href="/cart">
-
-Cart 🛒
-
-<span className="bg-[#9b7a3d] text-white px-2 rounded-full">
-
-{cart.length}
-
-</span>
-
-</Link>
-
-
-
-</div>
-
-
-
-</div>
-
-
-</header>
-
-
-
-
-
-{/* SEARCH RESULT */}
-
-{
-
-search &&
-
-<section className="max-w-7xl mx-auto px-6 py-10">
-
-
-<h2 className="text-3xl font-serif text-[#6b4d1f] mb-6">
-Search Result
-</h2>
-
-
-<div className="grid md:grid-cols-4 gap-6">
-
-
-{
-
-searchProducts.map((product)=>(
-
-<div
-key={product.id}
-className="bg-white rounded-xl shadow p-4"
+<main
+className="
+bg-[#F6F3EC]
+text-[#19160F]
+pt-24
+"
 >
-
-
-<Image
-
-src={product.image}
-
-alt={product.name}
-
-width={400}
-
-height={300}
-
-className="w-full h-48 object-cover rounded-xl"
-
-/>
-
-
-
-<h3 className="font-bold mt-3">
-
-{product.name}
-
-</h3>
-
-
-<p className="text-[#9b7a3d] font-bold">
-
-৳ {product.price.toLocaleString()}
-
-</p>
-
-
-<Link
-
-href={`/products/${product.id}`}
-
-className="block mt-3 bg-[#9b7a3d] text-white text-center py-2 rounded"
-
->
-
-View Product
-
-</Link>
-
-
-</div>
-
-
-))
-
-
-}
-
-
-</div>
-
-
-</section>
-
-
-}
-
 
 
 
 
 {/* HERO */}
 
-
-<section className="max-w-7xl mx-auto px-6 py-8">
-
-
-<div className="relative rounded-[40px] overflow-hidden border-8 border-[#d4b06b]">
+<LuxuryHero />
 
 
-<Image
 
-src="/images/hero.jpg"
 
-alt="Bride"
 
-width={2000}
 
-height={1200}
 
-className="w-full h-[620px] object-cover"
+{/* GOLD DIVIDER */}
 
+<div
+className="
+max-w-[600px]
+mx-auto
+my-20
+gold-line
+"
 />
 
 
 
-<div className="absolute inset-0 bg-black/40"></div>
 
 
 
-<div className="absolute left-16 top-1/2 -translate-y-1/2 text-white">
+
+{/* TRENDING */}
+
+<section
+className="
+max-w-[1240px]
+mx-auto
+px-8
+py-20
+"
+>
 
 
-<h2 className="text-7xl font-serif">
-
-ELEGANCE,
-
-<br/>
-
-UNVEILED.
-
-</h2>
+<div
+className="
+text-center
+mb-14
+"
+>
 
 
-<p className="mt-5 text-xl">
+<p
+className="
+uppercase
+tracking-[0.3em]
+text-xs
+text-[#A6875A]
+"
+>
 
-Discover curated bridal jewellery designed for your moment.
+Featured Collection
 
 </p>
 
 
+
+
+<h2
+className="
+font-luxury
+text-5xl
+mt-4
+"
+>
+
+The Signature Edit
+
+</h2>
+
+
 </div>
 
 
 
-</div>
+
+<TrendingProducts />
 
 
 </section>
@@ -338,21 +126,267 @@ Discover curated bridal jewellery designed for your moment.
 
 
 
-<TrendingProducts />
+
+
+
+
+{/* GOLD COLLECTION */}
+
+
+<section
+className="
+py-20
+"
+>
+
 
 <GoldCollection />
 
+
+</section>
+
+
+
+
+
+
+
+
+
+{/* DIAMOND COLLECTION */}
+
+
+<section
+className="
+py-20
+"
+>
+
+
 <DiamondCollection />
+
+
+</section>
+
+
+
+
+
+
+
+
+
+{/* NEW ARRIVAL */}
+
+
+<section
+className="
+py-20
+"
+>
+
 
 <NewArrivals />
 
+
+</section>
+
+
+
+
+
+
+
+
+
+{/* OFFER */}
+
+
+<section
+className="
+py-20
+"
+>
+
+
 <OfferBanner />
+
+
+</section>
+
+
+
+
+
+
+{/* PHILOSOPHY */}
+
+
+<section
+className="
+max-w-[1240px]
+mx-auto
+px-8
+py-28
+grid
+md:grid-cols-2
+gap-16
+items-center
+"
+>
+
+
+
+<div
+className="
+aspect-[5/6]
+bg-[#241C16]
+flex
+items-center
+justify-center
+"
+>
+
+
+<svg
+className="w-2/3"
+viewBox="0 0 100 100"
+>
+
+
+<path
+
+d="
+M50 5
+L80 25
+L92 55
+L72 90
+L28 90
+L8 55
+L20 25 Z
+"
+
+fill="none"
+
+stroke="#CBB088"
+
+/>
+
+
+</svg>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div>
+
+
+<p
+className="
+uppercase
+tracking-[0.25em]
+text-xs
+text-[#A6875A]
+"
+>
+
+Our Philosophy
+
+</p>
+
+
+
+
+<h2
+className="
+font-luxury
+text-5xl
+mt-5
+leading-tight
+"
+>
+
+An atelier
+<br/>
+of one idea
+
+</h2>
+
+
+
+
+
+<p
+className="
+mt-8
+text-[#3a352c]
+leading-relaxed
+"
+>
+
+Shotorupa Jewellers creates timeless
+pieces where gold, diamonds and
+craftsmanship meet elegance.
+
+</p>
+
+
+
+
+
+<p
+className="
+mt-5
+text-[#3a352c]
+leading-relaxed
+"
+>
+
+Every creation is designed to become
+a memory that lasts forever.
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+</section>
+
+
+
 
 
 
 </main>
 
 
-);
+
+
+
+
+
+{/* FOOTER */}
+
+<LuxuryFooter />
+
+
+
+</>
+
+
+)
 
 }

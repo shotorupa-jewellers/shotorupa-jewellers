@@ -17,7 +17,6 @@ import { useProducts } from "@/context/ProductContext";
 import Toast from "@/components/Toast";
 
 
-
 const defaultProducts = [
 
 {
@@ -65,18 +64,15 @@ purity:"22K Gold"
 
 
 
-
 export default function TrendingProducts(){
-
 
 
 const {products:adminProducts}=useProducts();
 
 
+const products = (
 
-const products = [
-
-...(adminProducts && adminProducts.length > 0
+adminProducts && adminProducts.length > 0
 
 ?
 
@@ -84,15 +80,13 @@ adminProducts
 
 :
 
-defaultProducts)
+defaultProducts
 
-].sort(
+).sort(
 
-(a,b)=>b.price-a.price
+(a:any,b:any)=>b.price-a.price
 
 );
-
-
 
 
 
@@ -101,12 +95,10 @@ const {addToCart}=useCart();
 const {addToWishlist}=useWishlist();
 
 
-const router=useRouter();
+const router = useRouter();
 
 
 const [toast,setToast]=useState("");
-
-
 
 
 
@@ -121,10 +113,8 @@ setToast("");
 
 },2000);
 
+
 }
-
-
-
 
 
 
@@ -156,12 +146,9 @@ router.push("/checkout");
 
 
 
-
-
 return(
 
 <>
-
 
 
 <Toast
@@ -174,12 +161,7 @@ show={toast!==""}
 
 
 
-
-
-
-<section className="max-w-7xl mx-auto px-6 py-12">
-
-
+<section className="max-w-7xl mx-auto px-6 py-14">
 
 
 
@@ -187,10 +169,11 @@ show={toast!==""}
 
 className="
 text-4xl
-font-serif
 text-center
+font-serif
+font-bold
 text-[#6b4d1f]
-mb-10
+mb-12
 "
 
 >
@@ -198,8 +181,6 @@ mb-10
 TRENDING PRODUCTS
 
 </h2>
-
-
 
 
 
@@ -217,7 +198,9 @@ slidesPerView={1}
 
 
 
-breakpoints={{
+breakpoints={
+
+{
 
 640:{
 slidesPerView:2
@@ -228,8 +211,9 @@ slidesPerView:2
 slidesPerView:4
 }
 
-}}
+}
 
+}
 
 
 
@@ -254,6 +238,7 @@ enabled:true
 grabCursor={true}
 
 
+
 loop={products.length>4}
 
 
@@ -262,13 +247,9 @@ loop={products.length>4}
 
 
 
-
-
 {
 
-products.slice(0,10).map((product)=>(
-
-
+products.slice(0,10).map((product:any)=>(
 
 
 <SwiperSlide key={product.id}>
@@ -278,33 +259,45 @@ products.slice(0,10).map((product)=>(
 
 className="
 bg-white
-rounded-2xl
+rounded-3xl
 shadow-xl
 overflow-hidden
+border
+hover:shadow-2xl
+transition
 "
+
+
 
 >
 
 
 
-
 <Image
+
 
 src={product.image}
 
+
 alt={product.name}
+
 
 width={500}
 
-height={400}
+
+height={500}
+
 
 quality={100}
 
+
 className="
 w-full
-h-64
+h-72
 object-cover
 "
+
+
 
 />
 
@@ -312,11 +305,7 @@ object-cover
 
 
 
-
-
-<div className="p-5">
-
-
+<div className="p-6">
 
 
 
@@ -326,8 +315,8 @@ className="
 bg-[#9b7a3d]
 text-white
 text-xs
-px-3
-py-1
+px-4
+py-2
 rounded-full
 "
 
@@ -341,13 +330,12 @@ rounded-full
 
 
 
-
 <h3
 
 className="
-mt-4
 text-xl
 font-bold
+mt-5
 text-[#6b4d1f]
 "
 
@@ -356,7 +344,6 @@ text-[#6b4d1f]
 {product.name}
 
 </h3>
-
 
 
 
@@ -371,14 +358,11 @@ text-[#6b4d1f]
 
 
 
-
-
 <p className="text-gray-500">
 
 Weight: {product.weight}
 
 </p>
-
 
 
 
@@ -390,7 +374,7 @@ className="
 text-2xl
 font-bold
 text-[#9b7a3d]
-mt-3
+mt-4
 "
 
 >
@@ -404,9 +388,8 @@ mt-3
 
 
 
-
-
 <button
+
 
 onClick={()=>{
 
@@ -426,7 +409,6 @@ showToast("🛒 Added To Cart");
 }}
 
 
-
 className="
 mt-5
 w-full
@@ -435,14 +417,16 @@ text-white
 py-3
 rounded-xl
 hover:bg-[#7c622f]
+transition
 "
 
 >
 
+
 🛒 Add To Cart
 
-</button>
 
+</button>
 
 
 
@@ -480,14 +464,19 @@ border-[#9b7a3d]
 text-[#9b7a3d]
 py-3
 rounded-xl
+hover:bg-[#9b7a3d]
+hover:text-white
+transition
 "
+
 
 >
 
+
 ♡ Wishlist
 
-</button>
 
+</button>
 
 
 
@@ -508,14 +497,18 @@ bg-black
 text-white
 py-3
 rounded-xl
+hover:bg-gray-800
+transition
 "
+
 
 >
 
+
 ⚡ Buy Now
 
-</button>
 
+</button>
 
 
 
@@ -532,14 +525,17 @@ href={`/products/${product.id}`}
 className="
 block
 text-center
-mt-4
+mt-5
 text-[#9b7a3d]
 font-semibold
 "
 
+
 >
 
+
 View Product
+
 
 </Link>
 
@@ -547,12 +543,7 @@ View Product
 
 
 
-
-
 </div>
-
-
-
 
 
 
@@ -571,18 +562,16 @@ View Product
 
 
 
-
-
 </Swiper>
-
-
 
 
 
 </section>
 
 
+
 </>
+
 
 );
 

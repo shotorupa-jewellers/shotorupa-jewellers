@@ -3,121 +3,286 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  Gem,
+  BarChart3,
+  FileText,
+  Tag,
+  Settings,
+  LogOut
+} from "lucide-react";
 
-export default function AdminSidebar(){
+
+export default function Sidebar(){
+
 
 const pathname = usePathname();
 
 
-const menu=[
+
+const menus=[
 
 {
 name:"Dashboard",
-link:"/admin"
+icon:LayoutDashboard,
+path:"/admin"
 },
 
 {
-name:"Product List",
-link:"/admin/products"
-},
-
-{
-name:"Add Product",
-link:"/admin/add-product"
+name:"Products",
+icon:Package,
+path:"/admin/products"
 },
 
 {
 name:"Orders",
-link:"/admin/orders"
+icon:ShoppingCart,
+path:"/admin/orders"
 },
 
 {
 name:"Customers",
-link:"/admin/customers"
+icon:Users,
+path:"/admin/customers"
+},
+
+{
+name:"Gold Stock",
+icon:Gem,
+path:"/admin/gold-stock"
+},
+
+{
+name:"Sales Report",
+icon:BarChart3,
+path:"/admin/reports"
+},
+
+{
+name:"Invoice",
+icon:FileText,
+path:"/admin/invoice"
+},
+
+{
+name:"Offers",
+icon:Tag,
+path:"/admin/offers"
 },
 
 {
 name:"Settings",
-link:"/admin/settings"
+icon:Settings,
+path:"/admin/settings"
 }
+
 
 ];
 
 
 
+
 return(
 
-<aside className="w-64 min-h-screen bg-black text-white p-6">
+<aside
+
+className="
+w-72
+min-h-screen
+bg-[#fffaf1]
+border-r
+border-[#ead9b0]
+px-5
+py-6
+"
+
+>
 
 
-<h1 className="text-2xl font-serif text-[#d4af37] mb-10">
+{/* Logo */}
+
+<div
+
+className="
+mb-8
+text-center
+"
+
+>
+
+<h1
+
+className="
+text-2xl
+font-serif
+font-bold
+text-[#6b4d1f]
+"
+
+>
 
 SHOTORUPA
 
 </h1>
 
 
+<p
 
-<nav className="space-y-3">
+className="
+text-xs
+tracking-[5px]
+text-[#c89b3c]
+"
+
+>
+
+ADMIN
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+{/* Menu */}
+
+
+<div className="space-y-2">
 
 
 {
 
-menu.map((item)=>(
+menus.map((item,index)=>{
+
+
+const Icon=item.icon;
+
+
+const active =
+pathname===item.path;
+
+
+
+return(
 
 
 <Link
 
-key={item.link}
+key={index}
 
-href={item.link}
+href={item.path}
 
-className={`block px-4 py-3 rounded-lg
+className={`
+flex
+items-center
+gap-4
+px-4
+py-3
+rounded-xl
+transition
 
-${pathname===item.link
+${
+active
 
-?"bg-[#9b7a3d]"
+?
+"bg-[#c89b3c] text-white shadow"
 
-:"hover:bg-gray-800"}
+:
+
+"text-[#6b4d1f] hover:bg-[#f3e5c5]"
+
+}
 
 `}
 
 >
 
+
+<Icon size={21}/>
+
+
+<span className="font-medium">
+
 {item.name}
+
+</span>
+
 
 </Link>
 
 
-))
+)
 
+
+})
 
 }
 
 
 
-<hr className="my-6 border-gray-700"/>
+</div>
+
+
+
+
+
+
+
+{/* Bottom Logout */}
+
+
+<div
+
+className="
+absolute
+bottom-6
+w-60
+"
+
+>
 
 
 <button
 
-className="w-full bg-red-600 py-3 rounded-lg"
+className="
+flex
+items-center
+gap-4
+px-4
+py-3
+rounded-xl
+text-red-600
+hover:bg-red-50
+w-full
+"
 
 >
+
+<LogOut size={21}/>
 
 Logout
 
 </button>
 
 
-</nav>
+</div>
+
+
 
 
 
 </aside>
 
 
-);
+)
 
 
 }

@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 
-import { 
+import {
   useParams,
   useRouter
 } from "next/navigation";
@@ -35,11 +35,9 @@ import {
 export default function EditProductPage(){
 
 
-
 const router = useRouter();
 
 const params = useParams();
-
 
 const id = params.id as string;
 
@@ -57,12 +55,18 @@ const [weight,setWeight]=useState("");
 
 const [purity,setPurity]=useState("");
 
+const [makingCharge,setMakingCharge]=useState("");
+
+const [stock,setStock]=useState("");
+
 const [image,setImage]=useState("");
 
-const [newImage,setNewImage]=useState<File | null>(null);
+const [newImage,setNewImage]=useState<File|null>(null);
 
 
 const [loading,setLoading]=useState(false);
+
+
 
 
 
@@ -88,20 +92,31 @@ doc(db,"products",id)
 if(snap.exists()){
 
 
-const data=snap.data();
+const data:any=snap.data();
 
 
-setName(data.name);
 
-setPrice(String(data.price));
+setName(data.name || "");
 
-setCategory(data.category);
+setPrice(String(data.price || ""));
 
-setWeight(data.weight);
+setCategory(data.category || "Gold");
 
-setPurity(data.purity);
+setWeight(data.weight || "");
 
-setImage(data.image);
+setPurity(data.purity || "");
+
+setMakingCharge(
+String(data.makingCharge || "")
+);
+
+
+setStock(
+String(data.stock || "")
+);
+
+
+setImage(data.image || "");
 
 
 
@@ -121,6 +136,7 @@ loadProduct();
 
 
 },[id]);
+
 
 
 
@@ -156,7 +172,6 @@ setNewImage(file);
 async function handleUpdate(){
 
 
-
 try{
 
 
@@ -170,11 +185,10 @@ let imageUrl=image;
 
 
 
-// Upload new image
+// New Image Upload
 
 
 if(newImage){
-
 
 
 const imageRef = ref(
@@ -204,8 +218,8 @@ imageRef
 );
 
 
-
 }
+
 
 
 
@@ -222,15 +236,29 @@ doc(db,"products",id),
 
 name,
 
+
 price:Number(price),
+
 
 category,
 
+
 weight,
+
 
 purity,
 
-image:imageUrl
+
+makingCharge:Number(makingCharge),
+
+
+stock:Number(stock),
+
+
+image:imageUrl,
+
+
+updatedAt:new Date()
 
 
 }
@@ -246,12 +274,13 @@ image:imageUrl
 alert("Product Updated Successfully ✅");
 
 
-
 router.push("/admin/products");
 
 
 
 }
+
+
 
 catch(error){
 
@@ -263,6 +292,8 @@ alert("Update Failed");
 
 
 }
+
+
 
 finally{
 
@@ -295,9 +326,11 @@ text-black
 ">
 
 
-
-<section className="max-w-xl mx-auto px-6">
-
+<section className="
+max-w-xl
+mx-auto
+px-6
+">
 
 
 <div className="
@@ -312,11 +345,12 @@ p-8
 <h1 className="
 text-3xl
 font-bold
+font-serif
 text-[#6b4d1f]
 mb-8
 ">
 
-Edit Product
+Edit Jewellery Product
 
 </h1>
 
@@ -339,11 +373,12 @@ className="
 w-full
 border
 p-3
-rounded
+rounded-lg
 mb-4
 "
 
 />
+
 
 
 
@@ -365,12 +400,11 @@ className="
 w-full
 border
 p-3
-rounded
+rounded-lg
 mb-4
 "
 
 />
-
 
 
 
@@ -388,7 +422,7 @@ className="
 w-full
 border
 p-3
-rounded
+rounded-lg
 mb-4
 "
 
@@ -400,6 +434,8 @@ mb-4
 <option>Diamond</option>
 
 <option>Platinum</option>
+
+<option>Silver</option>
 
 <option>Bridal</option>
 
@@ -425,17 +461,18 @@ value={weight}
 
 onChange={(e)=>setWeight(e.target.value)}
 
-placeholder="Weight"
+placeholder="Weight Gram"
 
 className="
 w-full
 border
 p-3
-rounded
+rounded-lg
 mb-4
 "
 
 />
+
 
 
 
@@ -449,13 +486,13 @@ value={purity}
 
 onChange={(e)=>setPurity(e.target.value)}
 
-placeholder="Purity"
+placeholder="Purity 22K / 24K"
 
 className="
 w-full
 border
 p-3
-rounded
+rounded-lg
 mb-4
 "
 
@@ -467,6 +504,64 @@ mb-4
 
 
 
+
+<input
+
+type="number"
+
+value={makingCharge}
+
+onChange={(e)=>setMakingCharge(e.target.value)}
+
+placeholder="Making Charge"
+
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
+
+/>
+
+
+
+
+
+
+
+
+<input
+
+type="number"
+
+value={stock}
+
+onChange={(e)=>setStock(e.target.value)}
+
+placeholder="Stock Quantity"
+
+className="
+w-full
+border
+p-3
+rounded-lg
+mb-4
+"
+
+/>
+
+
+
+
+
+
+
+
+{
+
+image &&
 
 <img
 
@@ -483,6 +578,8 @@ mb-4
 "
 
 />
+
+}
 
 
 
@@ -503,7 +600,7 @@ className="
 w-full
 border
 p-3
-rounded
+rounded-lg
 mb-5
 "
 
@@ -528,6 +625,7 @@ bg-[#9b7a3d]
 text-white
 py-4
 rounded-xl
+font-bold
 "
 
 >
@@ -549,8 +647,6 @@ loading
 
 
 </button>
-
-
 
 
 

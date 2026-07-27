@@ -1,22 +1,25 @@
 "use client";
 
 
-import { useEffect, useState } from "react";
-
 import Link from "next/link";
 
-
 import {
-collection,
-onSnapshot,
-deleteDoc,
-doc
-} from "firebase/firestore";
+  useState
+} from "react";
 
 
 import {
-db
-} from "@/lib/firebase";
+  useProducts
+} from "@/context/ProductContext";
+
+
+import {
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  Package
+} from "lucide-react";
 
 
 
@@ -25,85 +28,75 @@ db
 export default function ProductsPage(){
 
 
-const [products,setProducts]=useState<any[]>([]);
+
+const {
+
+products=[],
+deleteProduct
+
+}=useProducts();
 
 
 
 
-useEffect(()=>{
+const [search,setSearch]=useState("");
 
-
-const unsubscribe = onSnapshot(
-
-collection(db,"products"),
-
-(snapshot)=>{
-
-
-const data=snapshot.docs.map((item)=>(
-
-
-{
-
-id:item.id,
-
-...item.data()
-
-
-}
-
-
-));
-
-
-setProducts(data);
+const [category,setCategory]=useState("All");
 
 
 
-}
 
 
+
+const categories=[
+
+"All",
+"Gold",
+"Diamond",
+"Wedding",
+"City Gold"
+
+];
+
+
+
+
+
+
+
+
+const filteredProducts = products.filter((product:any)=>{
+
+
+const searchMatch =
+
+product.name
+?.toLowerCase()
+.includes(
+search.toLowerCase()
 );
 
 
 
-return ()=>unsubscribe();
+const categoryMatch =
+
+category==="All"
+
+?
+
+true
+
+:
+
+product.category===category;
 
 
 
-},[]);
+return searchMatch && categoryMatch;
 
 
 
-
-
-
-
-
-async function deleteProduct(id:string){
-
-
-const confirmDelete = confirm(
-
-"Delete this product?"
-
-);
-
-
-
-if(!confirmDelete) return;
-
-
-
-await deleteDoc(
-
-doc(db,"products",id)
-
-);
-
-
-
-}
+});
 
 
 
@@ -116,42 +109,182 @@ doc(db,"products",id)
 return(
 
 
-<main className="min-h-screen bg-[#f8f4ee] p-8 text-black">
+<main
+
+className="
+
+min-h-screen
+
+bg-gradient-to-br
+
+from-black
+
+via-[#100c06]
+
+to-black
 
 
-<div className="max-w-7xl mx-auto">
+text-white
+
+
+p-5
+
+lg:p-8
+
+
+"
+
+>
+
+
+<div
+
+className="
+
+max-w-7xl
+
+mx-auto
+
+"
+
+>
 
 
 
 
 
-<div className="flex justify-between items-center mb-8">
 
 
-<h1 className="text-4xl font-serif text-[#6b4d1f]">
 
-Product List
+{/* HEADER */}
+
+
+
+<div
+
+className="
+
+flex
+
+flex-col
+
+md:flex-row
+
+
+justify-between
+
+
+gap-5
+
+
+mb-10
+
+
+"
+
+>
+
+
+
+<div>
+
+
+<h1
+
+className="
+
+text-4xl
+
+font-serif
+
+text-yellow-400
+
+"
+
+>
+
+Products
 
 </h1>
+
+
+
+<p
+
+className="
+
+text-gray-400
+
+mt-2
+
+"
+
+>
+
+Manage jewellery inventory
+
+</p>
+
+
+</div>
+
+
+
 
 
 
 
 <Link
 
+
 href="/admin/add-product"
 
+
 className="
-bg-[#9b7a3d]
-text-white
+
+bg-gradient-to-r
+
+from-yellow-400
+
+to-yellow-600
+
+
+text-black
+
+
 px-6
+
 py-3
+
+
 rounded-xl
+
+
+font-semibold
+
+
+flex
+
+items-center
+
+gap-2
+
+
+hover:scale-105
+
+
+transition
+
+
 "
 
 >
 
-+ Add Product
+
+<Plus size={20}/>
+
+Add Product
+
 
 </Link>
 
@@ -167,77 +300,349 @@ rounded-xl
 
 
 
-<div className="bg-white rounded-2xl shadow p-6">
-
-
-
-
-
-{
-
-products.length===0
-
-?
-
-<p>
-
-No Product Found
-
-</p>
-
-
-:
-
-
-<div className="grid md:grid-cols-3 gap-6">
-
-
-
-{
-
-products.map((product)=>(
+{/* FILTER BAR */}
 
 
 
 <div
 
-key={product.id}
-
 className="
+
+bg-white/5
+
 border
-rounded-xl
-overflow-hidden
-bg-white
+
+border-yellow-600/30
+
+
+rounded-2xl
+
+
+p-5
+
+
+mb-8
+
+
+flex
+
+flex-col
+
+lg:flex-row
+
+
+gap-5
+
+
 "
 
 >
 
 
 
-<img
 
-src={product.image}
 
-alt={product.name}
+
+<div
 
 className="
-w-full
-h-56
-object-cover
+
+relative
+
+flex-1
+
+"
+
+>
+
+
+<Search
+
+size={20}
+
+className="
+
+absolute
+
+left-4
+
+top-3.5
+
+text-yellow-400
+
 "
 
 />
 
 
 
+<input
+
+
+value={search}
+
+
+onChange={(e)=>
+setSearch(e.target.value)
+}
+
+
+placeholder="Search jewellery..."
+
+
+className="
+
+w-full
+
+
+bg-black/40
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-xl
+
+
+py-3
+
+
+pl-12
+
+
+text-white
+
+
+outline-none
+
+
+focus:border-yellow-400
+
+
+"
+
+
+/>
+
+
+</div>
 
 
 
-<div className="p-5">
 
 
 
-<h2 className="text-xl font-bold">
+
+
+
+<select
+
+
+value={category}
+
+
+onChange={(e)=>
+setCategory(e.target.value)
+}
+
+
+className="
+
+bg-black
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-xl
+
+
+px-5
+
+
+text-white
+
+
+"
+
+
+>
+
+
+{
+
+categories.map(item=>(
+
+
+<option
+
+key={item}
+
+value={item}
+
+className="text-black"
+
+>
+
+{item}
+
+</option>
+
+
+))
+
+}
+
+
+</select>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* PRODUCTS */}
+
+
+
+<div
+
+className="
+
+grid
+
+md:grid-cols-2
+
+xl:grid-cols-3
+
+
+gap-6
+
+
+"
+
+>
+
+
+{
+
+
+filteredProducts.map((product:any)=>(
+
+
+<div
+
+
+key={product.id}
+
+
+className="
+
+
+bg-white/5
+
+
+border
+
+border-yellow-600/30
+
+
+rounded-3xl
+
+
+overflow-hidden
+
+
+hover:border-yellow-400
+
+
+transition
+
+
+"
+
+
+>
+
+
+
+
+
+{
+
+
+product.image &&
+
+
+<img
+
+
+src={product.image}
+
+
+alt={product.name}
+
+
+className="
+
+w-full
+
+h-64
+
+
+object-cover
+
+
+"
+
+/>
+
+
+}
+
+
+
+
+
+
+
+
+
+<div
+
+className="
+
+p-5
+
+"
+
+>
+
+
+<h2
+
+className="
+
+text-xl
+
+font-bold
+
+"
+
+>
 
 {product.name}
 
@@ -247,7 +652,21 @@ object-cover
 
 
 
-<p className="text-[#9b7a3d] text-lg font-semibold">
+<p
+
+className="
+
+text-yellow-400
+
+text-xl
+
+font-semibold
+
+mt-3
+
+"
+
+>
 
 ৳ {product.price?.toLocaleString()}
 
@@ -257,29 +676,54 @@ object-cover
 
 
 
-<p className="text-gray-600">
+
+
+<div
+
+className="
+
+mt-3
+
+text-sm
+
+text-gray-400
+
+space-y-1
+
+"
+
+>
+
+
+<p>
+
+Category:
 
 {product.category}
 
 </p>
 
 
+<p>
+
+Weight:
+
+{product.weight}
+
+</p>
 
 
 <p>
 
-Weight: {product.weight} gm
+Purity:
+
+{product.purity}
 
 </p>
 
 
 
-
-<p>
-
-Purity: {product.purity}
-
-</p>
+</div>
 
 
 
@@ -289,25 +733,106 @@ Purity: {product.purity}
 
 
 
-<div className="flex gap-3 mt-5">
-
-
-
-<Link
-
-href={`/admin/edit-product/${product.id}`}
+<div
 
 className="
-flex-1
-text-center
-border
-py-2
-rounded-lg
+
+flex
+
+justify-between
+
+items-center
+
+
+mt-5
+
+
 "
 
 >
 
-Edit
+
+<span
+
+className="
+
+flex
+
+items-center
+
+gap-2
+
+
+text-green-400
+
+
+text-sm
+
+
+"
+
+>
+
+
+<Package size={16}/>
+
+
+In Stock
+
+
+</span>
+
+
+
+
+<div
+
+className="
+
+flex
+
+gap-2
+
+"
+
+>
+
+
+<Link
+
+
+href={`/admin/edit-product/${product.id}`}
+
+
+className="
+
+p-3
+
+rounded-xl
+
+
+bg-yellow-500/10
+
+
+text-yellow-400
+
+
+hover:bg-yellow-500
+
+
+hover:text-black
+
+
+transition
+
+
+"
+
+>
+
+
+<Edit size={18}/>
+
 
 </Link>
 
@@ -315,29 +840,50 @@ Edit
 
 
 
-
-
-
 <button
 
-onClick={()=>deleteProduct(product.id)}
+
+onClick={()=>
+deleteProduct(product.id)
+}
+
 
 className="
-flex-1
-bg-red-600
-text-white
-py-2
-rounded-lg
+
+p-3
+
+rounded-xl
+
+
+bg-red-500/10
+
+
+text-red-400
+
+
+hover:bg-red-500
+
+
+hover:text-white
+
+
+transition
+
+
 "
 
 >
 
-Delete
+
+<Trash2 size={18}/>
+
 
 </button>
 
 
 
+</div>
+
 
 
 </div>
@@ -346,10 +892,7 @@ Delete
 
 
 
-
 </div>
-
-
 
 
 
@@ -368,26 +911,15 @@ Delete
 </div>
 
 
-}
-
-
-
-
-
-</div>
-
-
-
 
 
 
 </div>
-
 
 </main>
 
 
-);
+)
 
 
 }
